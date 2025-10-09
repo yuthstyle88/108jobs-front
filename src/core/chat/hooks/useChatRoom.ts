@@ -4,7 +4,6 @@ import {createHandleWSMessage} from '@/core/chat/events/handleWSMessage';
 import {ensureSharedKeyForRoom} from "@/utils";
 import {makeEmitReadAcker} from "@/core/chat/utils";
 import {
-    resendChatMessage,
     sendChatMessage,
     sendReadReceipt as sendReadReceiptEvent, sendRoomUpdateEvent,
     sendTyping as sendTypingEvent
@@ -34,6 +33,7 @@ export interface UseChatRoomParams {
     roomId: string;
     peerPublicKeyHex: string;
     onRemoteTyping?: (detail: { roomId: string; senderId: number; typing: boolean }) => void;
+    setMessages: React.Dispatch<React.SetStateAction<any[]>>;
     localUser: LocalUser,
     roomData: ChatRoomData;
     upsertMessage: (msg: ChatMessage) => void
@@ -105,21 +105,45 @@ export function useChatRoom({
     const [isPartnerTyping, setIsPartnerTyping] = useState(false);
     const typingDecayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [connectionError, setConnectionError] = useState(false);
-    const ws = useWebSocketContext();
+   const ws = useWebSocketContext();
+   // Normalize readiness flag for legacy socket vs new adapter
+   const isReady = !!((ws as any)?.isReady ?? (ws as any)?.adapter?.isReady);
+   // Normalized addMessageListener for both legacy socket and new adapter (or EventEmitter-style .on/.off)
+   const addMessageListener = React.useCallback((handler: (data: unknown) => void) => {
+       const a: any = (ws as any)?.adapter ?? null;
+       // Preferred: adapter.addMessageListener(handler)
+       if (a && typeof a.addMessageListener === 'function') {
+           return a.addMessageListener(handler);
+       }
+       // Legacy: ws.addMessageListener(handler)
+       if (ws && typeof (ws as any).addMessageListener === 'function') {
+           return (ws as any).addMessageListener(handler);
+       }
+       // Fallback: EventEmitter-style
+       const target: any = a || ws;
+       if (target && typeof target.on === 'function') {
+           target.on('message', handler);
+           return () => {
+               try { target.off?.('message', handler); } catch {}
+           };
+       }
+       // No-op unsubscriber
+       return () => {};
+   }, [ws]);
     useEffect(() => {
-        if (ws.isReady) {
+        if (isReady) {
             setConnectionError(false);
             setPageCursor(null);
             try {
                 // Notify in-app listeners that WS reconnected (no dynamic import)
                 emitWsReconnected?.();
-            } catch {
-            }
+            } catch {}
         }
-    }, [ws.isReady]);
+    }, [isReady]);
 
     const handleRemoteTyping = useCallback((detail: { roomId: ChatRoomId; senderId: LocalUserId; typing: boolean }) => {
         try {
+            console.log('[chat] handleRemoteTyping', detail);
             if (!detail) return;
             if (detail.roomId !== roomId) return;
             const me = Number(localUser.id) || 0;
@@ -191,20 +215,16 @@ export function useChatRoom({
     }), [roomId, localUser.id, setRefreshRoomData, markPeerActive, handleRemoteTyping, upsertMessage]);
 
     useEffect(() => {
-        if (!ws || typeof ws.addMessageListener !== 'function') return;
-        const off = ws.addMessageListener((data: unknown) => {
+        if (!ws) return;
+        const off = addMessageListener((data: unknown) => {
             try {
-                handleWSMessage({data} as any);
-            } catch {
-            }
+                handleWSMessage({ data } as any);
+            } catch {}
         });
         return () => {
-            try {
-                off?.();
-            } catch {
-            }
+            try { off?.(); } catch {}
         };
-    }, [ws, handleWSMessage]);
+    }, [ws, addMessageListener, handleWSMessage]);
 
     // E2E shared key warmup
     useEffect(() => {
@@ -228,7 +248,7 @@ export function useChatRoom({
             readAckRef.current = null;
             return;
         }
-        const emit = makeReadAckEmitter(ws as any, Number(localUser.id) || 0);
+        const emit = makeReadAckEmitter(((ws as any)?.adapter ?? ws) as any, Number(localUser.id) || 0);
         const baseAcker = makeEmitReadAcker(emit, roomId, 0);
         readAckRef.current = (id: number | string) => {
             try {
@@ -263,102 +283,72 @@ export function useChatRoom({
     }, []);
 
     // Actions
-    const sendMessage = useCallback(async (data: MessagePayload) => {
-        const deps = {
-            isE2EMock,
-            roomId,
-            peerPublicKeyHex,
-            sentSet: sentMessagesRef.current,
-            onAfterSend: () => {
-                lastTypedSentRef.current = false;
-            },
-            store: {
-                // Insert a local pending message into the store
-                addPending: (roomId: string, msg: {
-                    id?: string;
-                    senderId: number;
-                    content: string;
-                    createdAt?: string
-                }) => {
-                    const st = useChatStore.getState();
-                    const draftId = msg.id ?? (typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `${Date.now()}`);
-                    const draft = {
-                        id: draftId,
-                        roomId,
-                        senderId: msg.senderId,
-                        content: msg.content,
-                        status: 'pending',
-                        createdAt: msg.createdAt ?? new Date().toISOString(),
-                        isOwner: true,
-                    } as any; // ChatMessage shape
-                    (st as any).addMessage?.(draft) || (st as any).upsertMessage?.(draft);
-                    return draftId;
-                },
-                // Update message status (e.g., 'sent' | 'failed' | 'pending')
-                commitStatus: (roomId: string, id: string, status: any, patch?: any) => {
-                    const st = useChatStore.getState();
-                    (st as any).commitStatus?.(id, status, patch);
-                },
-            },
-            socket: ws,
-        } as const;
+  const sendMessage = useCallback(async (data: MessagePayload) => {
+      // Normalize transports (prefer new adapter, fallback to legacy ws object)
+      const ctx: any = ws as any;
+      const sender = ctx?.sender;
+      const adapter = (ctx?.adapter ?? ctx) as any;
+      if (!sender && !adapter) return; // require at least one transport
 
-        await sendChatMessage(deps, data);
-    }, [isE2EMock, roomId, peerPublicKeyHex, ws]);
+      // Ensure payload has a senderId (fallback to localUser.id)
+      const payload: MessagePayload = {
+          ...data,
+          senderId: Number(localUser.id) || (data as any)?.senderId,
+      };
+
+      const deps = {
+          isE2EMock,
+          roomId,
+          peerPublicKeyHex,
+          sentSet: sentMessagesRef.current,
+          onAfterSend: () => {
+              lastTypedSentRef.current = false;
+          },
+          ...(sender ? { sender } : {}),
+          ...(adapter ? { adapter } : {}),
+      } as const;
+
+      await sendChatMessage(deps, payload);
+  }, [ws, roomId, localUser.id, isE2EMock, peerPublicKeyHex]);
 
     const resendMessage = useCallback(async (id: string) => {
         const st = useChatStore.getState();
+        const sender = (ws as any)?.sender;
         try {
-            // Try targeted resend via sendEvents (preferred: resend only this message)
             // Resolve the latest message object from the store
-            const lookup = (rid: string, mid: string) => {
-                const fromMsgs = (st as any).messages?.find?.((m: any) => String(m.id) === String(mid) && String(m.roomId) === String(rid));
+            const lookup = (mid: string) => {
+                const fromMsgs = (st as any).messages?.find?.((m: any) => String(m.id) === String(mid));
                 if (fromMsgs) return fromMsgs;
-                return (st as any).pendingMessages?.find?.((m: any) => String(m.id) === String(mid) && String(m.roomId) === String(rid));
+                return (st as any).pendingMessages?.find?.((m: any) => String(m.id) === String(mid));
             };
 
-            const msg = lookup(roomId, id);
-            if (msg) {
-                await resendChatMessage(
-                    {
-                        roomId,
-                        socket: ws,
-                        store: {
-                            // expose only what resendChatMessage needs
-                            commitStatus: st.commitStatus,
-                            getMessageById: (rid: string, mid: string) => lookup(rid, mid),
-                        },
-                        isE2EMock,
-                        sentSet: sentMessagesRef.current,
-                    },
-                    msg
-                );
+            const msg = lookup(id);
+            if (sender && typeof sender.send === 'function' && msg) {
+                await sender.send(msg);
                 return;
             }
 
-            // Fallback: if we can't resolve the message object, trigger store retry + flush
+            // Fallback: if we can't resolve the message object or no sender, trigger store retry + flush
             st.retryMessage?.(id);
             await st.flushPending?.();
         } catch (err) {
             try {
                 console.warn('[chat] resendMessage failed, fallback to flush', err);
-            } catch {
-            }
+            } catch {}
             // Final fallback
             try {
                 st.retryMessage?.(id);
                 await st.flushPending?.();
-            } catch {
-            }
+            } catch {}
         }
-    }, [roomId, ws, isE2EMock]);
+    }, [ws]);
 
     const sendRoomUpdate = useCallback(
         (roomIdArg: string, update: Record<string, any>) => {
             try {
                 sendRoomUpdateEvent(
                     {
-                        socket: ws,
+                        socket: ((ws as any)?.adapter ?? ws) as any,
                         senderId: Number(localUser.id) ?? 0,
                         roomId: roomIdArg,
                     } as any,
@@ -395,7 +385,7 @@ export function useChatRoom({
         }
         try {
             if (isE2EMock) return;
-            sendReadReceiptEvent({roomId: roomIdArg, socket: ws, senderId: localUser.id}, lastMessageId);
+            sendReadReceiptEvent({roomId: roomIdArg, senderId: localUser.id}, lastMessageId);
             readAckRef.current?.(lastMessageId);
         } catch (err) {
             console.error('Failed to send read receipt', err);
@@ -403,9 +393,11 @@ export function useChatRoom({
     }, [isE2EMock, ws, localUser.id]);
 
     const sendTyping = useCallback((isTyping: boolean) => {
+        const adapter = ((ws as any)?.adapter ?? ws) as any;
+        if (!adapter) return;
         try {
             lastTypedSentRef.current = isTyping;
-            sendTypingEvent({roomId, socket: ws, senderId: localUser.id}, isTyping);
+            sendTypingEvent({adapter, roomId, senderId: localUser.id}, isTyping);
         } catch {
         }
     }, [roomId, localUser.id, ws]);

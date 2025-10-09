@@ -53,3 +53,35 @@ export type ChatMessageResponse = {
     message: ChatMessageModel;
     isOwner: boolean;
 };
+
+export interface PhoenixPacket<T = any> {
+    event: PhoenixEvent;
+    payload?: T;
+}
+
+export interface SendMessageDeps {
+    isE2EMock: boolean;
+    roomId: string;
+    peerPublicKeyHex?: string;
+    sentSet: Set<string>;
+    onAfterSend?: () => void; // ใช้เคลียร์ typing flag ที่ provider
+    // เชื่อม Chat Store แบบ optional: ถ้าไม่ได้ส่งมาก็ยังทำงานผ่าน DOM event เหมือนเดิม
+    adapter?: {
+        send: (packet: any) => Promise<string | false> | string | false;
+        emit?: (event: string, payload: any) => void;
+        onMessage?: (cb: (packet: any) => void) => () => void;
+        onAny?: (cb: (event: string, payload: any) => void) => () => void;
+    };
+    /**
+     * High-level message sender (preferred when available).
+     * If provided, sendChatMessage may delegate the actual transport to this sender.
+     */
+    sender?: {
+        /**
+         * Send a fully prepared ChatMessage (content/id/roomId/senderId set).
+         * Returns the server id when available, else the client id; `false` on failure.
+         */
+        send: (event: string, msg: ChatMessage) => Promise<boolean>;
+    };
+
+}

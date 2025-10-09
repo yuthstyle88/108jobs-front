@@ -12,7 +12,7 @@
  * - ใช้ mutex ป้องกันการทำงานซ้อน
  */
 
-import type { ChatSenderAdapter, SendDraft } from '../adapters/ChatSenderAdapter'
+import type { PhoenixSenderAdapter, SendDraft } from './chat/adapters/PhoenixSenderAdapter'
 import {ChatMessageModel} from "@/core/chat/types";
 
 
@@ -40,7 +40,7 @@ export class ResendManager {
 
   constructor(
     private readonly store: ChatStorePort,
-    private readonly sender: ChatSenderAdapter,
+    private readonly sender: PhoenixSenderAdapter,
   ) {}
 
   /**
@@ -105,7 +105,7 @@ export class ResendManager {
           id: msg.id, // ใช้ client id เพื่อให้ server ทำ idempotency ได้
         }
 
-        const serverId = await this.sender.send(draft)
+        const serverId = await this.sender.sendMessage("chat:message", draft)
         if (typeof serverId === 'string' && serverId.length > 0) {
           // ส่งสำเร็จ → promote และล้าง retry meta
           this.store.promoteToSent(msg.id)

@@ -8,9 +8,12 @@
 import React, {createContext, useContext} from 'react';
 import type {UseWebSocketOptions, WebSocketAPI} from '@/core/chat/hooks/useWebSocket';
 import {useWebSocket} from '@/core/chat/hooks/useWebSocket';
+import { PhoenixSenderAdapter } from '@/core/chat/adapters/PhoenixSenderAdapter';
 
 // ========================= Context Layer =======================
-interface WebSocketContextValue extends WebSocketAPI {}
+interface WebSocketContextValue extends WebSocketAPI {
+  sender: PhoenixSenderAdapter | null;
+}
 
 const WebSocketContext = createContext<WebSocketContextValue | undefined>(undefined);
 
@@ -18,7 +21,46 @@ const WebSocketContext = createContext<WebSocketContextValue | undefined>(undefi
 export const WebSocketProvider: React.FC<React.PropsWithChildren<{ options?: UseWebSocketOptions }>> = ({ children, options }) => {
 
   const ws = useWebSocket(options);
-  const value = React.useMemo(() => ws, [ws]);
+  const value = React.useMemo(() => {
+    const anyWs: any = ws as any;
+    const adapter: any = anyWs?.adapter ?? null;
+
+    // Normalized readiness: prefer adapter.isReady, fall back to legacy ws.isReady
+    const isReady: boolean = Boolean(anyWs?.isReady ?? adapter?.isReady);
+
+    // Normalized message subscription across adapter / legacy / EventEmitter
+    const addMessageListener = (handler: (data: unknown) => void) => {
+      if (adapter && typeof adapter.addMessageListener === 'function') {
+        return adapter.addMessageListener(handler);
+      }
+      if (anyWs && typeof anyWs.addMessageListener === 'function') {
+        return anyWs.addMessageListener(handler);
+      }
+      const target: any = adapter || anyWs;
+      if (target && typeof target.on === 'function') {
+        target.on('message', handler);
+        return () => {
+          try { target.off?.('message', handler); } catch {}
+        };
+      }
+      return () => {};
+    };
+
+    // Message sender (single source of truth for sending + optimistic emit + ack handling)
+    const sender = adapter ? new PhoenixSenderAdapter(adapter) : null;
+
+    console.log('sender', sender);
+    // Return the original ws enriched with normalized fields.
+    // Cast to any to avoid narrowing issues if WebSocketAPI doesn’t yet declare these fields.
+    return {
+      ...anyWs,
+      adapter,
+      sender,
+      isReady,
+      addMessageListener,
+    } as any as WebSocketContextValue;
+  }, [ws]);
+
   return (
     <WebSocketContext.Provider value={value}>
       {children}

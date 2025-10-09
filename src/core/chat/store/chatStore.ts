@@ -1,19 +1,13 @@
 // src/core/chat/store/chatStore.ts
 import { create } from 'zustand'
-import { ChatMessage, ChatStatus, ChatRoomId } from 'lemmy-js-client'
+import { ChatMessage, ChatStatus } from 'lemmy-js-client'
 
 // --- local pure helpers (no Zustand refs) ---
 function mergeIntoMessages(list: ChatMessage[], msg: ChatMessage): ChatMessage[] {
   const k = String(msg.id);
   const map = new Map(list.map(m => [String(m.id), m]));
   const prev = map.get(k);
-  if (!prev) {
-    map.set(k, msg);
-  } else if ((prev as any).status === 'pending' && (msg as any).status !== 'pending') {
-    map.set(k, { ...prev, ...msg });
-  } else {
-    map.set(k, { ...prev, ...msg });
-  }
+  map.set(k, prev ? { ...prev, ...msg } : msg);
   return Array.from(map.values());
 }
 
@@ -60,7 +54,7 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
     pendingMessages: [],
     online: false,
 
-    addMessage: (msg) => set((s) => ({ messages: [...s.messages, msg] })),
+    addMessage: (msg) => set(() => ({ messages: mergeIntoMessages(get().messages, msg) })),
 
     upsertHistory: (items) =>
       set((s) => {
@@ -93,18 +87,7 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
     removePending: (id) =>
       set((s) => ({ pendingMessages: s.pendingMessages.filter((m) => String(m.id) !== String(id)) })),
 
-    promoteToSent: (id) =>
-      set((s) => {
-        const pendingFiltered = s.pendingMessages.filter((m) => String(m.id) !== String(id));
-        const byId = new Map(s.messages.map(m => [String(m.id), m]));
-        const pendingMsg = s.pendingMessages.find(m => String(m.id) === String(id));
-        if (pendingMsg) {
-          byId.set(String(id), { ...pendingMsg, status: 'sent' as ChatStatus });
-        }
-        const nextMeta = { ...s.retryMeta };
-        delete nextMeta[String(id)];
-        return { messages: Array.from(byId.values()), pendingMessages: pendingFiltered, retryMeta: nextMeta } as Partial<ChatStoreState>;
-      }),
+    promoteToSent: (id) => get().commitStatus(id, 'sent' as ChatStatus),
 
     markFailed: (id) =>
       set((s) => {
@@ -254,9 +237,8 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
         };
       }),
 
-    addPendingMessage: (msg) => set((s) => ({ pendingMessages: [...s.pendingMessages, msg] })),
-
-    removePendingMessage: (id) => set((s) => ({ pendingMessages: s.pendingMessages.filter(m => String(m.id) !== String(id)) })),
+    addPendingMessage: (msg) => get().addPending(msg),
+    removePendingMessage: (id) => get().removePending(id),
 
     clearPendingMessages: () => set(() => ({ pendingMessages: [] })),
 }))

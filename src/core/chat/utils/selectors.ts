@@ -39,6 +39,6 @@ function mergeRoomLists(
 // === Memoized selector (สร้างอาเรย์ใหม่เฉพาะเมื่อ input เปลี่ยนจริง ๆ) ===
 export const selectRoomMessages = (() => {
     const memo = memoizeOne(mergeRoomLists);
-    return (state: { messages: ChatMessage[]; pendingMessages: ChatMessage[] }, roomId: string) =>
-      memo(state.messages, state.pendingMessages, roomId);
+    return (state: { messages: ChatMessage[] }, roomId: string) =>
+      memo(state.messages, [], roomId);
 })();

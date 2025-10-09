@@ -28,7 +28,7 @@ import {useTranslation} from "react-i18next";
 import {v4 as uuidv4} from "uuid";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {ProfileImage} from "@/constants/images";
-import type {ChatMessage, ChatRoomData, LocalUser, Post} from "lemmy-js-client";
+import {ChatMessage, ChatRoomData, ChatRoomId, LocalUser, Post} from "lemmy-js-client";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";
@@ -426,7 +426,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         goToStatus,
         setShowQuotationModal,
         setShowReviewModal,
-        setMessages,
         handleFileUpload: (ev: any) => handleFileUpload(ev as any),
         scrollContainerRef,
         currentRoom,
@@ -504,13 +503,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 <div className="flex-1 min-w-0 flex flex-col h-full w-full">
                     {/* Header: partner presence, typing indicator, and toggle for workflow side panel */}
                     <ChatHeader
-                        avatarUrl={partnerAvatar || ProfileImage.avatar}
-                        displayName={partnerName || "User"}
-                        online={isPeerActive}
-                        typingText={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
-                        onToggleFlow={() => setIsFlowOpen((v) => !v)}
-                        isFlowOpen={isFlowOpen}
-                    />
+                      avatarUrl={partnerAvatar || ProfileImage.avatar?.src}
+                      roomId={roomId}
+                      displayName={partnerName || "User"}
+                      typingText={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
+                      onToggleFlow={() => setIsFlowOpen((v) => !v)}
+                      isFlowOpen={isFlowOpen} />
                     {/* Scroll container: provides a stable parent for ChatMessages and scroll listeners */}
                     <div ref={setScrollRef} className="flex-1 min-h-0 overflow-y-auto">
                       <ChatMessages

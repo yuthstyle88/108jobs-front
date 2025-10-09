@@ -1,8 +1,8 @@
 /**
  * Phoenix socket/channel adapter — PRODUCTION-READY
  * - Stable WS-like surface (onopen/onmessage/onclose/onerror, send, close)
- * - Robust wiring via channel.onMessage wildcard only (no explicit per-event handlers to avoid duplicates)
- * - Dual-topic compatibility ("room:<id>" and "<id>")
+ * - Robust wiring via channel.onMessage wildcard only (no explicit per-event handlers)
+ * - Channel-scoped retry only (no page/network/global listeners to avoid duplication with upper layers)
  * - Minimal logging in production (logs only in development)
  * - Proper cleanup to avoid leaks
  */
@@ -22,16 +22,13 @@ export interface RealtimeChannelAdapter {
 }
 
 const DEV = typeof process !== "undefined" && process.env.NODE_ENV !== "production";
-const isInternalEvent = (ev?: string) : boolean => {
-  if (!ev) return false;
-  return (
-    ev.startsWith("chan_reply") ||       // Phoenix push replies
-    ev === "heartbeat" ||
-    ev === "presence_state" ||
-    ev === "phx_reply" ||
-    ev === "presence_diff"
-  );
-};
+const isInternalEvent = (ev?: string): boolean => !!ev && (
+  ev.startsWith("chan_reply") ||   // Phoenix push replies
+  ev === "heartbeat" ||
+  ev === "presence_state" ||
+  ev === "phx_reply" ||
+  ev === "presence_diff"
+);
 
 class PhoenixChannelHub {
   private static instance: PhoenixChannelHub | null = null;
@@ -90,18 +87,13 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
     onmessage: undefined,
     onclose: undefined,
     onerror: undefined,
-    send(data: string) {
-      // Accept either raw string JSON or object-like string
+    send(data: string | Record<string, any>) {
       try {
-        const payload = JSON.parse(data);
+        const payload = typeof data === 'string' ? JSON.parse(data) : data;
         (channel as any).push("chat:message", payload);
       } catch (e) {
-        // Invalid JSON passed to send(): surface error instead of silently rewriting payload
         if (DEV) console.error('[phoenix] send() invalid JSON payload', { data, e });
-        try {
-          adapter.onerror?.({ code: 'INVALID_JSON', reason: 'send() expects a JSON string', data });
-        } catch {}
-        return; // do not send malformed payload
+        try { adapter.onerror?.({ code: 'INVALID_JSON', reason: 'send() expects a JSON string or object', data }); } catch {}
       }
     },
     emit(event: string, payload: any) {
@@ -118,8 +110,6 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
       try { (channel as any).leave?.(); } catch {}
 
       hub.leaveChannel(token, topic);
-      // remove network listeners
-      cleanups.forEach(fn => { try { fn(); } catch {} });
       readyState = 3;
       adapter.onclose?.({ code: 1000, reason: 'client closed' });
     },
@@ -155,7 +145,7 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
     if ((ch as any).__wired) return;
     (ch as any).__wired = true;
     if (DEV) console.log('[phoenix] wire channel', { topic: topicLabel });
-    // wildcard forward
+    // Patch onMessage to wildcard‑forward every event before original handler, ensuring we never miss early events.
     try {
       const orig = ch.onMessage?.bind(ch);
       ch.onMessage = (event: string, payload: any, ref: any) => {
@@ -181,7 +171,6 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
   }
 
   // --- background resiliency helpers ---
-  const cleanups: Array<() => void> = [];
   let retryAttempt = 0;
   let retryTimer: any = null;
   let rejoinInFlight = false;
@@ -255,48 +244,6 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
   // Initial join after wiring
   joinChannel(channel, topic);
 
-  // Network-awareness: re-join when back online; pause backoff while offline
-  try {
-    const onOnline = () => {
-      if (DEV) console.log('[phoenix] online → rejoin');
-      retryAttempt = 0;
-      clearRetry();
-      try { recreateChannels(); } catch {}
-    };
-    const onOffline = () => {
-      if (DEV) console.log('[phoenix] offline');
-      clearRetry();
-    };
-    window.addEventListener('online', onOnline);
-    window.addEventListener('offline', onOffline);
-    cleanups.push(() => { try { window.removeEventListener('online', onOnline); } catch {} });
-    cleanups.push(() => { try { window.removeEventListener('offline', onOffline); } catch {} });
-  } catch {}
-
-  // Safari / bfcache: when tab becomes visible or page is shown again, rejoin
-  try {
-    const onPageShow = () => {
-      if (DEV) console.log('[phoenix] pageshow → rejoin');
-      retryAttempt = 0;
-      clearRetry();
-      try { recreateChannels(); } catch {}
-    };
-    const onVisibility = () => {
-      try {
-        if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
-          if (DEV) console.log('[phoenix] visibilitychange → rejoin');
-          retryAttempt = 0;
-          clearRetry();
-          try { recreateChannels(); } catch {}
-        }
-      } catch {}
-    };
-    window.addEventListener('pageshow', onPageShow);
-    document.addEventListener('visibilitychange', onVisibility);
-    cleanups.push(() => { try { window.removeEventListener('pageshow', onPageShow); } catch {} });
-    cleanups.push(() => { try { document.removeEventListener('visibilitychange', onVisibility); } catch {} });
-  } catch {}
-
   // Lifecycle propagation (errors/close)
   try { (channel as any).onError?.((e: any) => { if (DEV) console.log('[phoenix] channel error', e); adapter.onerror?.(e); scheduleRetry('channel error'); }); } catch {}
   try {
@@ -304,15 +251,6 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
       if (DEV) console.log('[phoenix] channel closed');
       try { adapter.onclose?.({ code: 1006, reason: 'channel closed' }); } catch {}
       scheduleRetry('channel closed');
-    });
-  } catch {}
-  try {
-    ((channel as any).socket as any)?.onError?.((e: any) => { if (DEV) console.log('[phoenix] socket error', e); adapter.onerror?.(e); scheduleRetry('socket error'); }); } catch {}
-  try {
-    ((channel as any).socket as any)?.onClose?.(() => {
-      if (DEV) console.log('[phoenix] socket closed');
-      try { adapter.onclose?.({ code: 1006, reason: 'socket closed' }); } catch {}
-      scheduleRetry('socket closed');
     });
   } catch {}
 

@@ -55,11 +55,6 @@ export function emitChatNewMessage(detail: ChatNewMessageDetail): void {
     }
 }
 
-// Emit multiple new-message events in order (UI may render progressively)
-export function emitChatNewMessages(details: ChatNewMessageDetail[]): void {
-    if (!isBrowser()) return;
-    for (const d of details) emitChatNewMessage(d);
-}
 
 export function onChatNewMessage(handler: ChatNewMessageHandler): () => void {
     if (!isBrowser()) return () => {

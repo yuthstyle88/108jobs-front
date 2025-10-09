@@ -1,6 +1,6 @@
 "use client";
 
-import {getChannelAdapter} from "@/core/chat/services/PhoenixSocketService";
+import {getChannelAdapter} from "@/core/PhoenixSocketService";
 import {useRoomsStore} from "@/core/chat/store/roomsStore";
 import {incrementForIncoming, useUnreadStore} from "@/core/chat/store/unreadStore";
 

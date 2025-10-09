@@ -16,7 +16,6 @@ import {
     cleanupFetch, dbg,
     maybeHandleReadReceipt,
     maybeHandleStatusChange,
-    mergeNewMessages,
     parseTypingDetail,
     tryFlushAutoAck
 } from "@/core/chat/utils";
@@ -102,8 +101,8 @@ export function createHandleWSMessage(deps: HandlerDeps) {
             // 2) typing → DOM + optional callback
 
             const typingInfo = parseTypingDetail(env, roomIdStr, meId);
-            dbg("handleWSMessage", typingInfo);
             if (typingInfo) {
+                console.log('[chat] typing2', typingInfo);
                 try {
                     emitChatTyping(typingInfo);
                 } catch {

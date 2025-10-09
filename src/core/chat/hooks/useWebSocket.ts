@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 // IMPORTANT: Adjust the import path if your service lives elsewhere
-import {getChannelAdapter} from '@/core/chat/services/PhoenixSocketService';
+import {getChannelAdapter} from '@/core/PhoenixSocketService';
 import {WebSocketStatus} from "@/core/chat/types";
 
 
@@ -15,6 +15,7 @@ export interface UseWebSocketOptions {
     roomId?: string;
     // การเชื่อมต่อ
     autoConnect?: boolean;               // default: true
+    // NOTE: autoJoin only runs when the underlying adapter sets `requiresManualJoin === true`
     autoJoin?: boolean;                  // default: true
     topicBuilder?: (roomId: string) => string;
 
@@ -63,6 +64,8 @@ export function useWebSocket(options: UseWebSocketOptions = {}): WebSocketAPI {
     onClose,
     onError,
     onMessage,
+    onNewMessage,
+    onTyping,
     eventHandlers,
     debug,
   } = options;
@@ -76,6 +79,10 @@ export function useWebSocket(options: UseWebSocketOptions = {}): WebSocketAPI {
 
   const bindAdapterHandlers = useCallback((adapter: any) => {
     if (!adapter) return;
+
+    // Avoid double-binding on the same adapter instance
+    if ((adapter as any).__ws_bound) return;
+    (adapter as any).__ws_bound = true;
 
     // Wire base-level handlers
     if ('onopen' in adapter) {
@@ -92,31 +99,60 @@ export function useWebSocket(options: UseWebSocketOptions = {}): WebSocketAPI {
         const data = evt?.data ?? evt; // handle both {data} or raw
         let parsed: any = data;
         try { parsed = typeof data === 'string' ? JSON.parse(data) : data; } catch {}
+
+        // top-level raw handler
         try { onMessage?.(parsed); } catch {}
+
         // fan-out to local subscribers
         try { listenersRef.current.forEach(fn => { try { fn(parsed); } catch {} }); } catch {}
+
+        // event routing
         try {
           const evName = (parsed && (parsed.event || parsed.type)) as string | undefined;
           const payload = (parsed && (parsed.payload ?? parsed.data)) as any;
-          if (evName && eventHandlers && typeof eventHandlers[evName] === 'function') {
-            eventHandlers[evName](payload);
+          if (evName) {
+            // specific convenience callbacks
+            if (evName === 'chat:message') {
+              try { onNewMessage?.(payload); } catch {}
+            } else if (evName === 'chat:typing') {
+              try { onTyping?.(payload); } catch {}
+            }
+            // flexible map-based handlers
+            if (eventHandlers && typeof eventHandlers[evName] === 'function') {
+              eventHandlers[evName](payload);
+            }
           }
         } catch {}
       };
     }
-  }, [onOpen, onClose, onError, onMessage, eventHandlers, debug]);
+  }, [onOpen, onClose, onError, onMessage, onNewMessage, onTyping, eventHandlers, debug]);
 
   // Connect when token is available
   const connect = useCallback(() => {
     if (!autoConnect) { setStatus('idle'); return; }
     if (!token || !roomId) { setStatus('idle'); return; }
-    setStatus('connecting');
+
     const nextTopic = topicBuilder(roomId);
-    setTopic(nextTopic);
+
+    // Fast path: if current adapter is connected for the same topic, do nothing
+    const current = adapterRef.current as any;
+    if (current && status === 'connected' && topic === nextTopic) {
+      log('connect skipped (already connected to same topic)');
+      return;
+    }
+
+    // Teardown existing adapter (if any) before reconnecting
+    if (current) {
+      try { current.close?.(); } catch {}
+      try { current.disconnect?.(); } catch {}
+    }
+
+    setStatus('connecting');
+    if (topic !== nextTopic) setTopic(nextTopic);
     const adapter = getChannelAdapter(token, nextTopic);
     adapterRef.current = adapter;
     bindAdapterHandlers(adapter);
-  }, [token, roomId, autoConnect, topicBuilder, bindAdapterHandlers]);
+  }, [token, roomId, autoConnect, topicBuilder, bindAdapterHandlers, status, topic]);
 
   const disconnect = useCallback(() => {
     const a = adapterRef.current;
@@ -124,9 +160,9 @@ export function useWebSocket(options: UseWebSocketOptions = {}): WebSocketAPI {
     try { a?.disconnect?.(); } catch {}
     adapterRef.current = null;
     setStatus('disconnected');
-    onClose?.();
+    // Do not call onClose here; adapter.onclose will invoke it to avoid duplicates
     log('disconnect');
-  }, [onClose]);
+  }, []);
 
   const join = useCallback(async (params?: { roomId?: string;}) => {
     const a = adapterRef.current; if (!a) return;
@@ -164,7 +200,11 @@ export function useWebSocket(options: UseWebSocketOptions = {}): WebSocketAPI {
   useEffect(() => {
     if (!autoJoin || status !== 'connected') return;
     if (!roomId) return;
-    void join({ roomId });
+    const a = adapterRef.current as any;
+    // Only adapters that declare they require manual join will be joined here.
+    if (a && a.requiresManualJoin === true) {
+      void join({ roomId });
+    }
   }, [autoJoin, status, roomId, join]);
 
   return {

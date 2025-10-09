@@ -1,7 +1,7 @@
 import {FlowActions, StatusKey} from '@/components/FreelanceChatFlow';
 import {v4 as uuidv4} from 'uuid';
 import type {ChatMessage, ChatMessage as WsChatMessage, ChatRoomData, LocalUser} from 'lemmy-js-client';
-import {emitChatNewMessage, sendChatMessage, SendMessageDeps} from "@/core/chat/events";
+import {emitChatNewMessage, sendChatMessage} from "@/core/chat/events";
 import React from "react";
 
 export type CreateFlowActionsDeps = {
@@ -66,7 +66,7 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
             const readable = t('profileChat.confirmAssignMsg') || 'Assignment confirmed. Waiting for freelancer to accept.';
             const payload = {type: 'employer-assigned'} as any;
 
-            await sendChatMessage({roomId} as SendMessageDeps, {
+            await sendChatMessage({roomId} as any, {
                 message: payload,
                 senderId: localUser.id,
                 id: messageId
@@ -99,7 +99,7 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
             const readable = t('profileChat.startWorkMsg') || 'Freelancer started work.';
             const payload = {type: 'start-work'} as any;
 
-            await sendChatMessage({roomId} as SendMessageDeps, {
+            await sendChatMessage({roomId} as any, {
                 message: payload,
                 senderId: localUser.id,
                 id: messageId
