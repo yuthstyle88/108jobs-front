@@ -60,13 +60,11 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     const roomIdStr = String((viewMsg as any)?.roomId ?? "");
     console.debug('[read-debug]', { roomIdStr });
     // What the PEER has read (used for receipts on my messages)
-    const peerLastReadAt = useChatStore((s) => {
+    const lastReadAt = useChatStore((s) => {
         const anyS = s as any;
-        return (anyS.peerLastReadIdMap && roomIdStr ? anyS.peerLastReadIdMap[roomIdStr] : undefined)
-            ?? anyS.getPeerLastReadId?.(roomIdStr)
-            ?? null;
+        return anyS.getLastReadAt?.(roomIdStr,"3") ?? null;
     });
-    const setPeerLastReadId = useChatStore((s) => (s as any).setPeerLastReadId);
+    const setLastReadId = useChatStore((s) => (s as any).setLastReadId);
 
     // After peerLastReadId, get ordered owner messages in this room
     // DEV TEST (optional): mark a specific UUID as peer-read
@@ -77,28 +75,28 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
         if (!TEST_READ_UUID) return;
         if (roomIdStr) {
             didMarkTestRef.current = true;
-            try { setPeerLastReadId?.(roomIdStr, TEST_READ_UUID); } catch {}
+            try { setLastReadId?.(roomIdStr,"3", TEST_READ_UUID); } catch {console.error("Failed to mark test read")}
         }
-    }, [roomIdStr, setPeerLastReadId, TEST_READ_UUID]);
+    }, [roomIdStr, setLastReadId, TEST_READ_UUID]);
 
     const isIncoming = !viewMsg.isOwner;
 
     const time = toLocalTime(viewMsg.createdAt as any, i18n?.language || "th-TH");
     // Read state now relies solely on lastReadId per room (no status/unread)
     const isOwner = !!viewMsg.isOwner;
-    // const isReadByLastId = isOwner && !!peerLastReadAt && String(viewMsg.id) === String(peerLastReadAt);
-    const isReadByLastId =   !isOlder(peerLastReadAt, message.createdAt);
-    console.log("peerLastReadAt", peerLastReadAt);
+    // Compare by timestamps: message is read if its createdAt <= peerLastReadAt
+    const isReadByLastAt = !!lastReadAt && (
+        isOlder(viewMsg.createdAt as any, lastReadAt) || String(viewMsg.createdAt) === String(lastReadAt)
+    );
+    console.log("LastReadAt", lastReadAt);
+
     // Keep msgStatus only as UI transport if MessageReceipt expects it; we no longer branch by it
     const msgStatus = "sent" as const;
 
-    // Read logic:
-    // - readByPeer: any owner message whose index is <= index of peerLastReadId in this room
-    // - showReceipt: only for the exact last-read message (receipt bubble)
-    // Debug logging helper and snapshot group
-    const readByPeer = isOwner && isReadByLastId;
+    // Read logic (timestamp-based):
+    const readByPeer = isOwner && isReadByLastAt;
     const deliveredButUnread = false;
-    const isLastRead = isOwner && peerLastReadAt && String(viewMsg.id) === String(peerLastReadAt);
+    const isLastRead = isOwner && !!lastReadAt && String(viewMsg.createdAt) === String(lastReadAt);
     const showReceipt = readByPeer || isLastRead;
     console.log("readByPeer", readByPeer, "deliveredButUnread", deliveredButUnread, "showReceipt", showReceipt);
     const parsed = useMemo<ProposedQuoteMessage | null>(() => {

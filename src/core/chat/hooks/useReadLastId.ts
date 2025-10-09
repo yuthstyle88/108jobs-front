@@ -84,7 +84,7 @@ export function useReadLastId(roomId: string, opts: ReadLastIdOptions = {}): Use
  * - Seeds initial from roomsStore, then UserService (local persisted), else null.
  * - Persists every change to both roomsStore (for UI) and UserService (for reloads).
  */
-export function useRoomReadLastId(roomId: string): UseReadLastId {
+export function useRoomReadLastId(roomId: string, userId: string): UseReadLastId {
   // Use chatStore for lastReadId management
   const chatStore = useChatStore();
   const setLastReadId = chatStore.setLastReadId;
@@ -92,10 +92,10 @@ export function useRoomReadLastId(roomId: string): UseReadLastId {
 
   // Seed priority: chatStore.getLastReadId → UserService cache → null
   const initial = useMemo(() => {
-    const fromStore = getLastReadId?.(roomId) ?? null;
+    const fromStore = getLastReadId?.(roomId, userId) ?? null;
     if (fromStore != null) return fromStore;
     try {
-      return UserService?.Instance?.getReadLastId?.(roomId) ?? null;
+      return UserService?.Instance?.getReadLastId?.(roomId, userId) ?? null;
     } catch {
       return null;
     }
@@ -105,15 +105,15 @@ export function useRoomReadLastId(roomId: string): UseReadLastId {
   const api = useReadLastId(roomId, {
     initial,
     onChange: (rid, id) => {
-      try { if (id) setLastReadId?.(rid, id); } catch {}
-      try { UserService?.Instance?.setReadLastId?.(rid, id ?? null); } catch {}
+      try { if (id) setLastReadId?.(rid,userId, id); } catch {}
+      try { UserService?.Instance?.setReadLastId?.(rid,userId, id ?? null); } catch {}
     },
   });
 
   // Back-fill chatStore when only UserService had a cached value
   useEffect(() => {
-    if (!getLastReadId?.(roomId) && initial) {
-      try { setLastReadId?.(roomId, initial); } catch {}
+    if (!getLastReadId?.(roomId, userId) && initial) {
+      try { setLastReadId?.(roomId, userId, initial); } catch {}
     }
   }, [roomId, initial, getLastReadId, setLastReadId]);
 
