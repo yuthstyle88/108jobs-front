@@ -476,21 +476,20 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const handleOnTopReached = useCallback(() => {
         if (!hasMore || isFetching) return;
         const rootEl = scrollContainerRef.current ?? scrollParentEl;
-        if (!rootEl) return;
 
-        const maxScrollTop = rootEl.scrollHeight - rootEl.clientHeight;
-        const halfwayPoint = maxScrollTop / 2;
-
-        // Trigger history fetch if scrolled above halfway (closer to top)
-        if (rootEl.scrollTop <= halfwayPoint) {
-            const oldHeight = rootEl.scrollHeight;
-            fetchHistory()
-                .then(() => {
-                    const newHeight = rootEl.scrollHeight;
-                    rootEl.scrollTop += newHeight - oldHeight; // preserve visual position
-                })
-                .catch(() => {});
+        // Always fetch when ChatMessages reports top reached; preserve position if we can
+        if (!rootEl) {
+            fetchHistory().catch(() => {});
+            return;
         }
+
+        const oldHeight = rootEl.scrollHeight;
+        fetchHistory()
+            .then(() => {
+                const newHeight = rootEl.scrollHeight;
+                rootEl.scrollTop += newHeight - oldHeight; // preserve visual position
+            })
+            .catch(() => {});
     }, [hasMore, isFetching, scrollParentEl, fetchHistory]);
 
     const renderFlowContent = () => (
