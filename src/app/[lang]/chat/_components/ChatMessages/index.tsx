@@ -54,18 +54,42 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         data.length ? String((data[data.length - 1] as any)?.id ?? '') : null
     );
 
+    // Track the range to detect when we're near the top
+    const rangeRef = React.useRef({startIndex: 0, endIndex: 0});
     const hasMoreRef = React.useRef(hasMore);
     const isFetchingRef = React.useRef(isFetching);
+
+    // Track initial load state internally as fallback
+    const initialLoadDoneRef = React.useRef(initialLoadDone);
 
     React.useEffect(() => {
         hasMoreRef.current = hasMore;
         isFetchingRef.current = isFetching;
     }, [hasMore, isFetching]);
 
+    // Sync with parent's initialLoadDone prop
+    React.useEffect(() => {
+        initialLoadDoneRef.current = initialLoadDone;
+    }, [initialLoadDone]);
+
     const handleTopReached = React.useCallback(() => {
         if (!hasMoreRef.current || isFetchingRef.current) return;
         onTopReached?.();
     }, [onTopReached]);
+
+    const handleRangeChanged = React.useCallback((range: { startIndex: number; endIndex: number }) => {
+        rangeRef.current = range;
+
+        // ⚠️ CRITICAL: Skip initial load - let parent useEffect handle it
+        if (!initialLoadDoneRef.current && range.startIndex === 0) {
+            return;
+        }
+
+        // If we're at the 10th message from the start and have more to load
+        if (range.startIndex <= 10 && hasMoreRef.current && !isFetchingRef.current) {
+            handleTopReached();
+        }
+    }, [handleTopReached]);
 
     React.useEffect(() => {
         const prevLength = prevLengthRef.current;
@@ -124,10 +148,11 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 return `${created}|${sender}`;
             }}
             alignToBottom
+            rangeChanged={handleRangeChanged}
+            // REMOVED: atTopStateChange to prevent duplicate triggers
             atTopStateChange={(atTop) => {
-                if (atTop) {
-                    handleTopReached();
-                }
+                // Don't trigger loading here - we use rangeChanged instead
+                // This prevents double fetching
             }}
             atBottomStateChange={(bottom) => {
                 setIsAtBottom(bottom);
