@@ -291,6 +291,7 @@ export async function handleIncomingPayload(
 
 // ---- Lightweight runtime validators for chat payloads ----
 export function isValidIncomingChatPayload(p: any): boolean {
+    console.log("isValidIncomingChatPayload", p)
     if (!p) return false;
     // Allow arrays of messages
     if (Array.isArray(p)) {

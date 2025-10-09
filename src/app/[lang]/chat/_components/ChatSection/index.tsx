@@ -452,9 +452,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         },
         [sendMessage, currentRoom, roomId, selectedFile, localUser.id, emitChatNewMessage]
     );
-
-    console.log("messages", messages)
-
     const flowActions: FlowActions = createFlowActions({
         t,
         goToStatus,

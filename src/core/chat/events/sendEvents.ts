@@ -88,11 +88,14 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
     id: string;
     sent: boolean;
 } | undefined> {
+    const {sender} = deps as any;
+    dbg('[sendEvent] sendChatMessage', {sender});
     const { roomId, peerPublicKeyHex } = deps as any;
     const store = useChatStore.getState();
     try {
         // ---- 0) Sanitize & validate input here (do not rely on caller) ----
         const raw = (data?.message ?? '');
+        dbg('[sendEvent] sendChatMessage', { raw, data });
         const message = typeof raw === 'string' ? raw.replace(/\s+/g, ' ').trim() : raw;
         if (!message) {
             try { (deps as any).onAfterSend?.(); } catch {}

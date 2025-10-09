@@ -26,7 +26,7 @@ export const WebSocketProvider: React.FC<React.PropsWithChildren<{ options?: Use
     const adapter: any = anyWs?.adapter ?? null;
 
     // Normalized readiness: prefer adapter.isReady, fall back to legacy ws.isReady
-    const isReady: boolean = Boolean(anyWs?.isReady ?? adapter?.isReady);
+    const isReady: boolean = Boolean(adapter?.isReady ?? anyWs?.isReady);
 
     // Normalized message subscription across adapter / legacy / EventEmitter
     const addMessageListener = (handler: (data: unknown) => void) => {
@@ -48,8 +48,6 @@ export const WebSocketProvider: React.FC<React.PropsWithChildren<{ options?: Use
 
     // Message sender (single source of truth for sending + optimistic emit + ack handling)
     const sender = adapter ? new PhoenixSenderAdapter(adapter) : null;
-
-    console.log('sender', sender);
     // Return the original ws enriched with normalized fields.
     // Cast to any to avoid narrowing issues if WebSocketAPI doesn’t yet declare these fields.
     return {

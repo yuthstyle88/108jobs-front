@@ -44,6 +44,7 @@ export class PhoenixSenderAdapter implements PhoenixSenderAdapter {
     }
 
     async send(event: string, payload: SendDraft): Promise<boolean> {
+        dbg('[PhoenixSenderAdapter] call', {payload});
         try {
             let delivered = false;
 
