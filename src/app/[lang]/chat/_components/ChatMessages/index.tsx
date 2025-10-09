@@ -149,7 +149,6 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
             }}
             alignToBottom
             rangeChanged={handleRangeChanged}
-            // REMOVED: atTopStateChange to prevent duplicate triggers
             atTopStateChange={(atTop) => {
                 // Don't trigger loading here - we use rangeChanged instead
                 // This prevents double fetching

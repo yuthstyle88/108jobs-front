@@ -10,15 +10,23 @@ import {debounce} from "lodash";
 import ChatListItem from "@/app/[lang]/chat/_components/ChatListItem";
 import {useTranslation} from "react-i18next";
 
-const ChatWrapper = () => {
-    const { t } = useTranslation();
+const ChatWrapper = ({
+                         isSidebarOpen,
+                         onToggleSidebar,
+                         setIsSidebarOpen,
+                     }:
+                     {
+                         isSidebarOpen: boolean;
+                         onToggleSidebar: () => void;
+                         setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+                     }) => {
+    const {t} = useTranslation();
     const params = useParams();
     const activeRoomId = params?.roomId as string | undefined;
-    const { lang: currentLang } = useLanguage();
-    const { localUser } = useMyUser();
-    const { rooms, isLoading, error} = useChatRoomsContext();
+    const {lang: currentLang} = useLanguage();
+    const {localUser} = useMyUser();
+    const {rooms, isLoading, error} = useChatRoomsContext();
     const [searchQuery, setSearchQuery] = useState("");
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     // Debounce search input to prevent excessive re-renders
     const debouncedSetSearchQuery = useCallback(
@@ -43,30 +51,9 @@ const ChatWrapper = () => {
         debouncedSetSearchQuery(e.target.value);
     };
 
-    // Toggle sidebar with accessibility
-    const toggleSidebar = () => {
-        setIsSidebarOpen((prev) => !prev);
-    };
 
     return (
         <>
-            {/* Toggle Button for Mobile */}
-            <button
-                className="md:hidden fixed top-16 sm:top-20 left-3 sm:left-4 z-50 p-2 sm:p-2.5 bg-primary text-white rounded-full shadow-lg hover:bg-[#063a68] transition-colors min-w-[40px] min-h-[40px]"
-                onClick={toggleSidebar}
-                aria-label={isSidebarOpen ? "Close chat sidebar" : "Open chat sidebar"}
-            >
-                {isSidebarOpen ? (
-                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                ) : (
-                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                )}
-            </button>
-
             {/* Sidebar */}
             <div
                 className={`flex flex-col bg-white border-r border-gray-200 shadow-lg md:shadow-none transition-transform duration-300 ease-in-out ${
@@ -89,14 +76,14 @@ const ChatWrapper = () => {
                 <div className="flex-1 overflow-y-auto">
                     {isLoading && filteredRooms.length === 0 && (
                         <div className="p-3 sm:p-4 space-y-3" aria-live="polite" aria-busy="true">
-                            {Array.from({ length: 6 }).map((_, i) => (
+                            {Array.from({length: 6}).map((_, i) => (
                                 <div key={i} className="mx-2 p-3 flex items-center gap-3 animate-pulse">
-                                    <div className="w-9 h-9 rounded-full bg-gray-200" />
+                                    <div className="w-9 h-9 rounded-full bg-gray-200"/>
                                     <div className="flex-1">
-                                        <div className="h-3 bg-gray-200 rounded w-2/3 mb-2" />
-                                        <div className="h-3 bg-gray-100 rounded w-1/3" />
+                                        <div className="h-3 bg-gray-200 rounded w-2/3 mb-2"/>
+                                        <div className="h-3 bg-gray-100 rounded w-1/3"/>
                                     </div>
-                                    <div className="w-8 h-5 bg-gray-200 rounded-full" />
+                                    <div className="w-8 h-5 bg-gray-200 rounded-full"/>
                                 </div>
                             ))}
                         </div>
@@ -112,9 +99,12 @@ const ChatWrapper = () => {
                     ))}
                     {filteredRooms.length === 0 && !isLoading && !error && (
                         <div className="p-6 text-center text-gray-500">
-                            <div className="mx-auto mb-3 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                                <svg className="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
+                            <div
+                                className="mx-auto mb-3 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                                <svg className="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                          d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/>
                                 </svg>
                             </div>
                             <p className="text-sm">No chats found</p>
@@ -123,12 +113,11 @@ const ChatWrapper = () => {
                     )}
                 </div>
             </div>
-
             {/* Overlay for Mobile */}
             {isSidebarOpen && (
                 <div
                     className="md:hidden fixed inset-0 bg-black/40 z-30"
-                    onClick={toggleSidebar}
+                    onClick={onToggleSidebar}
                     aria-hidden="true"
                 />
             )}

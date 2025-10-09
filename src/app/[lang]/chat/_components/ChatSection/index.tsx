@@ -120,12 +120,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const setMessages = React.useCallback((_updater: any) => {
     }, []);
     const initialFetchRef = useRef(false);
-    const atBottomRef = useRef<boolean>(true);
-    const [isAtBottom, setIsAtBottom] = useState(true);
     const markSeen = useUnreadStore((s) => s.markSeen);
     const [error, setError] = useState<string | null>(null);
     const {setActiveRoomId, markRoomRead} = useRoomsStore();
-    const [newSinceCount, setNewSinceCount] = useState<number>(0);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
     const roomPostId = currentRoom.room.post?.id;
@@ -191,7 +188,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         localUserId: Number(localUser.id) || 0,
         receivedSet: receivedIds,
         broadcast: () => {},
-        upsertHistory, // ✅ replaced setMessages
+        upsertHistory,
     });
     const upsertMessage = useChatStore(s => s.upsertMessage);
     const {
