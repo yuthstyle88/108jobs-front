@@ -53,7 +53,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     );
 
     // Track the range to detect when we're near the top
-    const rangeRef = React.useRef({startIndex: 0, endIndex: 0});
+    const rangeRef = React.useRef({ startIndex: 0, endIndex: 0 });
     const hasMoreRef = React.useRef(hasMore);
     const isFetchingRef = React.useRef(isFetching);
     const hasInitialScrollRef = React.useRef(false);
@@ -63,19 +63,10 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         isFetchingRef.current = isFetching;
     }, [hasMore, isFetching]);
 
-    const handleTopReached = React.useCallback(() => {
-        if (!hasMoreRef.current || isFetchingRef.current) return;
-        onTopReached?.();
-    }, [onTopReached]);
 
     const handleRangeChanged = React.useCallback((range: { startIndex: number; endIndex: number }) => {
         rangeRef.current = range;
-
-        // If we're at the 10th message from the start and have more to load
-        if (range.startIndex <= 10 && hasMoreRef.current && !isFetchingRef.current) {
-            handleTopReached();
-        }
-    }, [handleTopReached]);
+    }, []);
 
 
     React.useEffect(() => {
@@ -121,13 +112,27 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         }
     }, [data, isAtBottom]);
 
+    React.useEffect(() => {
+        // Only scroll to bottom if we have messages AND haven't done initial scroll yet
+        if (data.length > 0 && !hasInitialScrollRef.current) {
+            setTimeout(() => {
+                virtuosoRef.current?.scrollToIndex({
+                    index: data.length - 1,
+                    behavior: 'auto',
+                    align: 'end',
+                });
+                hasInitialScrollRef.current = true;
+            }, 50);
+        }
+    }, [data.length]);
+
     return (
         <Virtuoso
             ref={virtuosoRef}
             data={data}
             firstItemIndex={0}
             initialTopMostItemIndex={data.length > 0 ? data.length - 1 : 0}
-            followOutput={true}
+            followOutput={isFetching ? false : 'auto'}
             customScrollParent={customScrollParent ?? undefined}
             computeItemKey={(_index, msg) => {
                 const m: any = msg as any;
@@ -154,7 +159,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 }
             }}
             components={{
-                Footer: () => <div style={{height: 10}}/>,
+                Footer: () => <div style={{height: 20}}/>,
                 Header: hasMore
                     ? () => (
                         <div className="w-full flex justify-center my-2">
