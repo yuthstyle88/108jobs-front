@@ -161,6 +161,8 @@ export const th = {
             failed: "ล้มเหลว",
             sent: "ส่งแล้ว",
             retry: "ลองใหม่",
+            startHiringHint: "เริ่มจ้างงานโดยการพูดคุยรายละเอียดโครงการกับฟรีแลนซ์",
+            startWorkHint: "เริ่มงานเพื่อดำเนินการต่อกับงานนี้"
         },
         allCategories: {
             allJobCategories: "หมวดหมู่งานทั้งหมด",

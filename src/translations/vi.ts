@@ -163,6 +163,8 @@ export const vi = {
             failed: "Thất bại",
             sent: "Đã gửi",
             retry: "Thử lại",
+            startHiringHint: "Bắt đầu thuê bằng cách thảo luận chi tiết dự án với freelancer.",
+            startWorkHint: "Bắt đầu công việc để tiếp tục với công việc này."
         },
         allCategories: {
             allJobCategories: "Tất cả danh mục công việc",

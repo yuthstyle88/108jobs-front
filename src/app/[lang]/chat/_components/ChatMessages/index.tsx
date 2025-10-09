@@ -121,49 +121,13 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         }
     }, [data, isAtBottom]);
 
-    React.useEffect(() => {
-        if (data.length === 0) return;
-
-        console.log("Ensuring scroll to bottom on reload...");
-
-        // Multiple attempts to ensure scroll happens
-        const attemptScroll = (attempt: number) => {
-            setTimeout(() => {
-                if (virtuosoRef.current) {
-                    console.log(`Scroll attempt ${attempt} with ${data.length} messages`);
-                    virtuosoRef.current.scrollToIndex({
-                        index: data.length - 1,
-                        behavior: 'auto',
-                        align: 'end',
-                    });
-
-                    // Double check after a brief moment
-                    if (attempt === 1) {
-                        setTimeout(() => {
-                            virtuosoRef.current?.scrollToIndex({
-                                index: data.length - 1,
-                                behavior: 'auto',
-                                align: 'end',
-                            });
-                        }, 100);
-                    }
-                } else if (attempt < 3) {
-                    // Try again if Virtuoso ref isn't ready
-                    attemptScroll(attempt + 1);
-                }
-            }, attempt === 1 ? 50 : attempt * 100);
-        };
-
-        attemptScroll(1);
-    }, [data.length]);
-
     return (
         <Virtuoso
             ref={virtuosoRef}
             data={data}
             firstItemIndex={0}
             initialTopMostItemIndex={data.length > 0 ? data.length - 1 : 0}
-            followOutput={isFetching ? false : 'auto'}
+            followOutput={true}
             customScrollParent={customScrollParent ?? undefined}
             computeItemKey={(_index, msg) => {
                 const m: any = msg as any;
@@ -190,7 +154,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 }
             }}
             components={{
-                Footer: () => <div style={{height: 20}}/>,
+                Footer: () => <div style={{height: 10}}/>,
                 Header: hasMore
                     ? () => (
                         <div className="w-full flex justify-center my-2">

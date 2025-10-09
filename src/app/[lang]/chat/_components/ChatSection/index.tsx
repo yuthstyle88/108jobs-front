@@ -28,11 +28,10 @@ import {useWorkflowActions} from '@/core/chat/hooks/useWorkflowActions';
 import {emitChatNewMessage} from "@/core/chat/events";
 import {useChatRoom} from '@/core/chat/hooks/useChatRoom';
 import {useChatHistory} from '@/core/chat/hooks/useChatHistory';
-
 import {useRoomReadLastId} from "@/core/chat/hooks/useReadLastId";
 import {useChatStore} from "@/core/chat/store/chatStore";
-import { useShallow } from 'zustand/react/shallow';
-import { selectRoomMessages } from '@/core/chat/utils/selectors';
+import {useShallow} from 'zustand/react/shallow';
+import {selectRoomMessages} from '@/core/chat/utils/selectors';
 
 type MessageForm = { message: string };
 
@@ -76,7 +75,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [currentRoom, setCurrentRoom] = useState<ChatRoomData>(roomData);
     const roomSelector = React.useMemo(() => (s: any) => selectRoomMessages(s, String(roomId)), [roomId]);
     const messages = useChatStore(useShallow(roomSelector)) as ChatMessage[];
-    const setMessages = React.useCallback((_updater: any) => {}, []);
+    const setMessages = React.useCallback((_updater: any) => {
+    }, []);
     const atBottomRef = useRef<boolean>(true);
     const [isAtBottom, setIsAtBottom] = useState(true);
     const markSeen = useUnreadStore((s) => s.markSeen);
@@ -95,10 +95,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const calculatedProposedQuote = useMemo(() => {
         return Boolean(getLatestProposedQuotePayload(messages as any));
     }, [messages]);
-
     // Determine latest quotation amount and whether employer has sufficient balance to approve
     const latestQuoteAmount = currentRoom.room.post?.budget;
-
     const availableBalance: number = useMemo(() => {
         const total = Number((wallet as any)?.balanceAvailable ?? (wallet as any)?.balanceTotal ?? 0);
         return Number.isFinite(total) ? total : 0;
@@ -118,9 +116,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const {execute: approveQuotationApi} = useHttpPost("approveQuotation");
     const {execute: submitStartWorkApi} = useHttpPost("submitStartWork");
     const {execute: approveWorkApi} = useHttpPost("approveWork");
-    // Measure chat input height to prevent last message being obscured
     const inputContainerRef = useRef<HTMLDivElement>(null);
-    // Room-scoped last-read id (wired to roomsStore + UserService)
     const {lastReadId} = useRoomReadLastId(roomId);
     useCallback((el: HTMLDivElement | null) => {
         scrollContainerRef.current = el;
@@ -143,31 +139,31 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         isE2EMock: false,
         localUserId: Number(localUser.id) || 0,
         receivedSet: receivedIds,
-        broadcast: () => {},
+        broadcast: () => {
+        },
         upsertHistory,
     });
     const upsertMessage = useChatStore(s => s.upsertMessage);
     const {
         actions: {sendMessage, sendTyping, sendRoomUpdate, sendReadReceipt},
-        state: {refreshRoomData, isPartnerTyping, isPeerActive},
+        state: {refreshRoomData, isPartnerTyping},
     } = useChatRoom({roomId, peerPublicKeyHex, localUser, roomData: currentRoom, upsertMessage});
-
 
     // Apply read flags to current message list (newest-first)
     useEffect(() => {
         if (!lastReadId || !Array.isArray(messages) || messages.length === 0) return;
         setMessages((prev: ChatMessage[]) => {
-          let hit = false;
-          let changed = false;
-          const mapped: ChatMessage[] = prev.map((m: ChatMessage) => {
-            const isHit = String(m.id) === String(lastReadId);
-            if (isHit) hit = true;
-            const shouldRead: boolean = hit; // hit and below are read
-            if ((m as any).isRead === shouldRead) return m;
-            changed = true;
-            return { ...(m as any), isRead: shouldRead } as ChatMessage;
-          });
-          return changed ? mapped : prev;
+            let hit = false;
+            let changed = false;
+            const mapped: ChatMessage[] = prev.map((m: ChatMessage) => {
+                const isHit = String(m.id) === String(lastReadId);
+                if (isHit) hit = true;
+                const shouldRead: boolean = hit; // hit and below are read
+                if ((m as any).isRead === shouldRead) return m;
+                changed = true;
+                return {...(m as any), isRead: shouldRead} as ChatMessage;
+            });
+            return changed ? mapped : prev;
         });
     }, [lastReadId, messages]);
 
@@ -190,17 +186,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         window.addEventListener("focus", onVisible);
         return () => window.removeEventListener("focus", onVisible);
     }, [roomId, messages, sendReadReceipt]);
-
-    useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth < 640) {
-                setIsFlowOpen(false);
-            }
-        };
-        handleResize();
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
 
     useEffect(() => {
         if (!refreshRoomData) return;
@@ -384,7 +369,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         goToStatus,
         setShowQuotationModal,
         setShowReviewModal,
-        setMessages,
         handleFileUpload: (ev: any) => handleFileUpload(ev as any),
         scrollContainerRef,
         currentRoom,

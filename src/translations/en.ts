@@ -162,6 +162,8 @@ export const en = {
             failed: "Failed",
             sent: "Sent",
             retry: "Retry",
+            startHiringHint: "Start hiring by discussing project details with the freelancer.",
+            startWorkHint: "Start the work to proceed with the job."
         },
         allCategories: {
             allJobCategories: "All Job Categories",

@@ -131,6 +131,11 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                     } catch {
                     }
                 }
+                const payload = {type: 'employer-started'} as any;
+                const readable = t('profileChat.startHiring') || 'Employer started hiring.';
+                await sendStructuredMessage(sendMessage, roomId, payload, localUser.id, {
+                    previewText: readable
+                });
                 goToStatusAndBroadcast('WaitForFreelancerQuotation');
                 return true;
             } else {

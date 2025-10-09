@@ -1,13 +1,13 @@
 "use client";
 
-import Image, {StaticImageData} from "next/image";
-import type {ChatMessage} from "lemmy-js-client";
-import {MessageImage} from "@/constants/images";
-import {useTranslation} from "react-i18next";
+import Image, { StaticImageData } from "next/image";
+import type { ChatMessage } from "lemmy-js-client";
+import { MessageImage } from "@/constants/images";
+import { useTranslation } from "react-i18next";
 import { useChatStore } from "@/core/chat/store/chatStore";
 import { useChatServices } from "@/core/chat/contexts/PhoenixChatBridgeProvider";
 import React, { useMemo } from "react";
-import {toLocalTime} from "@/utils/date";
+import { toLocalTime } from "@/utils/date";
 import MessageReceipt from "@/components/MessageReceipt";
 
 interface ChatMessageItemProps {
@@ -15,7 +15,6 @@ interface ChatMessageItemProps {
     partnerAvatar?: string | StaticImageData;
 }
 
-// Light-weight type for proposed quote payload contained in message.content
 interface ProposedQuoteMessage {
     type: string;
     quote?: {
@@ -44,17 +43,15 @@ interface ProposedQuoteMessage {
 }
 
 const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
-    message,
-    partnerAvatar,
-}) => {
-    const {t, i18n} = useTranslation();
+                                                             message,
+                                                             partnerAvatar,
+                                                         }) => {
+    const { t, i18n } = useTranslation();
     const { resend } = useChatServices();
 
-    // Subscribe to latest message from store so UI auto-updates (ACK/resend/status/content patches)
     const liveMessage = useChatStore((s) => {
         const mid = message?.id;
         if (!mid) return undefined;
-        // Prefer committed messages; fallback to pending queue by id
         return s.messages.find((m) => m.id === mid) || s.pendingMessages.find((m) => m.id === mid);
     });
     const viewMsg = liveMessage || message;
@@ -62,19 +59,15 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     const isIncoming = !viewMsg.isOwner;
 
     const time = toLocalTime(viewMsg.createdAt as any, i18n?.language || "th-TH");
-    // Delivery status (server type: "pending" | "sent" | "failed")
     const msgStatus = (viewMsg.status || "pending") as "pending" | "sent" | "failed";
 
-    // unread may be absent when pending; treat undefined as "unknown"
     const hasUnreadField = typeof (viewMsg as any).unread === "boolean";
     const unreadVal = (viewMsg as any).unread === true;
     const readByPeer = viewMsg.isOwner && hasUnreadField && (viewMsg as any).unread === false;
     const deliveredButUnread = viewMsg.isOwner && hasUnreadField && unreadVal;
 
-    // Show receipt only for outbound messages (isOwner) after send
     const showReceipt = viewMsg.isOwner && msgStatus === "sent";
 
-    // Parse content as JSON only when it changes (auto re-render on updates from store)
     const parsed = useMemo<ProposedQuoteMessage | null>(() => {
         const c = viewMsg?.content;
         if (c && c.trim().startsWith("{")) {
@@ -92,7 +85,6 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     const isDeliveryAccepted = parsed && (parsed as any).type === "delivery-accepted";
     const isFileMsg = parsed && (parsed as any).type === "file";
 
-    // Build a public URL for assets using NEXT_PUBLIC_API_HOST_NAME when href is relative
     const buildPublicUrl = (u?: string) => {
         if (!u) return "";
         if (/^https?:\/\//i.test(u)) return u;
@@ -112,71 +104,97 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                 <Image
                     src={partnerAvatar || MessageImage.chatAvt}
                     alt="avatar"
-                    width={24}
-                    height={24}
-                    className="w-6 h-6 rounded-full mr-2 self-end"
+                    width={32}
+                    height={32}
+                    className="w-8 h-8 rounded-full mr-3 self-end"
                 />
             )}
-            <div className={`flex flex-col gap-1 ${isIncoming ? "items-start" : "items-end"}`}>
-                <p className="text-[11px] text-gray-400 flex items-center gap-1">
+            <div className={`flex flex-col gap-1.5 ${isIncoming ? "items-start" : "items-end"} max-w-[90%]`}>
+                <p className="text-xs text-gray-500 flex items-center gap-1.5">
                     {time}
                     <MessageReceipt
-                      isOwner={viewMsg.isOwner}
-                      unread={(viewMsg as any).unread}
-                      msgStatus={msgStatus}
-                      showReceipt={showReceipt}
-                      readByPeer={readByPeer}
-                      deliveredButUnread={deliveredButUnread}
-                      t={t}
-                      onRetry={viewMsg.isOwner ? () => {
-                        const rid = String((viewMsg as any)?.roomId ?? "");
-                        if (rid) {
-                          try { resend?.flushActive(rid); } catch {}
-                        }
-                      } : undefined}
+                        isOwner={viewMsg.isOwner}
+                        unread={(viewMsg as any).unread}
+                        msgStatus={msgStatus}
+                        showReceipt={showReceipt}
+                        readByPeer={readByPeer}
+                        deliveredButUnread={deliveredButUnread}
+                        t={t}
+                        onRetry={viewMsg.isOwner ? () => {
+                            const rid = String((viewMsg as any)?.roomId ?? "");
+                            if (rid) {
+                                try { resend?.flushActive(rid); } catch {}
+                            }
+                        } : undefined}
                     />
                 </p>
 
-                {/* Render quotation card if detected */}
+                {/* Enhanced Quotation Card */}
                 {isProposedQuote ? (
                     <div
-                        className={`max-w-[90vw] sm:max-w-md rounded-xl shadow-sm ring-1 ${
+                        className={`max-w-[90vw] sm:max-w-lg w-full rounded-2xl shadow-lg ring-1 transition-all duration-200 hover:shadow-xl ${
                             isIncoming ? "bg-white ring-gray-200" : "bg-blue-50 ring-blue-200"
                         } overflow-hidden`}
                     >
-                        <div className={`px-4 py-3 ${isIncoming ? "bg-gray-50" : "bg-blue-100"}`}>
-                            <div className="flex items-baseline justify-between gap-3">
-                                <h4 className="text-sm font-semibold text-gray-900 line-clamp-1">
+                        <div className={`px-5 py-4 ${isIncoming ? "bg-gray-100" : "bg-blue-100"} flex items-center justify-between gap-4`}>
+                            <div className="flex items-center gap-3">
+                                <svg className="w-5 h-5 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm0-14h-2v6H6v2h4v4h2v-4h4v-2h-4V6z"/>
+                                </svg>
+                                <h4 className="text-base font-semibold text-gray-900 truncate">
                                     {parsed!.quote!.projectName}
                                 </h4>
-                                <div className="text-sm font-bold text-blue-700">
-                                    {parsed!.quote!.amount.toLocaleString(undefined, {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    })}
-                                </div>
                             </div>
-                            <div className="mt-1 text-xs text-gray-600 flex flex-wrap gap-x-3 gap-y-1">
-                                <span>Start: {parsed!.quote!.startingDay}</span>
-                                <span>Due: {parsed!.quote!.deliveryDay}</span>
-                                <span>Days: {parsed!.quote!.workingDays}</span>
+                            <div className="text-lg font-bold text-blue-700">
+                                {parsed!.quote!.amount.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })}
                             </div>
                         </div>
-                        <div className="px-4 py-3 space-y-2">
-                            <p className="text-sm text-gray-800 whitespace-pre-line">
+                        <div className="px-5 py-4 space-y-4 bg-white">
+                            <div className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
                                 {parsed!.quote!.proposal}
-                            </p>
+                            </div>
+                            <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-gray-600 bg-gray-50 rounded-lg p-3">
+                                <div className="flex items-center gap-1.5">
+                                    <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 16H5V5h14v14z"/>
+                                    </svg>
+                                    <span>Start: {parsed!.quote!.startingDay}</span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                    <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 16H5V5h14v14z"/>
+                                    </svg>
+                                    <span>Due: {parsed!.quote!.deliveryDay}</span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                    <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zM11 7h2v6h-2zm0 8h2v2h-2z"/>
+                                    </svg>
+                                    <span>Days: {parsed!.quote!.workingDays}</span>
+                                </div>
+                            </div>
                             {parsed!.quote!.projectDetails && (
-                                <details className="text-xs text-gray-700">
-                                    <summary className="cursor-pointer select-none text-gray-600">Project details
+                                <details className="text-sm text-gray-700">
+                                    <summary className="cursor-pointer select-none font-medium text-gray-800 hover:text-blue-600 transition-colors">
+                                        Project Details
                                     </summary>
-                                    <div className="mt-1 whitespace-pre-line">{parsed!.quote!.projectDetails}</div>
+                                    <div className="mt-2 text-sm text-gray-600 whitespace-pre-line bg-gray-50 rounded-lg p-3">
+                                        {parsed!.quote!.projectDetails}
+                                    </div>
                                 </details>
                             )}
                             {parsed!.quote!.deliverables && parsed!.quote!.deliverables.length > 0 && (
                                 <div>
-                                    <div className="text-xs font-semibold text-gray-700 mb-1">Deliverables</div>
-                                    <ul className="list-disc list-inside text-sm text-gray-800 space-y-0.5">
+                                    <div className="text-sm font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                                        <svg className="w-5 h-5 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 12H8v-2h3v2zm0-4H8V9h3v2zm5 4h-3v-2h3v2zm0-4h-3V9h3v2z"/>
+                                        </svg>
+                                        Deliverables
+                                    </div>
+                                    <ul className="list-disc list-inside text-sm text-gray-700 space-y-1.5">
                                         {parsed!.quote!.deliverables.map((d, i) => (
                                             <li key={i} className="break-words">{d}</li>
                                         ))}
@@ -184,18 +202,28 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                 </div>
                             )}
                             {parsed!.quote!.workSteps && parsed!.quote!.workSteps.length > 0 && (
-                                <div className="border-t pt-2">
-                                    <div className="text-xs font-semibold text-gray-700 mb-1">Work steps</div>
-                                    <div className="space-y-1">
+                                <div className="border-t pt-3">
+                                    <div className="text-sm font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                                        <svg className="w-5 h-5 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M3 3h18v2H3V3zm0 4h12v2H3V7zm0 4h18v2H3v-2zm0 4h12v2H3v-2zm0 4h18v2H3v-2z"/>
+                                        </svg>
+                                        Work Steps
+                                    </div>
+                                    <div className="space-y-2">
                                         {parsed!.quote!.workSteps.map((ws, i) => (
-                                            <div key={i}
-                                                 className="text-xs text-gray-700 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2 bg-gray-50 rounded p-2">
-                                                <div
-                                                    className="font-medium text-gray-800">#{ws.seq} {ws.description}</div>
-                                                <div className="flex flex-wrap gap-x-3 gap-y-1">
+                                            <div
+                                                key={i}
+                                                className="text-sm text-gray-700 bg-gray-50 rounded-lg p-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 transition-all duration-200 hover:bg-gray-100"
+                                            >
+                                                <div className="font-medium text-gray-800">
+                                                    #{ws.seq} {ws.description}
+                                                </div>
+                                                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600">
                                                     <span>{ws.amount.toLocaleString()}</span>
                                                     <span>{ws.workingDays} days</span>
-                                                    <span>{ws.status}</span>
+                                                    <span className={`px-1.5 py-0.5 rounded ${ws.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                                                        {ws.status}
+                                                    </span>
                                                     <span>{ws.startingDay} → {ws.deliveryDay}</span>
                                                 </div>
                                             </div>
@@ -204,11 +232,48 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                 </div>
                             )}
                             {parsed!.quote!.note && (
-                                <div className="border-t pt-2 text-xs text-gray-600">
-                                    <span className="font-semibold text-gray-700">Note: </span>
+                                <div className="border-t pt-3 text-sm text-gray-600">
+                                    <span className="font-semibold text-gray-800">Note: </span>
                                     {parsed!.quote!.note}
                                 </div>
                             )}
+                        </div>
+                    </div>
+                ) : isEmployerStarted ? (
+                    <div
+                        className="max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ring-teal-200 bg-teal-50 px-4 py-3 transition-all duration-200 hover:ring-teal-300"
+                    >
+                        <div className="flex items-start gap-3">
+                            <svg className="w-5 h-5 text-teal-600 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M9.83 3.42A2 2 0 0112 2h2a2 2 0 011.17.38l.12.1 4.92 4.92a2 2 0 01.58 1.42V19a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h4.83zM12 4H5v15h14V9h-5V4h-2zm1 2v3h3l-3-3zm-3 5h4v2h-4v-2zm0 4h6v2h-6v-2z"/>
+                            </svg>
+                            <div>
+                                <div className="text-sm font-semibold text-teal-800">
+                                    {t('profileChat.startHiring') || 'Employer started hiring.'}
+                                </div>
+                                <div className="mt-1 text-xs text-teal-700">
+                                    {t('profileChat.startHiringHint') || 'The hiring process has been initiated. Awaiting freelancer response.'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ) : isStartWork ? (
+                    <div
+                        className="max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-2 ring-blue-300 bg-blue-50 px-4 py-3 relative overflow-hidden"
+                    >
+                        <div className="absolute inset-y-0 left-0 w-1 bg-blue-500 animate-pulse"></div>
+                        <div className="flex items-start gap-3">
+                            <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M8 5v2.5l4 4 4-4V5H8zm-2-2h12v6l-6 6-6-6V3zm-2 8h16v10H4V11zm2 2v6h12v-6H6z"/>
+                            </svg>
+                            <div>
+                                <div className="text-sm font-semibold text-blue-800">
+                                    {t('profileChat.startWorkMsg') || 'Freelancer started work.'}
+                                </div>
+                                <div className="mt-1 text-xs text-blue-700">
+                                    {t('profileChat.startWorkHint') || 'The freelancer has begun working on the project.'}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 ) : isEmployerAssigned ? (
@@ -227,21 +292,6 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                 </div>
                                 <div className="mt-0.5 text-xs text-green-700">
                                     {t('profileChat.orderApprovedMessage')}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                ) : isStartWork ? (
-                    <div
-                        className="max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ring-blue-200 bg-blue-50 px-4 py-3">
-                        <div className="flex items-start gap-3">
-                            <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" viewBox="0 0 20 20"
-                                 fill="currentColor" aria-hidden="true">
-                                <path d="M6 4l10 6-10 6V4z"/>
-                            </svg>
-                            <div>
-                                <div className="text-sm font-medium text-blue-800">
-                                    {t('profileChat.startWorkMsg') || 'Freelancer started work.'}
                                 </div>
                             </div>
                         </div>
@@ -343,16 +393,13 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                         </div>
                     </div>
                 ) : isFileMsg ? (
-                    // File attachment bubble
                     <div
                         className={`max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 overflow-hidden ${isIncoming ? 'bg-white ring-gray-200' : 'bg-blue-50 ring-blue-200'}`}>
                         <div className={`px-4 py-3 ${isIncoming ? 'bg-gray-50' : 'bg-blue-100'}`}>
                             <div className="flex items-start gap-3">
-                                {/* Icon/Thumbnail */}
                                 {String((parsed as any)?.mime || '').startsWith('image/') && (parsed as any)?.url ? (
                                     <a href={buildPublicUrl((parsed as any).url)} target="_blank"
                                        rel="noopener noreferrer" className="block flex-shrink-0">
-                                        {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img src={buildPublicUrl((parsed as any).url)}
                                              alt={(parsed as any)?.name || 'image'}
                                              className="w-16 h-16 object-cover rounded-md ring-1 ring-black/5"/>
@@ -377,8 +424,8 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                         {(parsed as any)?.mime && (
                                             <span
                                                 className="text-[10px] px-1.5 py-0.5 rounded bg-white text-gray-700 ring-1 ring-black/5">
-                        {String((parsed as any).mime).split('/').pop()}
-                      </span>
+                                                {String((parsed as any).mime).split('/').pop()}
+                                            </span>
                                         )}
                                     </div>
                                     {(parsed as any)?.caption && (
@@ -402,34 +449,16 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                             </div>
                         </div>
                     </div>
-                ) : isEmployerStarted ? (
-                    <div
-                        className="max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ring-blue-200 bg-blue-50 px-4 py-3">
-                        <div className="flex items-start gap-3">
-                            <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" viewBox="0 0 20 20"
-                                 fill="currentColor" aria-hidden="true">
-                                <path d="M6 4l10 6-10 6V4z"/>
-                            </svg>
-                            <div>
-                                <div className="text-sm font-medium text-blue-800">
-                                    {t('profileChat.startHiring') || 'Employer started hiring.'}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 ) : (
-                    // Default text message bubble
-                    viewMsg.content?.trim() && (
-                        <div
-                            className={`max-w-[80vw] sm:max-w-xs px-3 py-2 rounded-2xl text-[15px] leading-relaxed font-sans break-words whitespace-pre-line shadow-sm ${
-                                isIncoming
-                                    ? "bg-white text-gray-800 rounded-bl-sm ring-1 ring-gray-200"
-                                    : "bg-primary text-white rounded-br-sm"
-                            }`}
-                        >
-                            {viewMsg.content}
-                        </div>
-                    )
+                    <div
+                        className={`max-w-[80vw] sm:max-w-xs px-3 py-2 rounded-2xl text-[15px] leading-relaxed font-sans break-words whitespace-pre-line shadow-sm ${
+                            isIncoming
+                                ? "bg-white text-gray-800 rounded-bl-sm ring-1 ring-gray-200"
+                                : "bg-primary text-white rounded-br-sm"
+                        }`}
+                    >
+                        {viewMsg.content}
+                    </div>
                 )}
             </div>
         </div>
