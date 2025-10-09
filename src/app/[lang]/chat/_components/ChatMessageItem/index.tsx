@@ -88,7 +88,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     const isOwner = !!viewMsg.isOwner;
     // const isReadByLastId = isOwner && !!peerLastReadAt && String(viewMsg.id) === String(peerLastReadAt);
     const isReadByLastId =   !isOlder(peerLastReadAt, message.createdAt);
-    console.log("peerLastReadAt", peerLastReadAt);
+    // console.log("peerLastReadAt", peerLastReadAt);
     // Keep msgStatus only as UI transport if MessageReceipt expects it; we no longer branch by it
     const msgStatus = "sent" as const;
 

@@ -41,8 +41,6 @@ export interface SendEventDeps {
     sender?: SendMessageDeps['sender'];
 }
 
-
-
 // --- Typing events ---
 export function sendTyping(deps: SendEventDeps, typing: boolean) {
     const { senderId, roomId } = deps as any;

@@ -356,14 +356,11 @@ export function useChatRoom({
     }, [ws]);
 
     const sendRoomUpdate = useCallback(
-        (roomIdArg: string, update: Record<string, any>) => {
+        (roomId: string, update: Record<string, any>) => {
             try {
+                const adapter = ((ws as any)?.adapter ?? ws) as any;
                 sendRoomUpdateEvent(
-                    {
-                        socket: ((ws as any)?.adapter ?? ws) as any,
-                        senderId: Number(localUser.id) ?? 0,
-                        roomId: roomIdArg,
-                    } as any,
+                    {adapter, roomId, senderId: localUser.id},
                     update
                 );
             } catch (err) {

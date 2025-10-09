@@ -6,6 +6,7 @@ import type {ApproveQuotationForm, ChatRoomData, CreateInvoiceForm, LocalUser, P
 import type {WsMessageSender} from '@/core/chat/types';
 import type {StatusKey} from '@/components/FreelanceChatFlow';
 import {sendStructuredMessage} from '@/core/chat/utils/structured';
+import {SendEventDeps} from "@/core/chat/events";
 
 // Helper to extract meaningful error messages from wrapped HttpService responses
 function extractErr(res: any, fallback: string) {
@@ -30,7 +31,7 @@ export type UseWorkflowActionsDeps = {
     t: (key: string) => string | undefined;
     sendMessage: WsMessageSender;
     goToStatus: (target: StatusKey, prevStatus?: StatusKey) => void;
-    sendRoomUpdate: (roomId: string, update: Record<string, any>) => void;
+    sendRoomUpdate: (event: SendEventDeps, update: Record<string, any>) => void;
     setHasStarted: (v: boolean) => void;
     setShowQuotationModal: (v: boolean) => void;
     setSelectedFile: (v: any) => void;
@@ -79,7 +80,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             goToStatus?.(target, prevStatus);
 
             // broadcast to partner
-            sendRoomUpdate(roomId, {
+            sendRoomUpdate({roomId: roomId, senderId: localUser.id}, {
                 senderId: localUser.id,
                 updateType: 'status-change',
                 statusTarget: target,
