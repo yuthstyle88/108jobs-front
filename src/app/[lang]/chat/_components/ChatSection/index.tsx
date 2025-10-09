@@ -440,9 +440,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             <div className="relative flex-1 min-w-0 flex flex-col md:flex-row h-full">
                 <div className="flex-1 min-w-0 flex flex-col h-full w-full">
                     <ChatHeader
-                        avatarUrl={partnerAvatar || ProfileImage.avatar}
+                        avatarUrl={partnerAvatar}
                         displayName={partnerName || "User"}
-                        online={isPeerActive}
+                        roomId={roomId}
                         typingText={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
                         onToggleFlow={() => setIsFlowOpen((v) => !v)}
                         isFlowOpen={isFlowOpen}

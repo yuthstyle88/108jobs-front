@@ -53,7 +53,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     );
 
     // Track the range to detect when we're near the top
-    const rangeRef = React.useRef({ startIndex: 0, endIndex: 0 });
+    const rangeRef = React.useRef({startIndex: 0, endIndex: 0});
     const hasMoreRef = React.useRef(hasMore);
     const isFetchingRef = React.useRef(isFetching);
     const hasInitialScrollRef = React.useRef(false);
@@ -71,8 +71,8 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     const handleRangeChanged = React.useCallback((range: { startIndex: number; endIndex: number }) => {
         rangeRef.current = range;
 
-        // If we're at the 2nd message from the start and have more to load
-        if (range.startIndex <= 5 && hasMoreRef.current && !isFetchingRef.current) {
+        // If we're at the 10th message from the start and have more to load
+        if (range.startIndex <= 10 && hasMoreRef.current && !isFetchingRef.current) {
             handleTopReached();
         }
     }, [handleTopReached]);
@@ -122,17 +122,39 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     }, [data, isAtBottom]);
 
     React.useEffect(() => {
-        // Only scroll to bottom if we have messages AND haven't done initial scroll yet
-        if (data.length > 0 && !hasInitialScrollRef.current) {
+        if (data.length === 0) return;
+
+        console.log("Ensuring scroll to bottom on reload...");
+
+        // Multiple attempts to ensure scroll happens
+        const attemptScroll = (attempt: number) => {
             setTimeout(() => {
-                virtuosoRef.current?.scrollToIndex({
-                    index: data.length - 1,
-                    behavior: 'auto',
-                    align: 'end',
-                });
-                hasInitialScrollRef.current = true;
-            }, 50);
-        }
+                if (virtuosoRef.current) {
+                    console.log(`Scroll attempt ${attempt} with ${data.length} messages`);
+                    virtuosoRef.current.scrollToIndex({
+                        index: data.length - 1,
+                        behavior: 'auto',
+                        align: 'end',
+                    });
+
+                    // Double check after a brief moment
+                    if (attempt === 1) {
+                        setTimeout(() => {
+                            virtuosoRef.current?.scrollToIndex({
+                                index: data.length - 1,
+                                behavior: 'auto',
+                                align: 'end',
+                            });
+                        }, 100);
+                    }
+                } else if (attempt < 3) {
+                    // Try again if Virtuoso ref isn't ready
+                    attemptScroll(attempt + 1);
+                }
+            }, attempt === 1 ? 50 : attempt * 100);
+        };
+
+        attemptScroll(1);
     }, [data.length]);
 
     return (

@@ -4,6 +4,7 @@ import type {ChatRoom} from "@/types/chat";
 import type {LocalUser} from "lemmy-js-client";
 import Link from "next/link";
 import {useChatRoomsContext} from "@/core/chat/contexts/ChatRoomsContext";
+import AvatarBadge from "@/components/AvatarBadge";
 
 interface ChatListItemProps {
     room: ChatRoom;
@@ -53,18 +54,12 @@ function ChatListItemComponent({room, isActive, currentLang}: ChatListItemProps)
                         : "hover:bg-gray-50 hover:shadow-sm"
                 } transition-all duration-200`}
             >
-                {/* Avatar */}
-                <div
-                    className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full text-white flex items-center justify-center flex-shrink-0 ring-2 ring-gray-100 shadow-sm group-hover:ring-blue-200 transition-all duration-200"
-                    style={avatarStyle}
-                >
-                    <span className="text-sm sm:text-base font-semibold select-none">{initials.toUpperCase()}</span>
-                    <span
-                        className={`absolute bottom-0 right-0 block w-3 h-3 rounded-full border-2 border-white ${
-                            online ? "bg-green-500" : "bg-gray-300"
-                        }`}
-                    />
-                </div>
+                <AvatarBadge
+                    name={partnerName}
+                    online={online}
+                    isActive
+                    size={48}
+                />
                 {/* Room Info */}
                 <div className="min-w-0 flex-1">
                     <div className="flex flex-col gap-0.5">
