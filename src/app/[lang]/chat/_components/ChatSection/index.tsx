@@ -51,7 +51,6 @@ import {useWorkflowActions} from '@/core/chat/hooks/useWorkflowActions';
 import {emitChatNewMessage} from "@/core/chat/events";
 import {useChatRoom} from '@/core/chat/hooks/useChatRoom';
 import {useChatHistory} from '@/core/chat/hooks/useChatHistory';
-import {useRoomReadLastId} from "@/core/chat/hooks/useReadLastId";
 import {useChatStore} from "@/core/chat/store/chatStore";
 import {useShallow} from 'zustand/react/shallow';
 import {selectRoomMessages} from '@/core/chat/utils/selectors';
@@ -161,7 +160,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const {execute: submitStartWorkApi} = useHttpPost("submitStartWork");
     const {execute: approveWorkApi} = useHttpPost("approveWork");
     const inputContainerRef = useRef<HTMLDivElement>(null);
-    const {lastReadId} = useRoomReadLastId(roomId);
+    // const {lastReadId} = useRoomReadLastId(roomId);
     useCallback((el: HTMLDivElement | null) => {
         scrollContainerRef.current = el;
         if (el) setScrollParentEl(el);
@@ -198,22 +197,22 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     } = useChatRoom({roomId, peerPublicKeyHex, localUser, roomData: currentRoom, upsertMessage});
 
     // Apply read flags to current message list (newest-first)
-    useEffect(() => {
-        if (!lastReadId || !Array.isArray(messages) || messages.length === 0) return;
-        setMessages((prev: ChatMessage[]) => {
-            let hit = false;
-            let changed = false;
-            const mapped: ChatMessage[] = prev.map((m: ChatMessage) => {
-                const isHit = String(m.id) === String(lastReadId);
-                if (isHit) hit = true;
-                const shouldRead: boolean = hit; // hit and below are read
-                if ((m as any).isRead === shouldRead) return m;
-                changed = true;
-                return {...(m as any), isRead: shouldRead} as ChatMessage;
-            });
-            return changed ? mapped : prev;
-        });
-    }, [lastReadId, messages]);
+    // useEffect(() => {
+    //     if (!lastReadId || !Array.isArray(messages) || messages.length === 0) return;
+    //     setMessages((prev: ChatMessage[]) => {
+    //         let hit = false;
+    //         let changed = false;
+    //         const mapped: ChatMessage[] = prev.map((m: ChatMessage) => {
+    //             const isHit = String(m.id) === String(lastReadId);
+    //             if (isHit) hit = true;
+    //             const shouldRead: boolean = hit; // hit and below are read
+    //             if ((m as any).isRead === shouldRead) return m;
+    //             changed = true;
+    //             return {...(m as any), isRead: shouldRead} as ChatMessage;
+    //         });
+    //         return changed ? mapped : prev;
+    //     });
+    // }, [lastReadId, messages]);
 
     useEffect(() => {
         if (!messages.length) return;

@@ -1,9 +1,8 @@
 // src/core/chat/store/chatStore.ts
 import { create } from 'zustand'
 import { ChatMessage, ChatStatus } from 'lemmy-js-client'
+import {normRoom} from "@/utils/helpers";
 
-// --- normalize room id helper ---
-const normRoom = (rid: string) => String(rid || '').replace(/^room:/, '')
 
 // --- local pure helpers (no Zustand refs) ---
 function mergeIntoMessages(list: ChatMessage[], msg: ChatMessage): ChatMessage[] {
@@ -25,7 +24,6 @@ interface ChatStoreState {
     messages: ChatMessage[]
     retryMeta: RetryMeta
     pendingMessages: ChatMessage[]
-    lastReadIdMap?: Record<string, string>
 }
 
 interface ChatStoreActions {
@@ -38,7 +36,6 @@ interface ChatStoreActions {
     markFailed: (id: string) => void
     upsertRetryMeta: (id: string, meta: { retry: number; next: number }) => void
     dropRetryMeta: (id: string) => void
-    clearRoom: (roomId: string) => void
     getPendingByRoom: (roomId: string) => ChatMessage[]
     getFailedByRoom: (roomId: string) => ChatMessage[]
     getMessageById: (id: string) => ChatMessage | undefined
@@ -50,17 +47,12 @@ interface ChatStoreActions {
     addPendingMessage: (msg: ChatMessage) => void
     removePendingMessage: (id: string) => void
     clearPendingMessages: () => void
-    setLastReadId: (roomId: string, userId: string, id: string) => void
-    getLastReadAt: (roomId: string, userId: string) => string | undefined
-    clearLastReadId: (roomId: string) => void
 }
 
 export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get) => ({
     messages: [],
     retryMeta: {},
     pendingMessages: [],
-    lastReadIdMap: {},
-    online: false,
 
     addMessage: (msg) => set(() => ({ messages: mergeIntoMessages(get().messages, msg) })),
 
@@ -123,17 +115,6 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
           const meta = { ...s.retryMeta }
           delete meta[id]
           return { retryMeta: meta }
-      }),
-
-    clearRoom: (roomId) =>
-      set((s) => {
-        const key = normRoom(roomId);
-        const nextMap = { ...(s.lastReadIdMap || {}) } as Record<string, string>;
-        delete nextMap[key];
-        return {
-          messages: s.messages.filter((m) => normRoom(String(m.roomId)) !== key),
-          lastReadIdMap: nextMap,
-        };
       }),
 
     getPendingByRoom: (roomId) => {
@@ -264,47 +245,4 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
 
     clearPendingMessages: () => set(() => ({ pendingMessages: [] })),
 
-
-    getLastReadAt: (roomId: string, userId: string) => {
-      const map = get().lastReadIdMap || {};
-      const key = `${normRoom(roomId)}:${userId}`;
-      const id = map[key];
-      if (!id) return undefined;
-      const { messages, pendingMessages } = get();
-      const k = String(id);
-      const msg =
-        messages.find((m) => String(m.id) === k) ||
-        pendingMessages.find((m) => String(m.id) === k);
-
-      // Be tolerant of both createdAt and createAt
-      const rawAt = (msg as any)?.createdAt ?? (msg as any)?.createAt;
-      const at = rawAt != null ? String(rawAt) : undefined;
-      return at;
-    },
-
-    setLastReadId: (roomId: string, userId: string, id: string) => {
-      const roomKey = normRoom(String(roomId));
-      const userKey = String(userId);
-      const msgId = String(id);
-      const key = `${roomKey}:${userKey}`;
-      set((s) => ({
-        lastReadIdMap: {
-          ...(s.lastReadIdMap || {}),
-          [key]: msgId,
-        },
-      }));
-    },
-
-    clearLastReadId: (roomId: string, userId?: string) =>
-      set((s) => {
-        const next = { ...(s.lastReadIdMap || {}) } as Record<string, string>;
-        const roomKey = normRoom(String(roomId));
-        if (userId != null) {
-          delete next[`${roomKey}:${String(userId)}`];
-        }
-        // also clear legacy keys if present
-        delete next[roomKey];
-        delete next[`room:${roomKey}`];
-        return { lastReadIdMap: next };
-      }),
 }))

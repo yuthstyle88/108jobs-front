@@ -10,6 +10,7 @@ import React, { useMemo } from "react";
 import { toLocalTime } from "@/utils/date";
 import MessageReceipt from "@/components/MessageReceipt";
 import {isOlder} from "@/core/chat/utils";
+import {useReadLastIdStore} from "@/core/chat/store/readLastIdStore";
 
 interface ChatMessageItemProps {
     message: ChatMessage;
@@ -53,31 +54,28 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     const liveMessage = useChatStore((s) => {
         const mid = message?.id;
         if (!mid) return undefined;
-        return s.messages.find((m) => m.id === mid) || s.pendingMessages.find((m) => m.id === mid);
+        return (s.messages || []).find((m: any) => String(m.id) === String(mid))
+            || (s.pendingMessages || []).find((m: any) => String(m.id) === String(mid));
     });
     const viewMsg = liveMessage || message;
-    // Read last-read id for this room from chatStore (single source of truth)
+    // Determine room id first, then bind read-last-id hook for this room
     const roomIdStr = String((viewMsg as any)?.roomId ?? "");
-    console.debug('[read-debug]', { roomIdStr });
-    // What the PEER has read (used for receipts on my messages)
-    const lastReadAt = useChatStore((s) => {
-        const anyS = s as any;
-        return anyS.getLastReadAt?.(roomIdStr,"3") ?? null;
-    });
-    const setLastReadId = useChatStore((s) => (s as any).setLastReadId);
 
+    // Read/Write via store selectors (createdAt-based read state)
+    const lastReadAt = useReadLastIdStore((s) => (s as any).getLastReadAt?.(roomIdStr, "3") ?? null);
+    const setLastReadAt = useReadLastIdStore((s) => (s as any).setLastReadAt);
     // After peerLastReadId, get ordered owner messages in this room
     // DEV TEST (optional): mark a specific UUID as peer-read
-    const TEST_READ_UUID = process.env.NEXT_PUBLIC_TEST_READ_UUID || "";
+    const TEST_READ_UUID = process.env.NEXT_PUBLIC_TEST_READ_AT || "";
     const didMarkTestRef = React.useRef(false);
     React.useEffect(() => {
         if (didMarkTestRef.current) return;
         if (!TEST_READ_UUID) return;
         if (roomIdStr) {
             didMarkTestRef.current = true;
-            try { setLastReadId?.(roomIdStr,"3", TEST_READ_UUID); } catch {console.error("Failed to mark test read")}
+            try { setLastReadAt?.(roomIdStr, "3", TEST_READ_UUID); } catch { console.error("Failed to mark test read"); }
         }
-    }, [roomIdStr, setLastReadId, TEST_READ_UUID]);
+    }, [roomIdStr, TEST_READ_UUID, setLastReadAt]);
 
     const isIncoming = !viewMsg.isOwner;
 

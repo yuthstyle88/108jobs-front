@@ -668,3 +668,6 @@ export const isBeforeToday = (ymd: string): boolean => {
     const today = getTodayYMD();
     return ymd < today;
 };
+
+// --- normalize room id helper ---
+export const normRoom = (rid: string) => String(rid || '').replace(/^room:/, '')
