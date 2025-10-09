@@ -5,7 +5,7 @@ import {ensureSharedKeyForRoom} from "@/utils";
 import {dbg, makeEmitReadAcker} from "@/core/chat/utils";
 import {
     resendChatMessage,
-    sendChatMessage,
+    sendChatMessage, SendEventDeps,
     sendReadReceipt as sendReadReceiptEvent, sendRoomUpdateEvent,
     sendTyping as sendTypingEvent
 } from "@/core/chat/events/sendEvents";
@@ -356,11 +356,11 @@ export function useChatRoom({
     }, [ws]);
 
     const sendRoomUpdate = useCallback(
-        (roomId: string, update: Record<string, any>) => {
+        (event: SendEventDeps, update: Record<string, any>) => {
             try {
                 const adapter = ((ws as any)?.adapter ?? ws) as any;
                 sendRoomUpdateEvent(
-                    {adapter, roomId, senderId: localUser.id},
+                    {adapter, roomId: event.roomId, senderId: event.senderId},
                     update
                 );
             } catch (err) {
