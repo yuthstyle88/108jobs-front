@@ -19,6 +19,9 @@ export default function ProfileLayout({
         <>
             <ChatLanguageProvider>
                 <ChatRoomsProvider>
+                    <div className="hidden sm:block">
+                        <Header type="primary"/>
+                    </div>
                     <div className="block sm:hidden">
                         {/* Mobile Header */}
                         <div className="block sm:hidden fixed top-0 left-0 right-0 z-50">
