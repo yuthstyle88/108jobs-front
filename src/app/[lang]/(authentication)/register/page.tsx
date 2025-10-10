@@ -12,6 +12,7 @@ import {useRouter} from "next/navigation";
 import {useState} from "react";
 import {VerifyOTPForm} from "@/components/Authentication/VerifyOTP";
 import {useTranslation} from "react-i18next";
+import {DotLottieReact} from "@lottiefiles/dotlottie-react";
 
 type ViewState = "register" | "verify-otp"  | "resend-otp";
 
@@ -43,11 +44,11 @@ export default function RegisterPage() {
             </div>
           </div>
           <div className="flex gap-2 items-center">
-            <Image
-              src={CategoriesImage.conceptbanner}
-              alt="concept banner"
-              className="h-[164px]"
-            />
+              <DotLottieReact
+                  src="/lottie/concept-banner.lottie"
+                  loop
+                  autoplay
+              />
           </div>
           <div className="grid gap-4 grid-cols-2">
             <div className="flex gap-2 items-center">

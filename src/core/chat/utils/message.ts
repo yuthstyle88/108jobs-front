@@ -1,7 +1,6 @@
 // Helper to parse latest 'proposed-quote' payload from messages (expects newest-first ordering)
 // Returns the parsed JSON payload or null if none found.
 export function getLatestProposedQuotePayload(messages: Array<{ content?: string | null }> | null | undefined): any | null {
-    console.log('getLatestProposedQuotePayload', messages);
     if (!messages || !Array.isArray(messages)) return null; // Guard against undefined/null or non-array
     for (let i = 0; i < messages.length; i++) {
         const msg = messages[i];
@@ -14,7 +13,7 @@ export function getLatestProposedQuotePayload(messages: Array<{ content?: string
                 return parsed;
             }
         } catch {
-            continue;
+
         }
     }
     return null;

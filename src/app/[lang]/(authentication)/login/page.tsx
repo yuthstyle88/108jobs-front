@@ -10,6 +10,7 @@ import Image from "next/image";
 import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
+import {DotLottieReact} from "@lottiefiles/dotlottie-react";
 
 type ViewState = "login" | "forgot-password" | "verify-forgot-password";
 
@@ -52,11 +53,11 @@ export default function LoginPage() {
             </div>
           </div>
           <div className="flex gap-2 items-center">
-            <Image
-              src={CategoriesImage.conceptbanner}
-              alt="concept banner"
-              className="h-[164px]"
-            />
+              <DotLottieReact
+                  src="/lottie/concept-banner.lottie"
+                  loop
+                  autoplay
+              />
           </div>
           <div className="grid gap-4 grid-cols-2">
             <div className="flex gap-2 items-center">

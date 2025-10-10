@@ -25,7 +25,7 @@ export function makeReadAckEmitter(
       }
     } catch {}
 
-    const enriched = { ...(payload || {}), reader_id: readerId };
+    const enriched = { ...(payload || {}), readerId };
 
     try {
       if (typeof (ws as any)?.emit === 'function') {
