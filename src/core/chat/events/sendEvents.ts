@@ -53,10 +53,15 @@ export function sendTyping(deps: SendEventDeps, typing: boolean) {
 
 // --- Read receipt ---
 export function sendReadReceipt(deps: SendEventDeps, lastMessageId: string) {
-    const { roomId } = deps as any;
+    const { roomId , senderId } = deps as any;
     const adapter = (deps as any).adapter as SendMessageDeps['adapter'];
-    const packet = createEvent('chat:read', { roomId, lastReadMessageId: String(lastMessageId || '') });
-    dbg('sendReadReceipt', packet);
+    dbg('[sendEvent] sendReadReceipt1', {deps, lastMessageId});
+    const packet = createEvent('chat:read', {
+      roomId: roomId,
+      readerId: senderId,
+      lastReadMessageId: String(lastMessageId ?? ''),
+    });
+    dbg('sendReadReceipt2', packet);
     if (!adapter) return;
     wsSend(adapter, packet);
 }
@@ -81,7 +86,6 @@ async function doSend(deps: SendMessageDeps, msg: ChatMessage): Promise<{ id: st
         const acked = await waitForAck(deps, msg.id, 4000)
           .catch((err) => { dbg('waitForAck error', err); return false; });
         if (acked) {
-            dbg('xxxxxxxdoSend', { id: msg.id, sent });
             try { (deps as any).onAfterSend?.(); } catch {}
             return { id: String(msg.id), sent };
         }

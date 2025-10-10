@@ -40,7 +40,7 @@ export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResul
         setHasMore(true);
         fetchingRef.current = false;
         lastCursorRef.current = null;
-        console.debug('[useChatHistory] reset for room', roomId);
+        // console.debug('[useChatHistory] reset for room', roomId);
     }, [roomId]);
 
     const fetchHistory = useCallback(async () => {
@@ -62,7 +62,7 @@ export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResul
                 // Reverse items before inserting to match ascending render order
                 upsertHistory(items.reverse());
             }
-            console.log('[useChatHistory] reset history', items);
+            // console.log('[useChatHistory] reset history', items);
 
             // For backfill, use `prev` to continue going backward
             const prevCursor = (typeof prev === 'string' && prev.length > 0) ? prev : null;

@@ -388,13 +388,10 @@ export function useChatRoom({
     const sendReadReceipt = useCallback((roomIdArg: string, lastMessageId: string) => {
         try {
             if (localStorage.getItem('debug_read_ack') === '1') {
-                console.log('[read-ack] sendReadReceipt()', {roomId: roomIdArg, lastMessageId});
+                console.log('[read-ack] sendReadReceipt() 1', {roomId: roomIdArg, senderId: localUser.id, lastMessageId});
             }
-        } catch {
-        }
-        try {
-            if (isE2EMock) return;
             sendReadReceiptEvent({roomId: roomIdArg, senderId: localUser.id}, lastMessageId);
+            console.log('[read-ack] sendReadReceipt() 2', {roomId: roomIdArg, senderId: localUser.id, lastMessageId});
             readAckRef.current?.(lastMessageId);
         } catch (err) {
             console.error('Failed to send read receipt', err);

@@ -135,7 +135,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const calculatedProposedQuote = useMemo(() => {
         return Boolean(getLatestProposedQuotePayload(messages as any));
     }, [messages]);
-    dbg("calculatedProposedQuote", calculatedProposedQuote);
+    // dbg("calculatedProposedQuote", calculatedProposedQuote);
     // Determine latest quotation amount and whether employer has sufficient balance to approve
     const latestQuoteAmount = currentRoom.room.post?.budget;
 

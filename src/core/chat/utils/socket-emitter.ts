@@ -8,7 +8,7 @@ export type SocketEmitLike = {
 
 /**
  * Create a function that emits read-ack events through a socket-like object.
- * - Injects `reader_id` automatically.
+ * - Injects `readerId` automatically.
  * - Works with either `.emit(evt, payload)` or `.send(JSON.stringify(frame))`.
  * - Debug can be toggled by setting localStorage['debug_read_ack'] = '1'.
  */
@@ -25,7 +25,7 @@ export function makeReadAckEmitter(
       }
     } catch {}
 
-    const enriched = { ...(payload || {}), reader_id: readerId };
+    const enriched = { ...(payload || {}), readerId: readerId };
 
     try {
       if (typeof (ws as any)?.emit === 'function') {
