@@ -86,7 +86,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     const isReadByLastAt = !!lastReadAt && (
         isOlder(viewMsg.createdAt as any, lastReadAt) || String(viewMsg.createdAt) === String(lastReadAt)
     );
-    console.log("LastReadAt", lastReadAt);
+    // console.log("LastReadAt", lastReadAt);
 
     // Keep msgStatus only as UI transport if MessageReceipt expects it; we no longer branch by it
     const msgStatus = "sent" as const;
@@ -96,7 +96,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     const deliveredButUnread = false;
     const isLastRead = isOwner && !!lastReadAt && String(viewMsg.createdAt) === String(lastReadAt);
     const showReceipt = readByPeer || isLastRead;
-    console.log("readByPeer", readByPeer, "deliveredButUnread", deliveredButUnread, "showReceipt", showReceipt);
+    // console.log("readByPeer", readByPeer, "deliveredButUnread", deliveredButUnread, "showReceipt", showReceipt);
     const parsed = useMemo<ProposedQuoteMessage | null>(() => {
         const c = viewMsg?.content;
         if (c && c.trim().startsWith("{")) {

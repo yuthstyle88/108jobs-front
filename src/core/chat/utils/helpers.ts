@@ -231,6 +231,6 @@ export function isOlder(
     if (Number.isNaN(t1) || Number.isNaN(t2)) return false;
 
     const result = t1 < t2;
-    console.debug("[isOlder]", { lastReadAt, createdAt, t1, t2, result });
+    // console.debug("[isOlder]", { lastReadAt, createdAt, t1, t2, result });
     return result;
 }

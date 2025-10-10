@@ -19,17 +19,20 @@ import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import ConfirmActionModal from '@/components/Common/Modal/ConfirmActionModal';
 import {useWorkflowStepper} from '@/hooks/useWorkflowMachine';
-import type {UiFlowStatus} from '@/store/stateMachineStore';
+
 import Link from 'next/link';
 import FileUploadModal from '@/components/Common/Modal/FileUploadModal';
 import {UploadedFile} from '@/core/chat/hooks/useFileUpload';
+import {WorkFlowStatus} from "@/types/workflow";
+import WorkflowActionPanel from "@/components/WorkflowActionPanel"
+import {dbg} from "@/core/chat/utils";
 
 
 // =============================================================================
 // Types & Props
 // =============================================================================
 
-export type StatusKey = UiFlowStatus;
+export type StatusKey = WorkFlowStatus;
 
 /** UI-only status that can precede QuotationPending when no quotation exists yet */
 type ViewStatus = StatusKey | 'WaitForFreelancerQuotation';
@@ -107,7 +110,7 @@ const STEPS: Array<{ key: ViewStatus; title: string; sub: string }> = [
         sub: 'No quotation has been sent yet. Waiting for the freelancer to send one.',
     },
     {
-        key: 'QuotationPending',
+        key: 'QuotationPendingReview',
         title: 'Quotation Pending',
         sub: 'Quotation created by freelancer, waiting for employer review',
     },
@@ -171,22 +174,12 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
     const stepper = useWorkflowStepper();
     const derivedStatus = stepper?.state?.name as StatusKey | undefined;
     const isControlled = controlledStatus != null;
-    const currentStatus: StatusKey = (isControlled ? controlledStatus! : derivedStatus || 'QuotationPending') as StatusKey;
+    const currentStatus: StatusKey = (isControlled ? controlledStatus! : derivedStatus || 'QuotationPendingReview') as StatusKey;
     const derivedStatusBeforeCancel = stepper?.statusBeforeCancel;
     const currentStatusBeforeCancel = isControlled ? statusBeforeCancel : derivedStatusBeforeCancel;
-
-    // Derive a UI-only "waiting for quotation" state purely from permissions + role
-    // If current server status is QuotationPending:
-    //  - Freelancer who canProposeQuote => hasn't sent a quote yet
-    //  - Employer who cannot approve yet => no quote to approve
-    const viewStatus: ViewStatus =
-        currentStatus === 'QuotationPending' &&
-        (
-            (!isEmployer && Boolean(canProposeQuote)) ||
-            (isEmployer && !Boolean(canApproveQuotation))
-        )
-            ? 'WaitForFreelancerQuotation'
-            : currentStatus;
+    dbg('Current status:', currentStatus);
+    // Simplified: viewStatus always directly follows currentStatus
+    const viewStatus: ViewStatus = currentStatus as ViewStatus;
 
     const currentIndex = Math.max(0, STEPS.findIndex((s) => s.key === viewStatus));
 
@@ -200,7 +193,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
 
     const ORDER: ViewStatus[] = (stepper?.ORDER as StatusKey[]) as ViewStatus[] || [
         'WaitForFreelancerQuotation',
-        'QuotationPending',
+        'QuotationPendingReview',
         'OrderApproved',
         'InProgress',
         'PendingEmployerReview',
@@ -252,144 +245,39 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
         }
     };
 
-    // -- Action rendering per step ------------------------------------------------------
-    // Action buttons for each step
-    const actionsForStep = (key: ViewStatus) => {
-        const btn = (label: string, onClick?: () => void, kind: 'primary' | 'ghost' = 'primary') => (
-            <button
-                key={label}
-                className={`w-full rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                    kind === 'primary'
-                        ? 'bg-primary text-white hover:bg-[#063a68] focus:ring-2 focus:ring-primary/50'
-                        : 'border border-gray-300 text-gray-700 hover:bg-gray-100 focus:ring-2 focus:ring-gray-200'
-                } ${!onClick ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-sm'}`}
-                onClick={onClick}
-                disabled={!onClick}
-            >
-                {label}
-            </button>
-        );
+    // -- Dynamic actions via WorkflowActionPanel --------------------------------------
+    const dynamicActions = (stepper?.actions || []) as any[];
 
-        const cancelBtn =
-            stepper?.canCancel && key !== 'Completed' && key !== 'Cancelled'
-                ? btn(t('profileChat.cancelJob') || 'ยกเลิกงาน', () => setShowCancelConfirm(true), 'ghost')
-                : null;
-
+    const handlePanelAction = (key: string, payload?: any) => {
         switch (key) {
-            case 'WaitForFreelancerQuotation': {
-                const actions: React.ReactElement[] = [];
-                if (!isEmployer) {
-                    // Freelancer: prompt to send a quotation
-                    actions.push(btn(t('profileChat.proposeQuote') || 'Send quotation', onProposeQuote));
-                } else {
-                    // Employer: purely informational (no Approve button until quotation exists)
-                    actions.push(
-                        <div
-                            key="wait-freelancer-quotation"
-                            className="w-full text-xs text-gray-600 bg-yellow-50 border border-yellow-200 rounded-md px-3 py-2"
-                        >
-                            {t('profileChat.waitForFreelancerQuotation') || 'Waiting for freelancer to send a quotation.'}
-                        </div>
-                    );
-                    if (cancelBtn) actions.push(cancelBtn);
-                }
-                if (cancelBtn && actions.length && isEmployer) return actions;
-                if (cancelBtn) actions.push(cancelBtn);
-                return actions;
-            }
-            case 'QuotationPending': {
-                const actions: React.ReactElement[] = [];
-
-                if (!isEmployer) {
-                    // Freelancer
-                    actions.push(
-                        <div
-                            key="wait-approval"
-                            className="w-full text-xs text-gray-600 bg-yellow-50 border border-yellow-200 rounded-md px-3 py-2"
-                        >
-                            {t('profileChat.waitEmployerApproval') || 'Waiting for employer to approve your quotation'}
-                        </div>
-                    );
-                } else {
-                    // Employer
-                    if (insufficientForApprove) {
-                        actions.push(
-                            <div
-                                key="insufficient"
-                                className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-red-50 border border-red-200 text-red-800 text-xs sm:text-sm"
-                            >
-                                <div
-                                    className="font-medium">{t('profileChat.insufficientBalanceTitle') || 'Insufficient balance'}</div>
-                                <div className="mt-1">
-                                    {(t('profileChat.insufficientBalanceWarning') || 'Insufficient balance to approve the quotation.')}
-                                    {' '}
-                                    <Link href="/coin" className="underline font-medium">
-                                        {t('profileChat.topUpNow') || 'Top up now'}
-                                    </Link>
-                                </div>
-                            </div>
-                        );
-                    }
-                    if (canApproveQuotation && !insufficientForApprove) {
-                        actions.push(btn(t('profileChat.approveQuotation') || 'Approve quotation', () => setShowApproveConfirm(true)));
-                    }
-                    if (cancelBtn) actions.push(cancelBtn);
-                    return actions;
-                }
-
-                if (cancelBtn) actions.push(cancelBtn);
-                return actions;
-            }
-
-            case 'OrderApproved': {
-                const actions: React.ReactElement[] = [];
-                // Start work เฉพาะฝั่งฟรีแลนซ์
-                if (!isEmployer && onStartWork) actions.push(btn(t('profileChat.startWork') || 'Start work', onStartWork));
-                if (cancelBtn) actions.push(cancelBtn);
-                return actions;
-            }
-
-            case 'InProgress': {
-                if (isEmployer) {
-                    return [
-                        <div
-                            key="wait-freelancer"
-                            className="w-full text-xs text-gray-600 bg-blue-50 border border-blue-200 rounded-md px-3 py-2"
-                        >
-                            {t('profileChat.waitForFreelancerSubmit') || 'Waiting for the freelancer to submit their work.'}
-                        </div>,
-                        ...(cancelBtn ? [cancelBtn] : []),
-                    ];
-                }
-                const actions: React.ReactElement[] = [];
-                actions.push(btn(t('profileChat.submitDelivery') || 'ส่งงาน', () => setShowUploadModal(true), 'ghost'));
-                if (cancelBtn) actions.push(cancelBtn);
-                return actions.filter(Boolean) as React.ReactElement[];
-            }
-
-            case 'PendingEmployerReview': {
-                if (isEmployer) {
-                    return [
-                        btn(t('profileChat.requestRevision') || 'ขอแก้ไขรอบใหม่', () => setShowRevisionConfirm(true)),
-                        btn(t('profileChat.releasePayment') || 'ปล่อยเงิน/ปิดงาน', () => setShowReleaseConfirm(true), 'ghost'),
-                        ...(cancelBtn ? [cancelBtn] : []),
-                    ];
-                }
-                return [
-                    <div
-                        key="wait-employer"
-                        className="w-full text-xs text-gray-600 bg-yellow-50 border border-yellow-200 rounded-md px-3 py-2"
-                    >
-                        {t('profileChat.waitForEmployerReview') || 'Your delivery was submitted. Waiting for employer review.'}
-                    </div>,
-                    ...(cancelBtn ? [cancelBtn] : []),
-                ];
-            }
-
-            case 'Completed':
-            case 'Cancelled':
+            case 'submitQuotation':
+                onProposeQuote?.();
+                stepper?.sendAction?.('submitQuotation', payload);
+                break;
+            case 'approveOrder':
+                setShowApproveConfirm(true);
+                break;
+            case 'startWork':
+                onStartWork?.();
+                stepper?.sendAction?.('startWork', payload);
+                break;
+            case 'submitDelivery':
+                setShowUploadModal(true);
+                break;
+            case 'requestRevision':
+                setShowRevisionConfirm(true);
+                break;
+            case 'releasePayment':
+                setShowReleaseConfirm(true);
+                break;
+            case 'cancel':
+                setShowCancelConfirm(true);
+                break;
+            case 'restart':
+                stepper?.sendAction?.('restart');
+                break;
             default:
-                return [];
+                console.warn('Unknown action from WorkflowActionPanel', key, payload);
         }
     };
 
@@ -478,11 +366,11 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                         })}
                     </ul>
                     <div className={`flex flex-col gap-2 px-4 ${compact ? 'pb-2' : 'pb-4'}`}>
-                        {actionsForStep(viewStatus).map((action, idx) => (
-                            <div key={idx} className="w-full">
-                                {action}
-                            </div>
-                        ))}
+                        <WorkflowActionPanel
+                            actions={dynamicActions as any}
+                            loading={false}
+                            onAction={handlePanelAction}
+                        />
                     </div>
                     <ConfirmActionModal
                         isOpen={showApproveConfirm}
@@ -490,6 +378,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                         onConfirm={async () => {
                             setShowApproveConfirm(false);
                             onApproveQuotation?.();
+                            stepper?.sendAction?.('approveOrder');
                         }}
                         title={t('profileChat.confirmApproveQuotationTitle') || 'Approve quotation?'}
                         message={t('profileChat.confirmApproveQuotationMessage') || "This will approve the freelancer's quotation and convert it into an order."}
@@ -501,6 +390,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                         onConfirm={async () => {
                             setShowRevisionConfirm(false);
                             onRequestRevision?.();
+                            stepper?.sendAction?.('requestRevision');
                         }}
                         title={t('profileChat.confirmRequestRevisionTitle') || 'Request a revision?'}
                         message={t('profileChat.confirmRequestRevisionMessage') || 'This will move the job back to In Progress and notify the freelancer to revise and resubmit.'}
@@ -529,6 +419,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                         onConfirm={async () => {
                             setShowReleaseConfirm(false);
                             onReleasePayment?.();
+                            stepper?.sendAction?.('releasePayment');
                         }}
                         title={t('profileChat.confirmReleasePaymentTitle') || 'Release payment and close job?'}
                         message={t('profileChat.confirmReleasePaymentMessage') || 'This will approve the submitted work, release funds to the freelancer, and close the job.'}
@@ -542,6 +433,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                         onSubmit={async () => {
                             setShowUploadModal(false);
                             onSubmitDelivery?.();
+                            stepper?.sendAction?.('submitDelivery');
                         }}
                         selectedFile={selectedFile}
                         onFileUpload={onFileUpload}

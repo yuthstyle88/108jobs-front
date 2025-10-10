@@ -191,7 +191,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             await sendStructuredMessage(sendMessage, roomId, payload, localUser.id, {
                 previewText: readable
             });
-            goToStatusAndBroadcast('QuotationPending');
+            goToStatusAndBroadcast('QuotationPendingReview');
             setShowQuotationModal(false);
             return true;
         } catch (err) {

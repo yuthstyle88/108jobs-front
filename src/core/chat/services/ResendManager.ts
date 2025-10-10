@@ -12,7 +12,7 @@
  * - ใช้ mutex ป้องกันการทำงานซ้อน
  */
 
-import type { PhoenixSenderAdapter, SendDraft } from './chat/adapters/PhoenixSenderAdapter'
+import type { PhoenixSenderAdapter, SendDraft } from '../adapters/PhoenixSenderAdapter'
 import {ChatMessageModel} from "@/core/chat/types";
 
 

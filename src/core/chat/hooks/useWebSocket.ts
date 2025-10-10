@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 // IMPORTANT: Adjust the import path if your service lives elsewhere
-import {getChannelAdapter} from '@/core/PhoenixSocketService';
+import {getChannelAdapter} from '@/core/chat/services/PhoenixSocketService';
 import {WebSocketStatus} from "@/core/chat/types";
 
 

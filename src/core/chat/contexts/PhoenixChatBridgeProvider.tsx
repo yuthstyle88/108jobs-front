@@ -4,7 +4,7 @@ import {useChatStore} from "@/core/chat/store/chatStore";
 import {useNetworkStore} from "@/store/networkStore";
 import {useWebSocketContext} from "@/core/chat/contexts/WebSocketContext";
 import {PhoenixSenderAdapter} from "@/core/chat/adapters/PhoenixSenderAdapter";
-import {type ChatStorePort, ResendManager} from "@/core/ResendManager";
+import {type ChatStorePort, ResendManager} from "@/core/chat/services/ResendManager";
 import {GlobalAckMatcher} from "@/core/chat/utils/AckMatcher";
 import {isBrowser} from "@/utils/browser";
 import {ChatMessageModel} from "@/core/chat/types";

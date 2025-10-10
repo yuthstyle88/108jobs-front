@@ -1,5 +1,6 @@
 import {create} from 'zustand';
 import type {WorkflowStatus} from 'lemmy-js-client';
+import {ORDER, WorkFlowStatus, WORKFLOW_TRANSITIONS, WorkflowEvent} from "@/types/workflow";
 
 // Generic, reusable finite state machine store with typed states and events
 export type StateKey = string | number | symbol;
@@ -80,52 +81,13 @@ export const createMachineStore = <S extends StateKey, E extends string>(
 };
 
 // Concrete workflow implementation using the generic machine
-export type UiFlowStatus =
-    | 'WaitForFreelancerQuotation'
-    | 'QuotationPending'
-    | 'OrderApproved'
-    | 'InProgress'
-    | 'PendingEmployerReview'
-    | 'Completed'
-    | 'Cancelled';
 
-export const ORDER = [
-    'WaitForFreelancerQuotation',
-    'QuotationPending',
-    'OrderApproved',
-    'InProgress',
-    'PendingEmployerReview',
-    'Completed',
-    'Cancelled',
-] as const satisfies readonly UiFlowStatus[];
-
-// Events reflect real transitions; no "chat" state
-export type WorkflowEvent =
-    | { type: 'QUOTE_PROPOSED' }
-    | { type: 'APPROVE_ORDER' }
-    | { type: 'START_WORK' }
-    | { type: 'SUBMIT_DELIVERY' }
-    | { type: 'REQUEST_REVISION' }
-    | { type: 'RELEASE_PAYMENT' }
-    | { type: 'CANCEL' }
-    | { type: 'SET'; state: UiFlowStatus; statusBeforeCancel?: UiFlowStatus };
-
-const WORKFLOW_TRANSITIONS: TransitionMap<UiFlowStatus, Exclude<WorkflowEvent['type'], 'SET'>> = {
-    WaitForFreelancerQuotation: { QUOTE_PROPOSED: 'QuotationPending', CANCEL: 'Cancelled' }, // เปลี่ยน event และไปข้างหน้า
-    QuotationPending: { APPROVE_ORDER: 'OrderApproved', CANCEL: 'Cancelled' },
-    OrderApproved: { START_WORK: 'InProgress', CANCEL: 'Cancelled' },
-    InProgress: { SUBMIT_DELIVERY: 'PendingEmployerReview', CANCEL: 'Cancelled' },
-    PendingEmployerReview: { REQUEST_REVISION: 'InProgress', RELEASE_PAYMENT: 'Completed', CANCEL: 'Cancelled' },
-    Completed: {},
-    Cancelled: {},
-};
-
-export const useStateMachineStore = createMachineStore<UiFlowStatus, Exclude<WorkflowEvent['type'], 'SET'>>(
+export const useStateMachineStore = createMachineStore<WorkFlowStatus, Exclude<WorkflowEvent['type'], 'SET'>>(
     ORDER,
     WORKFLOW_TRANSITIONS,
     'WaitForFreelancerQuotation'
 );
 
 // Helper mapping functions bridging API <-> UI (identity mapping)
-export const apiToUiStatus = (s: WorkflowStatus | null | undefined): UiFlowStatus =>
-    (s as UiFlowStatus) ?? 'WaitForFreelancerQuotation';
+export const apiToUiStatus = (s: WorkflowStatus | null | undefined): WorkFlowStatus =>
+    (s as WorkFlowStatus) ?? 'WaitForFreelancerQuotation';

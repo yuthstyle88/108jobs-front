@@ -54,6 +54,7 @@ import {useChatHistory} from '@/core/chat/hooks/useChatHistory';
 import {useChatStore} from "@/core/chat/store/chatStore";
 import {useShallow} from 'zustand/react/shallow';
 import {selectRoomMessages} from '@/core/chat/utils/selectors';
+import {dbg} from "@/core/chat/utils";
 
 
 /** Shape of the form submitted by ChatInput. */
@@ -134,7 +135,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const calculatedProposedQuote = useMemo(() => {
         return Boolean(getLatestProposedQuotePayload(messages as any));
     }, [messages]);
-
+    dbg("calculatedProposedQuote", calculatedProposedQuote);
     // Determine latest quotation amount and whether employer has sufficient balance to approve
     const latestQuoteAmount = currentRoom.room.post?.budget;
 

@@ -1,1 +1,1 @@
-export type WorkflowStatus = "QuotationPending" | "OrderApproved" |"InProgress" | "PendingEmployerReview" | "Completed" | "Cancelled";
+export type WorkflowStatus = "WaitForFreelancerQuotation" | "QuotationPendingReview" | "OrderApproved" |"InProgress" | "PendingEmployerReview" | "Completed" | "Cancelled";

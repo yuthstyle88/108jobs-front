@@ -1,18 +1,24 @@
-import {ORDER, UiFlowStatus, useStateMachineStore} from '@/store/stateMachineStore';
+import { useStateMachineStore } from '@/store/stateMachineStore';
+import { ORDER, WorkFlowStatus, WorkFlowAction, workflowActionsMap, toWorkflowEvent } from '@/types/workflow';
 
 // A stepper-friendly hook that mirrors the issue description API
 export type StepperEvents = { type: 'NEXT' } | { type: 'BACK' } | { type: 'RESET' } | { type: 'CANCEL' };
 export type UseWorkflowStepper = {
-    state: { name: UiFlowStatus };
-    statusBeforeCancel?: UiFlowStatus;
-    ORDER: readonly UiFlowStatus[];
-    idx: number;
-    canNext: boolean;
-    canBack: boolean;
-    canCancel: boolean;
-    canGo: (to: UiFlowStatus) => boolean;
-    send: (e: StepperEvents) => void;
-    cancel: () => void;
+  state: { name: WorkFlowStatus };
+  statusBeforeCancel?: WorkFlowStatus;
+  ORDER: readonly WorkFlowStatus[];
+  idx: number;
+  canNext: boolean;
+  canBack: boolean;
+  canCancel: boolean;
+  canGo: (to: WorkFlowStatus) => boolean;
+  // Dynamic actions derived from state
+  actions: WorkFlowAction[];
+  canPerform: (a: WorkFlowAction) => boolean;
+  sendAction: (a: WorkFlowAction, payload?: any) => void;
+  // Legacy stepper events
+  send: (e: StepperEvents) => void;
+  cancel: () => void;
 };
 
 export const useWorkflowStepper = (): UseWorkflowStepper => {
@@ -25,10 +31,37 @@ export const useWorkflowStepper = (): UseWorkflowStepper => {
     const sendEvent = useStateMachineStore((s) => s.send);
     const cancelStore = useStateMachineStore((s) => s.cancel);
 
+    // Dynamic actions available for the current workflow state
+    const actions = (workflowActionsMap as Record<WorkFlowStatus, WorkFlowAction[]>)[state] || [];
+    const canPerform = (a: WorkFlowAction) => actions.includes(a);
+
+    const sendAction = (a: WorkFlowAction, payload?: any) => {
+        if (!canPerform(a)) {
+            console.warn('useWorkflowStepper: action not allowed in current state', { state, action: a });
+            return;
+        }
+        // Map UI action to machine event
+        const ev = toWorkflowEvent(a);
+        if (ev.type === 'SET') {
+            // treat SET as RESET to first step or explicit
+            return reset();
+        }
+        if (ev.type === 'CANCEL') {
+            if (!canCancel) {
+                console.warn('useWorkflowStepper: Cannot cancel from state', { state });
+                return;
+            }
+            cancelStore();
+            return;
+        }
+        // For other machine events, delegate to store's send
+        sendEvent(ev as any);
+    };
+
     const canNext = idx < ORDER.length - 1;
     const canBack = idx > 0;
     const canCancel = state !== 'Completed' && state !== 'Cancelled';
-    const canGo = (to: UiFlowStatus) => {
+    const canGo = (to: WorkFlowStatus) => {
         const toIdx = ORDER.indexOf(to);
         if (toIdx < 0) return false;
         return toIdx === idx || Math.abs(toIdx - idx) === 1;
@@ -44,7 +77,9 @@ export const useWorkflowStepper = (): UseWorkflowStepper => {
                 console.warn('useWorkflowStepper: Cannot cancel from state', { state });
                 return;
             }
-            sendEvent({ type: 'CANCEL' } as any);
+            // Use the store's cancel to ensure statusBeforeCancel is tracked and transitions are uniform
+            cancelStore();
+            return;
         }
     };
 
@@ -66,6 +101,9 @@ export const useWorkflowStepper = (): UseWorkflowStepper => {
         canBack,
         canCancel,
         canGo,
+        actions,
+        canPerform,
+        sendAction,
         send,
         cancel,
     };
