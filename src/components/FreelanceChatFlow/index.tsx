@@ -23,7 +23,7 @@ import FileUploadModal from '@/components/Common/Modal/FileUploadModal';
 import {UploadedFile} from '@/core/chat/hooks/useFileUpload';
 import {WorkFlowStatus, WorkFlowAction, workflowActionsMap} from "@/types/workflow";
 import WorkflowActionPanel from "@/components/WorkflowActionPanel"
-
+import {filterByRole} from "@/utils/workflow/helper";
 
 // =============================================================================
 // Types & Props
@@ -242,7 +242,8 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
     };
 
     // -- Dynamic actions via current status (ensures Cancelled → ["restart"]) --------
-    const dynamicActions: WorkFlowAction[] = (workflowActionsMap as Record<StatusKey, WorkFlowAction[]>)[currentStatus] || [];
+    const actionsAll: WorkFlowAction[] = (workflowActionsMap as Record<StatusKey, WorkFlowAction[]>)[currentStatus] || [];
+    const dynamicActions: WorkFlowAction[] = filterByRole(actionsAll, !!isEmployer, !isEmployer);
 
     const handlePanelAction = (key: string, payload?: any) => {
         switch (key) {
@@ -303,7 +304,20 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     </div>
                 </div>
             )}
-
+            {showStartButton && (
+                <div className="w-full px-4">
+                    <button
+                        className={`rounded-md px-4 py-2 text-sm font-medium ${
+                            canStartWorkflow ? 'bg-primary text-white hover:bg-[#063a68]' : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                        }`}
+                        onClick={canStartWorkflow ? () => setShowStartConfirm(true) : undefined}
+                        aria-disabled={!canStartWorkflow}
+                        disabled={!canStartWorkflow}
+                    >
+                        {t('profileChat.startWorkflow') || 'Start a new job'}
+                    </button>
+                </div>
+            )}
             {startedEffective && (
                 <>
                     <ul className={`flex ${orientation === 'horizontal' ? 'flex-row flex-wrap gap-4' : 'flex-col'} px-4 ${compact ? 'py-2' : 'py-4'}`}>
