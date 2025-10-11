@@ -78,11 +78,9 @@ export function sendRoomUpdateEvent(
 /** Internal helper to send a message, wait for ack, update status and emit UI event */
 async function doSend(deps: SendMessageDeps, msg: ChatMessage): Promise<{ id: string; sent: boolean; }> {
     const { sender } = deps as any;
-    dbg('doSend', deps);
     if (!sender) return { id: String(msg.id), sent: false };
 
     const sent = deps.sender ? Boolean(await deps.sender.sendMessage('chat:message', msg)) : false;
-    dbg('doSend', sent);
     if (sent) {
         const acked = await waitForAck(deps, msg.id, 4000)
           .catch((err) => { dbg('waitForAck error', err); return false; });
