@@ -6,6 +6,7 @@ interface Props {
     unread?: boolean;
     showReceipt: boolean | undefined;
     readByPeer: boolean | undefined;
+    readTime: string | null
     deliveredButUnread: boolean | undefined;
     t: any;
     onRetry?: () => void; // <- allow parent to wire resend.flushActive(roomId)
@@ -57,6 +58,7 @@ const MessageReceipt: React.FC<Props> = ({
                                              unread,
                                              showReceipt,
                                              readByPeer,
+                                             readTime,
                                              deliveredButUnread,
                                              t,
                                              onRetry,
@@ -107,9 +109,10 @@ const MessageReceipt: React.FC<Props> = ({
     if (showReceipt) {
         if (readByPeer) {
             return (
-                <span className="ml-1 inline-flex items-center gap-1 text-green-600">
+                <span className="ml-1 inline-flex items-center gap-1 text-green-600 text-xs">
                     <ReadIcon/>
-                    <span className="text-xs">{t("profileChat.read") || "Read"}</span>
+                    <span>{t("profileChat.read") || "Read"}</span>
+                    <span className="opacity-70">{readTime}</span>
                 </span>
             );
         }

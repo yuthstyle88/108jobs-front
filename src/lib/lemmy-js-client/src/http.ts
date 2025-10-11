@@ -31,7 +31,7 @@ import type {
     GetRandomCommunityI,
     GetRegistrationApplicationI,
     GetReportCountI,
-    GetSiteMetadataI,
+    GetSiteMetadataI, LastReadQueryI,
     ListCommentLikesI,
     ListCommunitiesI,
     ListCommunityPendingFollowsI,
@@ -265,6 +265,8 @@ import type {ScbTokenResponse} from "./types/ScbTokenResponse";
 import type {ScbQrCodeRequest, ScbQrCodeResponse} from "./types/ScbQrCode";
 import type {ScbQrInquiryRequest, ScbQrInquiryResponse} from "./types/ScbQrInquiry";
 import type {BillingId} from "./types/BillingId";
+import {LastReadQuery} from "./types/LastReadQuery";
+import {LastReadResponse} from "./types/LastReadResponse";
 
 enum HttpType {
     Get = "GET",
@@ -2988,7 +2990,7 @@ export class LemmyHttp extends Controller {
             options,
         );
     }
-    
+
     /**
      * @summary Generate SCB access token.
      */
@@ -3271,6 +3273,24 @@ export class LemmyHttp extends Controller {
         return this.#wrapper<ChatHistoryQuery, ChatMessagesResponse>(
             HttpType.Get,
             "/chat/history",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary Fetch last read for a user of a room.
+     */
+    @Security("bearerAuth")
+    @Get("/chat/last-read")
+    @Tags("Chat")
+    async getLastRead(
+        @Queries() form: LastReadQueryI,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<LastReadQuery, LastReadResponse>(
+            HttpType.Get,
+            "/chat/last-read",
             form,
             options,
         );

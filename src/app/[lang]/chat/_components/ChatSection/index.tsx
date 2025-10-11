@@ -1,4 +1,3 @@
-
 "use client";
 
 /**
@@ -54,7 +53,8 @@ import {useChatHistory} from '@/core/chat/hooks/useChatHistory';
 import {useChatStore} from "@/core/chat/store/chatStore";
 import {useShallow} from 'zustand/react/shallow';
 import {selectRoomMessages} from '@/core/chat/utils/selectors';
-import {dbg} from "@/core/chat/utils";
+import {useLoadLastRead} from "@/core/chat/hooks/useLoadLastRead";
+import {useReadLastIdStore} from "@/core/chat/store/readLastIdStore";
 
 
 /** Shape of the form submitted by ChatInput. */
@@ -106,7 +106,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     // Set of message IDs received during this session, used by history hook to deduplicate pages.
     const receivedIds = useMemo(() => new Set<string>(), []);
     const roomId = roomData.room.room.id;
-    // Hydrate UI from local store (messages + pending) so leftover local data shows immediately
+    // Hydrate UI from the local store (messages + pending) so leftover local data shows immediately
     const {send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
@@ -117,8 +117,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     // Store selector pinned to the current room. Guarantees stable ascending order and dedup at selector level.
     const roomSelector = React.useMemo(() => (s: any) => selectRoomMessages(s, String(roomId)), [roomId]);
     const messages = useChatStore(useShallow(roomSelector)) as ChatMessage[];
-    const setMessages = React.useCallback((_updater: any) => {
-    }, []);
     const initialFetchRef = useRef(false);
     const markSeen = useUnreadStore((s) => s.markSeen);
     const [error, setError] = useState<string | null>(null);
@@ -135,7 +133,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const calculatedProposedQuote = useMemo(() => {
         return Boolean(getLatestProposedQuotePayload(messages as any));
     }, [messages]);
-    // dbg("calculatedProposedQuote", calculatedProposedQuote);
     // Determine latest quotation amount and whether employer has sufficient balance to approve
     const latestQuoteAmount = currentRoom.room.post?.budget;
 
@@ -161,7 +158,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const {execute: submitStartWorkApi} = useHttpPost("submitStartWork");
     const {execute: approveWorkApi} = useHttpPost("approveWork");
     const inputContainerRef = useRef<HTMLDivElement>(null);
-    // const {lastReadId} = useRoomReadLastId(roomId);
     useCallback((el: HTMLDivElement | null) => {
         scrollContainerRef.current = el;
         if (el) setScrollParentEl(el);
@@ -175,6 +171,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         handleRemoveSelectedFile
     } = useFileUpload({setError, t: (k: string) => t(k)});
     const upsertHistory = useChatStore(s => s.upsertHistory);
+
+    // fetch the last read timestamp from the backend and store it into useReadLastIdStore
+    useLoadLastRead(roomId, localUser.id);
+
     // --- History management ---
     // Pulls paginated history for this room and writes pages into the global store via upsertHistory.
     // `receivedSet` prevents double-inserting messages when pages overlap.
@@ -187,7 +187,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         isE2EMock: false,
         localUserId: Number(localUser.id) || 0,
         receivedSet: receivedIds,
-        broadcast: () => {},
+        broadcast: () => {
+        },
         upsertHistory,
     });
     const upsertMessage = useChatStore(s => s.upsertMessage);
@@ -196,50 +197,38 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         state: {refreshRoomData, isPartnerTyping},
     } = useChatRoom({roomId, peerPublicKeyHex, localUser, roomData: currentRoom, upsertMessage});
 
-    // Apply read flags to current message list (newest-first)
-    // useEffect(() => {
-    //     if (!lastReadId || !Array.isArray(messages) || messages.length === 0) return;
-    //     setMessages((prev: ChatMessage[]) => {
-    //         let hit = false;
-    //         let changed = false;
-    //         const mapped: ChatMessage[] = prev.map((m: ChatMessage) => {
-    //             const isHit = String(m.id) === String(lastReadId);
-    //             if (isHit) hit = true;
-    //             const shouldRead: boolean = hit; // hit and below are read
-    //             if ((m as any).isRead === shouldRead) return m;
-    //             changed = true;
-    //             return {...(m as any), isRead: shouldRead} as ChatMessage;
-    //         });
-    //         return changed ? mapped : prev;
-    //     });
-    // }, [lastReadId, messages]);
+    const {setLastReadAt} = useReadLastIdStore.getState();
 
     useEffect(() => {
         if (!messages.length) return;
         const lastMessage = messages[messages.length - 1];
         // Only send if message is not yours
         if (lastMessage.senderId !== localUser.id) {
-            const lastAt = String((lastMessage as any).createdAt ?? '');
-            if (lastAt) {
-                sendReadReceipt(roomId, lastAt);
+            const lastIdStr = String(lastMessage.id);
+            sendReadReceipt(roomId, lastIdStr);
+            try {
+                setLastReadAt(roomId, localUser.id, lastMessage.createdAt);
+            } catch {
             }
         }
-    }, [messages, roomId, localUser.id, sendReadReceipt]);
+    }, [messages, roomId, localUser.id, sendReadReceipt, setLastReadAt]);
 
     // When the window regains focus, send a read receipt for the newest message (if any).
     useEffect(() => {
         const onVisible = () => {
             const lastMsg = messages[messages.length - 1];
             if (lastMsg) {
-                const lastAt = String((lastMsg as any).createdAt ?? '');
-                if (lastAt) {
-                    sendReadReceipt(roomId, lastAt);
+                const lastIdStr = String(lastMsg.id);
+                sendReadReceipt(roomId, lastIdStr);
+                try {
+                    setLastReadAt(roomId, localUser.id, lastMsg.createdAt);
+                } catch {
                 }
             }
         };
         window.addEventListener("focus", onVisible);
         return () => window.removeEventListener("focus", onVisible);
-    }, [roomId, messages, sendReadReceipt]);
+    }, [roomId, messages, sendReadReceipt, setLastReadAt]);
 
     // Auto-collapse the workflow panel on narrow viewports to preserve space for the conversation.
     useEffect(() => {
@@ -484,7 +473,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
         // Always fetch when ChatMessages reports top reached; preserve position if we can
         if (!rootEl) {
-            fetchHistory().catch(() => {});
+            fetchHistory().catch(() => {
+            });
             return;
         }
 
@@ -494,7 +484,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 const newHeight = rootEl.scrollHeight;
                 rootEl.scrollTop += newHeight - oldHeight; // preserve visual position
             })
-            .catch(() => {});
+            .catch(() => {
+            });
     }, [hasMore, isFetching, scrollParentEl, fetchHistory]);
 
     const renderFlowContent = () => (
@@ -549,22 +540,32 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         messages={messages}
                         partnerAvatar={ProfileImage.avatar}
                         customScrollParent={scrollParentEl}
-                        // Fetch older history when scrolled halfway from the top instead of at the exact top
                         onTopReached={handleOnTopReached}
                         hasMore={hasMore}
                         isFetching={isFetching}
                         onAtBottomChange={(isAtBottom) => {
-                          if (isAtBottom) {
-                            try { markRoomRead(roomId); } catch {}
-                            try { markSeen(roomId); } catch {}
-                            const last = messages[messages.length - 1];
-                            if (last) {
-                              const lastAt = String((last as any).createdAt ?? '');
-                              if (lastAt) {
-                                try { sendReadReceipt(roomId, lastAt); } catch {}
-                              }
+                            if (isAtBottom) {
+                                try {
+                                    markRoomRead(roomId);
+                                } catch {
+                                }
+                                try {
+                                    markSeen(roomId);
+                                } catch {
+                                }
+                                const last = messages[messages.length - 1];
+                                if (last) {
+                                    const lastIdStr = String((last as any).id);
+                                    try {
+                                        setLastReadAt?.(roomId, localUser.id, last.createdAt);
+                                    } catch {
+                                    }
+                                    try {
+                                        sendReadReceipt(roomId, lastIdStr);
+                                    } catch {
+                                    }
+                                }
                             }
-                          }
                         }}
                         sendReadReceipt={sendReadReceipt}
                         roomId={roomId}
