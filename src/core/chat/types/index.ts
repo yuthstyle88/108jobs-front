@@ -76,7 +76,7 @@ export interface SendMessageDeps {
          * Send a fully prepared ChatMessage (content/id/roomId/senderId set).
          * Returns the server id when available, else the client id; `false` on failure.
          */
-        send: (event: string, msg: ChatMessage) => Promise<boolean>;
+        sendMessage: (event: string, msg: ChatMessage) => Promise<boolean>;
     };
 
 }

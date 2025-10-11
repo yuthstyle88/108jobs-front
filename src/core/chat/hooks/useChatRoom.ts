@@ -354,7 +354,6 @@ export function useChatRoom({
           ...(sender ? { sender } : {}),
           ...(adapter ? { adapter } : {}),
       } as const;
-
       await sendChatMessage(deps, payload);
   }, [ws, roomId, localUser.id, isE2EMock, peerPublicKeyHex]);
 
@@ -468,9 +467,21 @@ export function useChatRoom({
         fetchingRef.current = false;
     }, []);
 
+    // Getter: read-last (peer) — delegate to readLastIdStore (SSOT)
+    const getPeerLastReadAt = useCallback((peerUserId: number | string, roomIdArg?: string) => {
+        const rid = roomIdArg ?? roomId;
+        try {
+            const mod = require("@/core/chat/store/readLastIdStore");
+            const useReadLastIdStore = (mod as any).useReadLastIdStore as { getState: () => { getPeerLastReadAt?: (roomId: string, userId: string | number) => string | undefined } };
+            return useReadLastIdStore?.getState?.().getPeerLastReadAt?.(rid, peerUserId);
+        } catch {
+            return undefined;
+        }
+    }, [roomId]);
+
     return {
         state: {pageCursor, refreshRoomData, isPartnerTyping, isPeerActive: peerActiveRef},
         actions: {sendMessage, resendMessage, flushPending, removePending, sendReadReceipt, sendTyping, sendRoomUpdate},
-        utils: {onWsErrorDuringFetch, markPeerActive},
+        utils: {onWsErrorDuringFetch, markPeerActive, getPeerLastReadAt},
     } as const;
 }

@@ -175,7 +175,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         handleRemoveSelectedFile
     } = useFileUpload({setError, t: (k: string) => t(k)});
     const upsertHistory = useChatStore(s => s.upsertHistory);
-    const setLastReadId = useChatStore((s) => (s as any).setLastReadId);
     // --- History management ---
     // Pulls paginated history for this room and writes pages into the global store via upsertHistory.
     // `receivedSet` prevents double-inserting messages when pages overlap.
@@ -220,25 +219,27 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         const lastMessage = messages[messages.length - 1];
         // Only send if message is not yours
         if (lastMessage.senderId !== localUser.id) {
-            const lastIdStr = String(lastMessage.id);
-            sendReadReceipt(roomId, lastIdStr);
-            try { setLastReadId?.(roomId, lastIdStr); } catch {}
+            const lastAt = String((lastMessage as any).createdAt ?? '');
+            if (lastAt) {
+                sendReadReceipt(roomId, lastAt);
+            }
         }
-    }, [messages, roomId, localUser.id, sendReadReceipt, setLastReadId]);
+    }, [messages, roomId, localUser.id, sendReadReceipt]);
 
     // When the window regains focus, send a read receipt for the newest message (if any).
     useEffect(() => {
         const onVisible = () => {
             const lastMsg = messages[messages.length - 1];
             if (lastMsg) {
-                const lastIdStr = String(lastMsg.id);
-                sendReadReceipt(roomId, lastIdStr);
-                try { setLastReadId?.(roomId, lastIdStr); } catch {}
+                const lastAt = String((lastMsg as any).createdAt ?? '');
+                if (lastAt) {
+                    sendReadReceipt(roomId, lastAt);
+                }
             }
         };
         window.addEventListener("focus", onVisible);
         return () => window.removeEventListener("focus", onVisible);
-    }, [roomId, messages, sendReadReceipt, setLastReadId]);
+    }, [roomId, messages, sendReadReceipt]);
 
     // Auto-collapse the workflow panel on narrow viewports to preserve space for the conversation.
     useEffect(() => {
@@ -558,9 +559,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                             try { markSeen(roomId); } catch {}
                             const last = messages[messages.length - 1];
                             if (last) {
-                              const lastIdStr = String((last as any).id);
-                              try { setLastReadId?.(roomId, lastIdStr); } catch {}
-                              try { sendReadReceipt(roomId, lastIdStr); } catch {}
+                              const lastAt = String((last as any).createdAt ?? '');
+                              if (lastAt) {
+                                try { sendReadReceipt(roomId, lastAt); } catch {}
+                              }
                             }
                           }
                         }}
