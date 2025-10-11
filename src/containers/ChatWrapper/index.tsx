@@ -2,7 +2,7 @@
 
 import {useLanguage} from "@/contexts/LanguageContext";
 import {useParams} from "next/navigation";
-import React, {useCallback, useMemo, useState} from "react";
+import React, {useCallback, useMemo, useState, useEffect} from "react";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {useChatRoomsContext} from "@/core/chat/contexts/ChatRoomsContext";
 import type {ChatRoom} from "@/types/chat";
@@ -25,7 +25,8 @@ const ChatWrapper = ({
     const activeRoomId = params?.roomId as string | undefined;
     const {lang: currentLang} = useLanguage();
     const {localUser} = useMyUser();
-    const {rooms, isLoading, error} = useChatRoomsContext();
+    const chatCtx = useChatRoomsContext();
+    const { rooms, isLoading, error } = chatCtx || {} as any;
     const [searchQuery, setSearchQuery] = useState("");
 
     // Debounce search input to prevent excessive re-renders
@@ -33,6 +34,31 @@ const ChatWrapper = ({
         debounce((value: string) => setSearchQuery(value), 300),
         []
     );
+    useEffect(() => {
+        return () => {
+            debouncedSetSearchQuery.cancel();
+        };
+    }, [debouncedSetSearchQuery]);
+
+    // Auto-join when the route roomId changes and the chat context is ready
+    useEffect(() => {
+        if (!activeRoomId || !chatCtx) return;
+        try {
+            // Ensure connection exists (no-op if already connected)
+            (chatCtx as any)?.connect?.();
+            // Prefer ensureJoined if available, otherwise joinRoom/openRoom
+            const roomKey = activeRoomId;
+            const ensured = (chatCtx as any)?.ensureJoined?.(roomKey);
+            if (!ensured) {
+                (chatCtx as any)?.joinRoom?.(roomKey) ?? (chatCtx as any)?.openRoom?.(roomKey);
+            }
+            // Optionally set active for local store/views
+            (chatCtx as any)?.setActiveRoom?.(roomKey);
+        } catch (e) {
+            console.warn('[ChatWrapper] auto-join failed', e);
+        }
+        if (isSidebarOpen) setIsSidebarOpen(false);
+    }, [activeRoomId, chatCtx, isSidebarOpen, setIsSidebarOpen]);
 
     // Memoized filtered rooms to optimize search performance
     const filteredRooms = useMemo(() => {
@@ -41,7 +67,7 @@ const ChatWrapper = ({
         return q
             ? list.filter(
                 (r) =>
-                    r.name.toLowerCase().includes(q)
+                    (r.name ?? '').toLowerCase().includes(q)
             )
             : list;
     }, [rooms, searchQuery]);

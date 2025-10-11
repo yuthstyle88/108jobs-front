@@ -46,7 +46,6 @@ export function sendTyping(deps: SendEventDeps, typing: boolean) {
     const { senderId, roomId } = deps as any;
     const adapter = (deps as any).adapter as SendMessageDeps['adapter'];
     const unified = createEvent('chat:typing', { typing, senderId, roomId });
-    dbg('sendTyping1', unified);
     if (!adapter) return;
     wsSend(adapter, unified);
 }
@@ -55,13 +54,11 @@ export function sendTyping(deps: SendEventDeps, typing: boolean) {
 export function sendReadReceipt(deps: SendEventDeps, lastMessageId: string) {
     const { roomId , senderId } = deps as any;
     const adapter = (deps as any).adapter as SendMessageDeps['adapter'];
-    dbg('[sendEvent] sendReadReceipt1', {deps, lastMessageId});
     const packet = createEvent('chat:read', {
       roomId: roomId,
       readerId: senderId,
       lastReadMessageId: String(lastMessageId ?? ''),
     });
-    dbg('sendReadReceipt2', packet);
     if (!adapter) return;
     wsSend(adapter, packet);
 }
@@ -74,7 +71,6 @@ export function sendRoomUpdateEvent(
     const { roomId } = deps as any;
     const adapter = (deps as any).adapter as SendMessageDeps['adapter'];
     const packet = createEvent('chat:update', { roomId, ...update });
-    dbg('sendRoomUpdateEvent', packet);
     if (!adapter) return;
     wsSend(adapter, packet);
 }
@@ -102,13 +98,11 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
     sent: boolean;
 } | undefined> {
     const {sender} = deps as any;
-    dbg('[sendEvent] sendChatMessage', {sender});
     const { roomId, peerPublicKeyHex } = deps as any;
     const store = useChatStore.getState();
     try {
         // ---- 0) Sanitize & validate input here (do not rely on caller) ----
         const raw = (data?.message ?? '');
-        dbg('[sendEvent] sendChatMessage', { raw, data });
         const message = typeof raw === 'string' ? raw.replace(/\s+/g, ' ').trim() : raw;
         if (!message) {
             try { (deps as any).onAfterSend?.(); } catch {}
@@ -233,4 +227,44 @@ export async function resendChatMessage(
         store?.commitStatus?.(messageId, "failed");
         return {id: messageId, sent: false};
     }
+}
+
+// ปลอดภัยกับ SSR
+const getWin = (): Window | undefined => {
+    try { return window; } catch { return undefined; }
+};
+
+/** สั่งให้ realtime layer เชื่อมต่อ WS (ถ้าเชื่อมแล้วจะเป็น no-op) */
+export function emitEnsureWs(): void {
+    const w = getWin();
+    if (!w) return;
+    w.dispatchEvent(new CustomEvent('ws:ensure-connect'));
+}
+
+/** สั่ง join room แบบ decoupled ผ่าน event bus */
+export function emitJoinRoom(payload: { roomId: string }): void {
+    const w = getWin();
+    if (!w) return;
+    w.dispatchEvent(new CustomEvent('chat:join-room', { detail: payload }));
+}
+
+/** helper สำหรับฝั่ง provider เอาไว้ subscribe */
+export function onWsEnsureConnect(handler: () => void): () => void {
+    const w = getWin();
+    if (!w) return () => {};
+    const fn = () => handler();
+    w.addEventListener('ws:ensure-connect', fn as EventListener);
+    return () => w.removeEventListener('ws:ensure-connect', fn as EventListener);
+}
+
+export function onJoinRoom(handler: (roomId: string) => void): () => void {
+    const w = getWin();
+    if (!w) return () => {};
+    const fn = (ev: Event) => {
+        const ce = ev as CustomEvent<{ roomId: string }>;
+        const rid = ce?.detail?.roomId;
+        if (rid) handler(rid);
+    };
+    w.addEventListener('chat:join-room', fn as EventListener);
+    return () => w.removeEventListener('chat:join-room', fn as EventListener);
 }

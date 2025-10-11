@@ -138,7 +138,6 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
             outPayload = (inner == null ? {} : inner);
         }
         const env = { event: outEvent, topic: topic.replace(/^room:/, ""), payload: outPayload };
-        dbg('[phoenix] forward', { event, topic, payload });
         try { adapter.onmessage?.({ data: JSON.stringify(env) }); } catch {}
     };
 

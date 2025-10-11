@@ -71,9 +71,7 @@ export const PhoenixChatBridgeProvider: React.FC<WebSocketProviderProps> = ({chi
         wiredWsRef.current = ch;
 
         // Build sender bound to channel
-        const sender = new PhoenixSenderAdapter(ch, (clientId) => {
-            servicesRef.current.resend?.onSendFailure(clientId);
-        });
+        const sender = new PhoenixSenderAdapter(ch);
 
         // Map store to ChatStorePort (抓เฉพาะที่ ResendManager ใช้)
         const port: ChatStorePort = {

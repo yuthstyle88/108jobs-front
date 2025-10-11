@@ -108,6 +108,10 @@ export function useChatRoom({
     const [connectionError, setConnectionError] = useState(false);
     const localSenderRef = useRef<any>(null);
    const ws = useWebSocketContext();
+   const adapterAny: any = (ws as any)?.adapter ?? ws;
+   // guards to avoid connect/join loops
+   const connectAttemptedRef = useRef<number>(0);
+   const joinedRoomRef = useRef<string | null>(null);
    // Normalize readiness flag for legacy socket vs new adapter
    const isReady = !!((ws as any)?.isReady ?? (ws as any)?.adapter?.isReady);
    // Normalized addMessageListener for both legacy socket and new adapter (or EventEmitter-style .on/.off)
@@ -132,16 +136,47 @@ export function useChatRoom({
        // No-op unsubscriber
        return () => {};
    }, [ws]);
+
     useEffect(() => {
-        if (isReady) {
-            setConnectionError(false);
-            setPageCursor(null);
-            try {
-                // Notify in-app listeners that WS reconnected (no dynamic import)
-                emitWsReconnected?.();
-            } catch {}
+        console.debug('[chat-room-debug] isReady check', {
+            isReady,
+            wsReady: (ws as any)?.isReady,
+            adapterReady: (ws as any)?.adapter?.isReady,
+            roomId,
+            joinedRoom: joinedRoomRef.current,
+            connectAttemptedAt: connectAttemptedRef.current,
+        });
+        if (!adapterAny) return;
+
+        // If not ready: connect only once per adapter instance
+        if (!isReady) {
+            if (!connectAttemptedRef.current) {
+                try { adapterAny.connect?.(); } catch {}
+                connectAttemptedRef.current = Date.now();
+            }
+            // do not attempt join until ready to avoid spinning
+            return;
         }
-    }, [isReady]);
+
+        // Ready now → ensure joined exactly once per roomId
+        if (roomId && joinedRoomRef.current !== roomId) {
+            try {
+                // leave previous if applicable (best-effort)
+                if (joinedRoomRef.current && typeof adapterAny.leave === 'function') {
+                    try { adapterAny.leave(joinedRoomRef.current); } catch {}
+                }
+                if (typeof adapterAny.join === 'function') {
+                    adapterAny.join(roomId);
+                }
+                joinedRoomRef.current = roomId;
+            } catch {}
+
+            // Clear transient UI flags only on new join
+            setConnectionError(false);
+            if (pageCursor !== null) setPageCursor(null);
+            try { emitWsReconnected?.(); } catch {}
+        }
+    }, [isReady, roomId]);
 
     const handleRemoteTyping = useCallback((detail: { roomId: ChatRoomId; senderId: LocalUserId; typing: boolean }) => {
         try {
@@ -385,18 +420,25 @@ export function useChatRoom({
         }
     }, []);
 
-    const sendReadReceipt = useCallback((roomIdArg: string, lastMessageId: string) => {
+    // New read-receipt: only send event, do NOT optimistically update peer read state locally
+    const sendReadReceipt = useCallback((roomIdArg: string, lastMessageAt: string) => {
+        const adapter = ((ws as any)?.adapter ?? ws) as any;
+        const me = Number(localUser.id) || 0;
+
+        // Do NOT update peer read locally here.
+        // Read-last is a property of the OTHER party; we wait for server/peer event to reflect it.
+        if (!adapter) return;
         try {
             if (localStorage.getItem('debug_read_ack') === '1') {
-                console.log('[read-ack] sendReadReceipt() 1', {roomId: roomIdArg, senderId: localUser.id, lastMessageId});
+                // console.log('[read-ack] sendReadReceipt() 1', { roomId: roomIdArg, senderId: me, lastMessageAt });
             }
-            sendReadReceiptEvent({roomId: roomIdArg, senderId: localUser.id}, lastMessageId);
-            console.log('[read-ack] sendReadReceipt() 2', {roomId: roomIdArg, senderId: localUser.id, lastMessageId});
-            readAckRef.current?.(lastMessageId);
+            (sendReadReceiptEvent as any)({ adapter, roomId: roomIdArg, senderId: me }, { lastReadAt: lastMessageAt });
+            // console.log('[read-ack] sendReadReceipt() 2', { roomId: roomIdArg, senderId: me, lastMessageAt });
+            try { (readAckRef.current as any)?.(lastMessageAt); } catch {}
         } catch (err) {
             console.error('Failed to send read receipt', err);
         }
-    }, [isE2EMock, ws, localUser.id]);
+    }, [ws, localUser.id]);
 
     const sendTyping = useCallback((isTyping: boolean) => {
         const adapter = ((ws as any)?.adapter ?? ws) as any;

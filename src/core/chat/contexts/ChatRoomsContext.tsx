@@ -11,7 +11,7 @@ import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {isBrowser} from "@/utils/browser";
 import {useUnreadStore} from "@/core/chat/store/unreadStore";
-import {useRoomsStore} from "@/core/chat/store/roomsStore";
+import {useRoomsStore, useActiveRoomId} from "@/core/chat/store/roomsStore";
 import {disableBackgroundUnread, enableBackgroundUnread} from "@/core/chat/utils/backgroundUnreadWatcher";
 // Context state for listing chat rooms with pagination and E2EE-aware lastMessage preview
 
@@ -172,46 +172,26 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         hasMore: true
     } as any);
 
-    // Use unreadStore as single source of truth for active room
-    const storeActiveRoomId = useUnreadStore(s => s.activeRoomId);
-    const acquireActive = useUnreadStore(s => s.acquireActive);
-    const releaseActive = useUnreadStore(s => s.releaseActive);
-    const directSetActive = useUnreadStore(s => s.setActiveRoomId);
-    const [activeToken, setActiveToken] = useState<string | null>(null);
+    // Use roomsStore as single source of truth for active room
+    const storeActiveRoomId = useActiveRoomId();
+    const setRoomsActive    = useRoomsStore(s => s.setActiveRoomId);
+    // removed activeToken state
     const markSeen = useUnreadStore(s => s.markSeen);
 
     const activeRoomId = storeActiveRoomId;
     const setActiveRoomId = useCallback((roomId: string | null) => {
         const current = storeActiveRoomId == null ? null : String(storeActiveRoomId);
         const next = roomId == null ? null : String(roomId);
-        // No-op if no change
         if (current === next) return;
 
-        if (next === null) {
-            try {
-                if (activeToken) releaseActive(activeToken);
-            } catch {
-            }
-            setActiveToken(null);
-            try {
-                directSetActive(null);
-            } catch {
-            }
-            return;
+        // Delegate active switching to roomsStore (SSOT)
+        setRoomsActive(next);
+
+        // Clear unread for the newly active room (if any)
+        if (next) {
+            try { markSeen(next); } catch {}
         }
-        // switch ownership token only when id actually changes
-        try {
-            if (activeToken) releaseActive(activeToken);
-        } catch {
-        }
-        const token = acquireActive(next);
-        setActiveToken(token);
-        // Clear unread immediately at the origin where active is set
-        try {
-            markSeen(next);
-        } catch {
-        }
-    }, [storeActiveRoomId, activeToken, acquireActive, releaseActive, directSetActive, markSeen]);
+    }, [storeActiveRoomId, setRoomsActive, markSeen]);
 
     useEffect(() => {
         let alive = true;
@@ -491,14 +471,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         // Re-run when the set of room ids changes
     }, [state.rooms.map?.(r => r.id).join('|')]);
 
-    useEffect(() => {
-        return () => {
-            try {
-                if (activeToken) releaseActive(activeToken);
-            } catch {
-            }
-        };
-    }, [activeToken, releaseActive]);
+    // removed effect that released activeToken on unmount
 
     const value = useMemo<ChatRoomsContextValue>(() => ({
         ...state,

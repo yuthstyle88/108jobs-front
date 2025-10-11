@@ -21,7 +21,7 @@ export function makeReadAckEmitter(
   return (evt: string, payload: any) => {
     try {
       if (typeof localStorage !== 'undefined' && localStorage.getItem(debugKey) === '1') {
-        console.log('[read-ack] emit', { evt, payload });
+        // console.log('[read-ack] emit', { evt, payload });
       }
     } catch {}
 

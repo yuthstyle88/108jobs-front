@@ -13,12 +13,12 @@ import {dbg} from "@/core/chat/utils";
 // ข้อมูลขั้นต่ำที่ต้องใช้ในการส่งข้อความ  (ไม่ผูกกับชนิดจาก SDK ภายนอก)
 export type SendDraft = ChatMessage;
 
-export interface PhoenixSenderAdapter {
+export interface ChatSenderAdapter {
     /**
      * ส่งข้อความไปยัง backend
      * @returns server message id (string) เมื่อสำเร็จ, หรือ false เมื่อไม่สำเร็จ
      */
-    sendMessage(vent: string, draft: SendDraft): Promise<string | false>;
+    sendMessage(event: string, draft: SendDraft): Promise<string | false>;
 }
 
 /**
@@ -37,38 +37,50 @@ export type PhoenixChannel = {
  */
 /** Called when an outbound send fails so ResendManager can schedule retry */
 
-export class PhoenixSenderAdapter implements PhoenixSenderAdapter {
+export class PhoenixSenderAdapter implements ChatSenderAdapter {
     constructor(
       private socket: PhoenixChannel | WebSocket,
-    ) {
-    }
+    ) {}
 
-    async send(event: string, payload: SendDraft): Promise<boolean> {
+    async sendMessage(event: string, payload: SendDraft): Promise<string | false> {
         try {
             let delivered = false;
+            let serverId: string | undefined;
 
-            // 1) Prefer Phoenix channel push for a proper server response (id)
+            // Prefer Phoenix channel push for a proper server response (id)
             const maybePush = (this.socket as any)?.push;
-            if(typeof maybePush === 'function') {
+            if (typeof maybePush === 'function') {
                 try {
-                    await maybePush.call(this.socket, event, payload);
+                    const res: any = await maybePush.call(this.socket, event, payload);
+                    // Try to extract id from common phoenix/phx_reply shapes
+                    serverId =
+                        res?.response?.id ??
+                        res?.payload?.response?.id ??
+                        res?.payload?.id ??
+                        res?.id ??
+                        undefined;
                     delivered = true;
+                    if (serverId) return String(serverId);
                 } catch (e) {
-                    // push failed → we will fall back to wsSend path
-                    dbg('[PhoenixSenderAdapter] push failed, fallback to wsSend', {id: payload.id, e});
+                    dbg('[PhoenixSenderAdapter] push failed, fallback to wsSend', { id: (payload as any)?.id, e });
                 }
             }
 
-            // 2) Fallback to wsSend (transport-agnostic). It returns boolean only.
-            if(!delivered) {
-                const sent = wsSend(this.socket as any, {event, payload});
-                dbg('[PhoenixSenderAdapter] wsSend', {id: payload.id, sent});
-                if(!sent) throw new Error('socket send failed');
+            // Fallback: raw ws send (boolean only)
+            if (!delivered) {
+                const sent = wsSend(this.socket as any, { event, payload });
+                dbg('[PhoenixSenderAdapter] wsSend', { id: (payload as any)?.id, sent });
+                if (!sent) throw new Error('socket send failed');
+                // No server id in this path → return client-side id if present
+                const clientId = (payload as any)?.id ?? (typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : String(Date.now()));
+                return String(clientId);
             }
-            // Return serverId if present; otherwise fall back to client payload id
-            return true;
+
+            // Delivered via push but no id found → fall back to client id
+            const clientId = (payload as any)?.id ?? (typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : String(Date.now()));
+            return String(clientId);
         } catch (err) {
-            dbg('[PhoenixSenderAdapter] send failed', {id: payload.id, err});
+            dbg('[PhoenixSenderAdapter] send failed', { id: (payload as any)?.id, err });
             return false;
         }
     }

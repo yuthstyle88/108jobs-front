@@ -295,11 +295,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
         if (messages.length === 0 && hasMore && !isFetching) {
             initialFetchRef.current = true;
-            console.log("🔄 Initial page load - fetching chat history");
+            // console.log("🔄 Initial page load - fetching chat history");
 
             fetchHistory()
                 .then(() => {
-                    console.log("✅ Initial history fetch completed");
+                    // console.log("✅ Initial history fetch completed");
                 })
                 .catch((error) => {
                     console.error("❌ Failed to fetch initial history:", error);

@@ -78,14 +78,13 @@ export function createHandleWSMessage(deps: HandlerDeps) {
     const handleWSMessage = async (event: any) => {
         let payload: any;
         try {
-            console.log("handleWSMessage", event);
             payload = unwrapPhoenixFrame(event);
-            if (!isValidIncomingChatPayload(payload)) {
+            const evt = payload?.data?.event;
+            if (evt === 'chat:message' && !isValidIncomingChatPayload(payload)) {
                 // Keep log lightweight; the permissive mapper below will try its best.
                 try {
-                    console.debug("[ws] payload failed strict validation; attempting permissive mapping");
-                } catch {
-                }
+                    console.debug("[ws] payload failed strict validation (chat:message); attempting permissive mapping");
+                } catch {}
             }
             // Normalize once only
             const env: NormalizedEnvelope = normalizePhoenixEnvelope(payload.data, roomIdStr);
@@ -102,7 +101,6 @@ export function createHandleWSMessage(deps: HandlerDeps) {
 
             const typingInfo = parseTypingDetail(env, roomIdStr, meId);
             if (typingInfo) {
-                console.log('[chat] typing2', typingInfo);
                 try {
                     emitChatTyping(typingInfo);
                 } catch {

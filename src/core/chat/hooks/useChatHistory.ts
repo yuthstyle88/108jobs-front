@@ -68,24 +68,24 @@ export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResul
             const prevCursor = (typeof prev === 'string' && prev.length > 0) ? prev : null;
             const sameCursor = prevCursor !== null && prevCursor === lastCursorRef.current;
             if (filteredCount === 0 && sameCursor) {
-                console.debug('[useChatHistory] stop: no new items & cursor unchanged');
+                // console.debug('[useChatHistory] stop: no new items & cursor unchanged');
                 setPageCursor(null);
                 setHasMore(false);
             } else if (prevCursor) {
                 lastCursorRef.current = prevCursor;
                 setPageCursor(prevCursor);
                 setHasMore(true);
-                console.debug('[useChatHistory] next prev-cursor =', prevCursor);
+                // console.debug('[useChatHistory] next prev-cursor =', prevCursor);
             } else {
-                console.debug('[useChatHistory] end reached: hasMore=false');
+                // console.debug('[useChatHistory] end reached: hasMore=false');
                 setPageCursor(null);
                 setHasMore(false);
             }
 
-            console.debug('[useChatHistory] page done', {
-                filteredCount,
-                hasMoreCandidate: (typeof prev === 'string' && prev.length > 0)
-            });
+            // console.debug('[useChatHistory] page done', {
+            //     filteredCount,
+            //     hasMoreCandidate: (typeof prev === 'string' && prev.length > 0)
+            // });
         } catch (e) {
             console.error('[useChatHistory] fetchHistory failed', e);
         } finally {

@@ -170,11 +170,9 @@ export function isBase64Like(s: string): boolean {
 
 export function addOnce(set: Set<string>, key: string): boolean {
     if (set.has(key)) {
-        dbg(`addOnce: Key already exists in set:`, key);
         return false;
     }
     set.add(key);
-    dbg(`addOnce: Added key to set:`, key);
     return true;
 }
 
@@ -651,7 +649,7 @@ export function makeEmitReadAcker(
         scheduled = true;
         if (DBG) {
             try {
-                console.log('[read-ack][emit] schedule', {roomId, pendingIdStr});
+                // console.log('[read-ack][emit] schedule', {roomId, pendingIdStr});
             } catch {
             }
         }
