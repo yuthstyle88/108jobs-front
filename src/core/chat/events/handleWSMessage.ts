@@ -110,8 +110,7 @@ export function createHandleWSMessage(deps: HandlerDeps) {
                 } catch {
                 }
             }
-
-            // 3) read-receipt → emit & return
+            // 3) read-receipt → persist peer's read-last then return
             if (maybeHandleReadReceipt(env, roomIdStr)) {
                 return;
             }

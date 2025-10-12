@@ -1,5 +1,3 @@
-
-
 // ---- Optional emitter helper (no DOM emits) -------------------------------
 export type SocketEmitLike = {
   emit?: (evt: string, payload: any) => void;
@@ -19,13 +17,32 @@ export function makeReadAckEmitter(
 ) {
   const debugKey = opts?.debugKey ?? 'debug_read_ack';
   return (evt: string, payload: any) => {
-    try {
-      if (typeof localStorage !== 'undefined' && localStorage.getItem(debugKey) === '1') {
-        // console.log('[read-ack] emit', { evt, payload });
-      }
-    } catch {}
+    let enriched: any = { ...(payload || {}) };
 
-    const enriched = { ...(payload || {}), readerId: readerId };
+    // Normalize only for chat:read — backend expects camelCase keys: roomId, readerId, lastReadMessageId
+    if (evt === 'chat:read') {
+      const roomId = enriched.roomId ?? enriched.topic ?? enriched.room_id;
+      const lastReadMessageId =
+        enriched.lastReadMessageId ??
+        enriched.last_read_message_id ??
+        enriched.id ??
+        enriched.msgRefId ??
+        enriched.messageId;
+
+      enriched = {
+        roomId: roomId != null ? String(roomId) : undefined,
+        readerId: readerId,
+        lastReadMessageId: lastReadMessageId != null ? String(lastReadMessageId) : undefined,
+      };
+    } else {
+      // For other events, just inject readerId and pass through
+      enriched.readerId = readerId;
+    }
+      try {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem(debugKey) === '1') {
+              console.debug('[read-ack] emit', { evt, enriched });
+          }
+      } catch {}
 
     try {
       if (typeof (ws as any)?.emit === 'function') {
