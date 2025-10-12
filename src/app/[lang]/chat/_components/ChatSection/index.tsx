@@ -80,7 +80,7 @@ interface ChatSectionProps {
     partnerAvailable?: boolean;
     roomData: ChatRoomData;
     localUser: LocalUser;
-    peerPublicKeyHex: string;
+    shareKey: string;
 }
 
 const ChatSection: React.FC<ChatSectionProps> = ({
@@ -91,7 +91,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                                      partnerAvailable,
                                                      roomData,
                                                      localUser,
-                                                     peerPublicKeyHex
+                                                     shareKey
                                                  }) => {
     const {t} = useTranslation();
     const {person, wallet} = useMyUser();
@@ -195,7 +195,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const {
         actions: {sendMessage, sendTyping, sendRoomUpdate, sendReadReceipt},
         state: {refreshRoomData, isPartnerTyping},
-    } = useChatRoom({roomId, peerPublicKeyHex, localUser, roomData: currentRoom, upsertMessage});
+    } = useChatRoom({roomId, shareKey, localUser, roomData: currentRoom, upsertMessage});
 
     const {setLastReadAt} = useReadLastIdStore.getState();
 

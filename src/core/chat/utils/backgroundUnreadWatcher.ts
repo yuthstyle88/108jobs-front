@@ -2,7 +2,6 @@
 
 import {getChannelAdapter} from "@/core/chat/services/PhoenixSocketService";
 import {useRoomsStore} from "@/core/chat/store/roomsStore";
-import {incrementForIncoming, useUnreadStore} from "@/core/chat/store/unreadStore";
 
 // Debug toggle: set window.__DEBUG_BG_UNREAD = true or localStorage.DEBUG_BG_UNREAD = '1' to enable logs
 const DEBUG_KEY = 'DEBUG_BG_UNREAD';
@@ -46,10 +45,8 @@ export function enableBackgroundUnread(tokenGetter: TokenGetter, userIdGetter?: 
     st.tokenGetter = tokenGetter;
     st.userIdGetter = userIdGetter || null;
     dbg('start watcher', { hasToken: !!st.tokenGetter?.(), userId: st.userIdGetter?.() });
-    const unsubRooms = useRoomsStore.subscribe(() => reconcileRooms(st));
-    const unsubActive = useUnreadStore.subscribe(() => reconcileRooms(st));
-
-    st.stopFns.push(unsubRooms, unsubActive);
+    const unsub = useRoomsStore.subscribe(() => reconcileRooms(st));
+    st.stopFns.push(unsub);
     dbg('initial reconcile');
     reconcileRooms(st);
 }
@@ -80,7 +77,7 @@ function reconcileRooms(st: BGState) {
 
         const rooms = useRoomsStore.getState().rooms as Array<{ id: string }>;
 
-        const active = useUnreadStore.getState().activeRoomId;
+        const active = useRoomsStore.getState().getActiveRoom();
 
         const selfIdRaw = st.userIdGetter?.();
         const selfId = selfIdRaw == null ? null : String(selfIdRaw);
@@ -131,12 +128,25 @@ function reconcileRooms(st: BGState) {
                     const sender = payload.senderId;
                     if (selfId != null && sender != null && String(sender) === selfId) { dbg('skip: from self', { roomId, messageId, sender }); return; }
 
-                    const activeNow = useUnreadStore.getState().activeRoomId;
-                    if (String(activeNow ?? '') === roomId) { dbg('skip: active room', { roomId, messageId }); return; }
+                    const stRooms = useRoomsStore.getState();
+                    const activeRoom = stRooms.getActiveRoom();
+                    const activeFlag = typeof stRooms.isActive === 'function' ? !!stRooms.isActive(roomId) : (String(activeRoom ?? '') === roomId);
+                    if (activeFlag) { dbg('skip: active room', { roomId, messageId }); return; }
 
                     dbg('increment', { roomId, messageId });
                     try { if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('bg-unread:increment', { detail: { roomId, messageId } })); } catch {}
-                    incrementForIncoming(roomId, { messageId });
+
+                    try {
+                      const inc = useRoomsStore.getState().incrementUnread as unknown as ((roomId: string, payload: { messageId: string }) => void) | undefined;
+                      if (typeof inc === 'function') {
+                        inc(roomId, { messageId });
+                      } else {
+                        dbg('store action missing: incrementUnread', { roomId, messageId });
+                      }
+                    } catch (err) {
+                      console.error('[bg-unread] incrementUnread failed', err);
+                    }
+
                 } catch (e) {
                     dbg('onmessage error', e);
                 }

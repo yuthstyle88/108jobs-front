@@ -3320,7 +3320,7 @@ export class LemmyHttp extends Controller {
     @Security("bearerAuth")
     @Get("/users/{id}/keys")
     @Tags("User")
-    async getUserKeys(
+    async getUserKey(
         @Path() id: number,
         @Inject() options?: RequestOptions,
     ) {

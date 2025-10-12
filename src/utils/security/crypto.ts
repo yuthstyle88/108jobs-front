@@ -142,3 +142,39 @@ export async function importAesKey(sharedKeyBase64Raw: string, usage: KeyUsage):
   const raw = Uint8Array.from(atob(sharedKeyBase64Raw), c => c.charCodeAt(0));
   return crypto.subtle.importKey("raw", raw, { name: "AES-GCM", length: 256 }, false, [usage]);
 }
+
+const subtle = typeof window !== "undefined" ? window.crypto?.subtle : undefined;
+
+async function importServerPubFromHex(hex: string): Promise<CryptoKey> {
+    if (!subtle) throw new Error("WebCrypto not available");
+    const raw = hexToBytes(hex.trim()); // SEC1 uncompressed 65B (0x04 + X + Y)
+    return subtle.importKey(
+      "raw",
+      raw,
+      { name: "ECDH", namedCurve: "P-256" },
+      true,
+      []
+    );
+}
+
+export async function deriveAesGcmKeyHex(clientPrivateKey: CryptoKey, serverPubHex: string): Promise<string> {
+    if (!subtle) throw new Error("WebCrypto not available");
+    const serverPubKey = await importServerPubFromHex(serverPubHex);
+    const aesKey = await subtle.deriveKey(
+      { name: "ECDH", public: serverPubKey },
+      clientPrivateKey,
+      { name: "AES-GCM", length: 256 },
+      true,
+      ["encrypt", "decrypt"]
+    );
+    const raw = await subtle.exportKey("raw", aesKey); // 32 bytes
+    return bytesToHex(raw);
+}
+export function hexToBytes(hex: string): Uint8Array {
+    return new Uint8Array(hex.match(/.{1,2}/g)!.map(b => parseInt(b, 16)));
+}
+
+export function bytesToHex(buf: ArrayBuffer | Uint8Array): string {
+    const arr = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
+    return Array.from(arr).map(x => x.toString(16).padStart(2, "0")).join("");
+}

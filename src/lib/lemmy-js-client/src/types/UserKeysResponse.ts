@@ -3,5 +3,5 @@
  * The response containing a user's published public keys.
  */
 export type UserKeysResponse = {
-  publicKeys: string[];
+  publicKey: string;
 };

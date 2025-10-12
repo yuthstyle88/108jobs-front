@@ -2,25 +2,26 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useWebSocketContext} from '@/core/chat/contexts/WebSocketContext';
 import {createHandleWSMessage} from '@/core/chat/events/handleWSMessage';
 import {ensureSharedKeyForRoom} from "@/utils";
-import {dbg, makeEmitReadAcker} from "@/core/chat/utils";
+import {makeEmitReadAcker} from "@/core/chat/utils";
 import {
-    resendChatMessage,
-    sendChatMessage, SendEventDeps,
-    sendReadReceipt as sendReadReceiptEvent, sendRoomUpdateEvent,
+    sendChatMessage,
+    SendEventDeps,
+    sendReadReceipt as sendReadReceiptEvent,
+    sendRoomUpdateEvent,
     sendTyping as sendTypingEvent
 } from "@/core/chat/events/sendEvents";
-import {ChatRoomId, ChatRoomData, LocalUser, LocalUserId, ChatMessage} from "lemmy-js-client";
+import {ChatMessage, ChatRoomData, ChatRoomId, LocalUser, LocalUserId} from "lemmy-js-client";
 import {useChatStore} from "@/core/chat/store/chatStore"
 import {makeReadAckEmitter} from "@/core/chat/utils/socket-emitter";
 import {emitWsReconnected} from "@/core/chat/events";
 import {MessagePayload} from "@/core/chat/types";
 import {useChatRoomsContext} from "@/core/chat/contexts/ChatRoomsContext";
-import { PhoenixSenderAdapter } from '@/core/chat/adapters/PhoenixSenderAdapter';
+import {PhoenixSenderAdapter} from '@/core/chat/adapters/PhoenixSenderAdapter';
 
 // Safe DOM CustomEvent dispatcher
 function dispatchDomEvent(name: string, detail: any) {
     try {
-        if (typeof window !== 'undefined') {
+        if(typeof window !== 'undefined') {
             window.dispatchEvent(new CustomEvent(name, {detail}));
         }
     } catch {
@@ -33,7 +34,7 @@ const PEER_ACTIVE_BUMP_MIN_MS = 1000; // throttle markPeerActive to avoid runawa
 
 export interface UseChatRoomParams {
     roomId: string;
-    peerPublicKeyHex: string;
+    shareKey: string;
     onRemoteTyping?: (detail: { roomId: string; senderId: number; typing: boolean }) => void;
     localUser: LocalUser,
     roomData: ChatRoomData;
@@ -41,13 +42,13 @@ export interface UseChatRoomParams {
 }
 
 export function useChatRoom({
-                                roomId,
-                                peerPublicKeyHex,
-                                onRemoteTyping,
-                                localUser,
-                                roomData,
-                                upsertMessage
-                            }: UseChatRoomParams) {
+    roomId,
+    shareKey,
+    onRemoteTyping,
+    localUser,
+    roomData,
+    upsertMessage
+}: UseChatRoomParams) {
     const [pageCursor, setPageCursor] = useState<string | null>(null);
     const fetchingRef = useRef(false);
     const hasMoreRef = useRef(true);
@@ -63,7 +64,7 @@ export function useChatRoom({
         const now = Date.now();
 
         // Throttle to avoid churn from extremely frequent packets
-        if (now - lastPeerActiveBumpAtRef.current < PEER_ACTIVE_BUMP_MIN_MS) {
+        if(now - lastPeerActiveBumpAtRef.current < PEER_ACTIVE_BUMP_MIN_MS) {
             return;
         }
         lastPeerActiveBumpAtRef.current = now;
@@ -75,10 +76,10 @@ export function useChatRoom({
 
         // If there's already a decay timer running, do not create a new one.
         // Let the single timer extend its expiry by reading peerActiveExpiresAtRef when it wakes.
-        if (!peerActiveDecayRef.current) {
+        if(!peerActiveDecayRef.current) {
             const tick = () => {
                 const remaining = peerActiveExpiresAtRef.current - Date.now();
-                if (remaining <= 0) {
+                if(remaining <= 0) {
                     // Expired: flip the flag and clear the timer handle
                     peerActiveRef.current = false;
                     updatePeerPresence(roomId, false);
@@ -107,35 +108,39 @@ export function useChatRoom({
     const typingDecayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [connectionError, setConnectionError] = useState(false);
     const localSenderRef = useRef<any>(null);
-   const ws = useWebSocketContext();
-   const adapterAny: any = (ws as any)?.adapter ?? ws;
-   // guards to avoid connect/join loops
-   const connectAttemptedRef = useRef<number>(0);
-   const joinedRoomRef = useRef<string | null>(null);
-   // Normalize readiness flag for legacy socket vs new adapter
-   const isReady = !!((ws as any)?.isReady ?? (ws as any)?.adapter?.isReady);
-   // Normalized addMessageListener for both legacy socket and new adapter (or EventEmitter-style .on/.off)
-   const addMessageListener = React.useCallback((handler: (data: unknown) => void) => {
-       const a: any = (ws as any)?.adapter ?? null;
-       // Preferred: adapter.addMessageListener(handler)
-       if (a && typeof a.addMessageListener === 'function') {
-           return a.addMessageListener(handler);
-       }
-       // Legacy: ws.addMessageListener(handler)
-       if (ws && typeof (ws as any).addMessageListener === 'function') {
-           return (ws as any).addMessageListener(handler);
-       }
-       // Fallback: EventEmitter-style
-       const target: any = a || ws;
-       if (target && typeof target.on === 'function') {
-           target.on('message', handler);
-           return () => {
-               try { target.off?.('message', handler); } catch {}
-           };
-       }
-       // No-op unsubscriber
-       return () => {};
-   }, [ws]);
+    const ws = useWebSocketContext();
+    const adapterAny: any = (ws as any)?.adapter ?? ws;
+    // guards to avoid connect/join loops
+    const connectAttemptedRef = useRef<number>(0);
+    const joinedRoomRef = useRef<string | null>(null);
+    // Normalize readiness flag for legacy socket vs new adapter
+    const isReady = !!((ws as any)?.isReady ?? (ws as any)?.adapter?.isReady);
+    // Normalized addMessageListener for both legacy socket and new adapter (or EventEmitter-style .on/.off)
+    const addMessageListener = React.useCallback((handler: (data: unknown) => void) => {
+        const a: any = (ws as any)?.adapter ?? null;
+        // Preferred: adapter.addMessageListener(handler)
+        if(a && typeof a.addMessageListener === 'function') {
+            return a.addMessageListener(handler);
+        }
+        // Legacy: ws.addMessageListener(handler)
+        if(ws && typeof (ws as any).addMessageListener === 'function') {
+            return (ws as any).addMessageListener(handler);
+        }
+        // Fallback: EventEmitter-style
+        const target: any = a || ws;
+        if(target && typeof target.on === 'function') {
+            target.on('message', handler);
+            return () => {
+                try {
+                    target.off?.('message', handler);
+                } catch {
+                }
+            };
+        }
+        // No-op unsubscriber
+        return () => {
+        };
+    }, [ws]);
 
     useEffect(() => {
         console.debug('[chat-room-debug] isReady check', {
@@ -146,12 +151,15 @@ export function useChatRoom({
             joinedRoom: joinedRoomRef.current,
             connectAttemptedAt: connectAttemptedRef.current,
         });
-        if (!adapterAny) return;
+        if(!adapterAny) return;
 
         // If not ready: connect only once per adapter instance
-        if (!isReady) {
-            if (!connectAttemptedRef.current) {
-                try { adapterAny.connect?.(); } catch {}
+        if(!isReady) {
+            if(!connectAttemptedRef.current) {
+                try {
+                    adapterAny.connect?.();
+                } catch {
+                }
                 connectAttemptedRef.current = Date.now();
             }
             // do not attempt join until ready to avoid spinning
@@ -159,35 +167,42 @@ export function useChatRoom({
         }
 
         // Ready now → ensure joined exactly once per roomId
-        if (roomId && joinedRoomRef.current !== roomId) {
+        if(roomId && joinedRoomRef.current !== roomId) {
             try {
                 // leave previous if applicable (best-effort)
-                if (joinedRoomRef.current && typeof adapterAny.leave === 'function') {
-                    try { adapterAny.leave(joinedRoomRef.current); } catch {}
+                if(joinedRoomRef.current && typeof adapterAny.leave === 'function') {
+                    try {
+                        adapterAny.leave(joinedRoomRef.current);
+                    } catch {
+                    }
                 }
-                if (typeof adapterAny.join === 'function') {
+                if(typeof adapterAny.join === 'function') {
                     adapterAny.join(roomId);
                 }
                 joinedRoomRef.current = roomId;
-            } catch {}
+            } catch {
+            }
 
             // Clear transient UI flags only on new join
             setConnectionError(false);
-            if (pageCursor !== null) setPageCursor(null);
-            try { emitWsReconnected?.(); } catch {}
+            if(pageCursor !== null) setPageCursor(null);
+            try {
+                emitWsReconnected?.();
+            } catch {
+            }
         }
     }, [isReady, roomId]);
 
     const handleRemoteTyping = useCallback((detail: { roomId: ChatRoomId; senderId: LocalUserId; typing: boolean }) => {
         try {
             console.log('[chat] handleRemoteTyping', detail);
-            if (!detail) return;
-            if (detail.roomId !== roomId) return;
+            if(!detail) return;
+            if(detail.roomId !== roomId) return;
             const me = Number(localUser.id) || 0;
-            if (detail.senderId === me) return; // ignore self
+            if(detail.senderId === me) return; // ignore self
             setIsPartnerTyping(detail.typing);
-            if (!detail.typing) {
-                if (typingDecayRef.current) {
+            if(!detail.typing) {
+                if(typingDecayRef.current) {
                     try {
                         clearTimeout(typingDecayRef.current);
                     } catch {
@@ -208,8 +223,8 @@ export function useChatRoom({
                 senderId: Number(detail.senderId) || 0,
                 typing: detail.typing
             });
-            if (detail.typing) {
-                if (typingDecayRef.current) {
+            if(detail.typing) {
+                if(typingDecayRef.current) {
                     try {
                         clearTimeout(typingDecayRef.current);
                     } catch {
@@ -252,36 +267,40 @@ export function useChatRoom({
     }), [roomId, localUser.id, setRefreshRoomData, markPeerActive, handleRemoteTyping, upsertMessage]);
 
     useEffect(() => {
-        if (!ws) return;
+        if(!ws) return;
         const off = addMessageListener((data: unknown) => {
             try {
-                handleWSMessage({ data } as any);
-            } catch {}
+                handleWSMessage({data} as any);
+            } catch {
+            }
         });
         return () => {
-            try { off?.(); } catch {}
+            try {
+                off?.();
+            } catch {
+            }
         };
     }, [ws, addMessageListener, handleWSMessage]);
 
     // E2E shared key warmup
     useEffect(() => {
-        if (isE2EMock) return;
-        if (!roomId || !localUser) return;
+        if(isE2EMock) return;
+        if(!roomId || !localUser) return;
         (async () => {
             try {
-                if (peerPublicKeyHex) {
-                    await ensureSharedKeyForRoom(roomId, peerPublicKeyHex);
+                if(shareKey) {
+                    await ensureSharedKeyForRoom(roomId, shareKey);
                 } else {
                     console.warn(`[crypto] skipped key derivation: no peerPublicKey for room ${roomId}`);
                 }
             } catch {
             }
         })();
-    }, [roomId, localUser, peerPublicKeyHex, isE2EMock]);
+    }, [roomId, localUser, shareKey, isE2EMock]);
 
     // Read-ack acker wiring
     useEffect(() => {
-        if (isE2EMock || !roomId) {
+        if(isE2EMock || !roomId) {
             readAckRef.current = null;
             return;
         }
@@ -304,13 +323,13 @@ export function useChatRoom({
 
     useEffect(() => {
         return () => {
-            if (typingDecayRef.current) {
+            if(typingDecayRef.current) {
                 try {
                     clearTimeout(typingDecayRef.current);
                 } catch {
                 }
             }
-            if (peerActiveDecayRef.current) {
+            if(peerActiveDecayRef.current) {
                 try {
                     clearTimeout(peerActiveDecayRef.current);
                 } catch {
@@ -320,42 +339,45 @@ export function useChatRoom({
     }, []);
 
     // Actions
-  const sendMessage = useCallback(async (data: MessagePayload) => {
-      // Normalize transports (prefer context sender; fallback to local sender from adapter)
-      const ctx: any = ws as any;
-      let sender = ctx?.sender as any;
-      const adapter = (ctx?.adapter ?? ctx) as any;
+    const sendMessage = useCallback(async (data: MessagePayload) => {
+        // Normalize transports (prefer context sender; fallback to local sender from adapter)
+        const ctx: any = ws as any;
+        let sender = ctx?.sender as any;
+        const adapter = (ctx?.adapter ?? ctx) as any;
 
-      if (!sender && adapter) {
-          // Lazily create a local sender bound to the adapter (one-time)
-          if (!localSenderRef.current) {
-              try { localSenderRef.current = new PhoenixSenderAdapter(adapter); } catch {}
-          }
-          sender = localSenderRef.current;
-      }
+        if(!sender && adapter) {
+            // Lazily create a local sender bound to the adapter (one-time)
+            if(!localSenderRef.current) {
+                try {
+                    localSenderRef.current = new PhoenixSenderAdapter(adapter);
+                } catch {
+                }
+            }
+            sender = localSenderRef.current;
+        }
 
-      if (!sender && !adapter) return; // require at least one transport
+        if(!sender && !adapter) return; // require at least one transport
 
-      // Ensure payload has a senderId (fallback to localUser.id)
-      const payload: MessagePayload = {
-          ...data,
-          senderId: Number(localUser.id) || (data as any)?.senderId,
-      };
+        // Ensure payload has a senderId (fallback to localUser.id)
+        const payload: MessagePayload = {
+            ...data,
+            senderId: Number(localUser.id) || (data as any)?.senderId,
+        };
 
-      const deps = {
-          isE2EMock,
-          roomId,
-          peerPublicKeyHex,
-          sentSet: sentMessagesRef.current,
-          addMessageListener, // allow waitForAck to subscribe when adapter lacks onAny/onmessage
-          onAfterSend: () => {
-              lastTypedSentRef.current = false;
-          },
-          ...(sender ? { sender } : {}),
-          ...(adapter ? { adapter } : {}),
-      } as const;
-      await sendChatMessage(deps, payload);
-  }, [ws, roomId, localUser.id, isE2EMock, peerPublicKeyHex]);
+        const deps = {
+            isE2EMock,
+            roomId,
+            shareKey,
+            sentSet: sentMessagesRef.current,
+            addMessageListener, // allow waitForAck to subscribe when adapter lacks onAny/onmessage
+            onAfterSend: () => {
+                lastTypedSentRef.current = false;
+            },
+            ...(sender ? {sender} : {}),
+            ...(adapter ? {adapter} : {}),
+        } as const;
+        await sendChatMessage(deps, payload);
+    }, [ws, roomId, localUser.id, isE2EMock, shareKey]);
 
     const resendMessage = useCallback(async (id: string) => {
         const st = useChatStore.getState();
@@ -364,12 +386,12 @@ export function useChatRoom({
             // Resolve the latest message object from the store
             const lookup = (mid: string) => {
                 const fromMsgs = (st as any).messages?.find?.((m: any) => String(m.id) === String(mid));
-                if (fromMsgs) return fromMsgs;
+                if(fromMsgs) return fromMsgs;
                 return (st as any).pendingMessages?.find?.((m: any) => String(m.id) === String(mid));
             };
 
             const msg = lookup(id);
-            if (sender && typeof sender.send === 'function' && msg) {
+            if(sender && typeof sender.send === 'function' && msg) {
                 await sender.send(msg);
                 return;
             }
@@ -380,28 +402,30 @@ export function useChatRoom({
         } catch (err) {
             try {
                 console.warn('[chat] resendMessage failed, fallback to flush', err);
-            } catch {}
+            } catch {
+            }
             // Final fallback
             try {
                 st.retryMessage?.(id);
                 await st.flushPending?.();
-            } catch {}
+            } catch {
+            }
         }
     }, [ws]);
 
     const sendRoomUpdate = useCallback(
-        (event: SendEventDeps, update: Record<string, any>) => {
-            try {
-                const adapter = ((ws as any)?.adapter ?? ws) as any;
-                sendRoomUpdateEvent(
-                    {adapter, roomId: event.roomId, senderId: event.senderId},
-                    update
-                );
-            } catch (err) {
-                console.error("[chat] sendRoomUpdateEvent failed:", err);
-            }
-        },
-        [ws, localUser.id]
+      (event: SendEventDeps, update: Record<string, any>) => {
+          try {
+              const adapter = ((ws as any)?.adapter ?? ws) as any;
+              sendRoomUpdateEvent(
+                {adapter, roomId: event.roomId, senderId: event.senderId},
+                update
+              );
+          } catch (err) {
+              console.error("[chat] sendRoomUpdateEvent failed:", err);
+          }
+      },
+      [ws, localUser.id]
     );
 
 
@@ -426,14 +450,17 @@ export function useChatRoom({
 
         // Do NOT update peer read locally here.
         // Read-last is a property of the OTHER party; we wait for server/peer event to reflect it.
-        if (!adapter) return;
+        if(!adapter) return;
         try {
-            if (localStorage.getItem('debug_read_ack') === '1') {
+            if(localStorage.getItem('debug_read_ack') === '1') {
                 // console.log('[read-ack] sendReadReceipt() 1', { roomId: roomIdArg, senderId: me, lastMessageAt });
             }
-            (sendReadReceiptEvent as any)({ adapter, roomId: roomIdArg, senderId: me }, { lastReadAt: lastMessageAt });
+            (sendReadReceiptEvent as any)({adapter, roomId: roomIdArg, senderId: me}, {lastReadAt: lastMessageAt});
             // console.log('[read-ack] sendReadReceipt() 2', { roomId: roomIdArg, senderId: me, lastMessageAt });
-            try { (readAckRef.current as any)?.(lastMessageAt); } catch {}
+            try {
+                (readAckRef.current as any)?.(lastMessageAt);
+            } catch {
+            }
         } catch (err) {
             console.error('Failed to send read receipt', err);
         }
@@ -441,7 +468,7 @@ export function useChatRoom({
 
     const sendTyping = useCallback((isTyping: boolean) => {
         const adapter = ((ws as any)?.adapter ?? ws) as any;
-        if (!adapter) return;
+        if(!adapter) return;
         try {
             lastTypedSentRef.current = isTyping;
             sendTypingEvent({adapter, roomId, senderId: localUser.id}, isTyping);
@@ -450,14 +477,14 @@ export function useChatRoom({
     }, [roomId, localUser.id, ws]);
 
     const onWsErrorDuringFetch = useCallback(() => {
-        if (fetchTimeoutRef.current) {
+        if(fetchTimeoutRef.current) {
             try {
                 clearTimeout(fetchTimeoutRef.current);
             } catch {
             }
             fetchTimeoutRef.current = null;
         }
-        if (fetchResolveRef.current) {
+        if(fetchResolveRef.current) {
             try {
                 fetchResolveRef.current();
             } catch {
@@ -472,7 +499,9 @@ export function useChatRoom({
         const rid = roomIdArg ?? roomId;
         try {
             const mod = require("@/core/chat/store/readLastIdStore");
-            const useReadLastIdStore = (mod as any).useReadLastIdStore as { getState: () => { getPeerLastReadAt?: (roomId: string, userId: string | number) => string | undefined } };
+            const useReadLastIdStore = (mod as any).useReadLastIdStore as {
+                getState: () => { getPeerLastReadAt?: (roomId: string, userId: string | number) => string | undefined }
+            };
             return useReadLastIdStore?.getState?.().getPeerLastReadAt?.(rid, peerUserId);
         } catch {
             return undefined;

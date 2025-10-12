@@ -100,7 +100,7 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
     id: string;
     sent: boolean;
 } | undefined> {
-    const { roomId, peerPublicKeyHex } = deps as any;
+    const { roomId, shareKey } = deps as any;
     const store = useChatStore.getState();
     try {
         // ---- 0) Sanitize & validate input here (do not rely on caller) ----
@@ -135,20 +135,19 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
 
         // mark as attempted
         try { if (msgId) sentSet?.add?.(msgId); } catch {}
-
+        const sharedKeyHex = shareKey && !UserService.Instance.authInfo?.sharedKey
         // ---- 3) Ensure shared key (best effort) and encrypt if available ----
         try {
-            if (token && peerPublicKeyHex && !UserService.Instance.authInfo?.sharedKey) {
+            if (token && sharedKeyHex) {
                 try {
-                    await ensureSharedKeyForRoom(roomId, peerPublicKeyHex);
+                    await ensureSharedKeyForRoom(roomId, sharedKeyHex);
                 } catch (ex) {
                     if (process.env.NODE_ENV !== 'production') {
                         console.warn(`[crypto] derive shared key failed, sending plaintext`, ex);
                     }
                 }
             }
-            const sharedKeyHex = UserService.Instance.authInfo?.sharedKey;
-            const shouldEncrypt = token && peerPublicKeyHex && sharedKeyHex && message;
+            const shouldEncrypt = token && shareKey && sharedKeyHex && message;
             if (shouldEncrypt) {
                 try {
                     const aesKey = await importAesKey(sharedKeyHex!, "encrypt");

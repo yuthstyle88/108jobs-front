@@ -10,7 +10,7 @@ import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {Post} from "@/lib/lemmy-js-client";
 import {RoomNotFound} from "@/components/RoomNotFound";
 import {useStateMachineStore} from "@/store/stateMachineStore";
-import {ensureIdentityKeyPair} from "@/utils";
+import {deriveAesGcmKeyHex, ensureIdentityKeyPair} from "@/utils";
 
 export default function MessageClient({roomId}: { roomId: string }) {
     const accessToken = UserService.Instance.auth();
@@ -19,7 +19,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
         partnerName: string;
         partnerId?: number;
         currentRoom?: any;
-        peerPublicKeyHex?: string;
+        shareKey?: string;
         post?: Post;
         notFound: boolean;
         loading: boolean;
@@ -54,11 +54,25 @@ export default function MessageClient({roomId}: { roomId: string }) {
                     const exchangeRes = await HttpService.client.exchangePublicKey({
                         publicKey: publicKeyHex,
                     });
-                    if (exchangeRes.state !== REQUEST_STATE.SUCCESS) {
+                    if (exchangeRes.state === REQUEST_STATE.SUCCESS) {
+                        const serverPublicKeyHex = String(exchangeRes.data.publicKey || "").trim();
+                        // derive shared AES-256 (hex) using client private key + server public key (hex)
+                        const clientPrivateKey: CryptoKey | undefined = (await ensureIdentityKeyPair()).privateKey;
+                        if (!clientPrivateKey) throw new Error("Missing client private key from ensureIdentityKeyPair()");
+                        const shareKeyHex = await deriveAesGcmKeyHex(clientPrivateKey, serverPublicKeyHex);
+
+                        setState((prev) => ({
+                            ...prev,
+                            shareKey: shareKeyHex, // store derived AES-256 key in hex (server uses the same bytes)
+                            loading: false,
+                        }));
+                    } else {
                         console.warn("Failed to exchange public key:", exchangeRes);
+                        setState((prev) => ({ ...prev, loading: false }));
                     }
                 } catch (error) {
                     console.warn("Error during public key exchange:", error);
+                    setState((prev) => ({ ...prev, loading: false }));
                 }
 
                 // 2. Fetch chat room data
@@ -108,9 +122,8 @@ export default function MessageClient({roomId}: { roomId: string }) {
                     );
 
                     if (other) {
-                        const [profileRes, keysRes] = await Promise.all([
+                        const [profileRes] = await Promise.all([
                             HttpService.client.visitProfile(String(other.memberId)),
-                            HttpService.client.getUserKeys(Number(other.memberId)),
                         ]);
 
                         if (cancelled) return;
@@ -125,12 +138,6 @@ export default function MessageClient({roomId}: { roomId: string }) {
                             partnerAvailable:
                                 profileRes.state === REQUEST_STATE.SUCCESS
                                     ? profileRes.data.profile.available
-                                    : undefined,
-                            peerPublicKeyHex:
-                                keysRes.state === REQUEST_STATE.SUCCESS &&
-                                Array.isArray(keysRes.data?.publicKeys) &&
-                                keysRes.data.publicKeys.length > 0
-                                    ? keysRes.data.publicKeys[0]
                                     : undefined,
                             loading: false,
                         }));
@@ -154,7 +161,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
     }, [accessToken, roomId, localUser?.id]);
 
 
-    if (!accessToken || !roomId || !localUser || !state.peerPublicKeyHex || state.loading) {
+    if (!accessToken || !roomId || !localUser || !state.shareKey || state.loading) {
         return <LoadingBlur text=""/>;
     }
 
@@ -163,10 +170,11 @@ export default function MessageClient({roomId}: { roomId: string }) {
     }
 
     return (
+        // NOTE: state.shareKey now holds **shared AES-256 key (hex)** derived via ECDH, not a peer public key.
         <PhoenixChatBridgeProvider
             token={accessToken}
             roomId={roomId}
-            peerPublicKeyHex={state.peerPublicKeyHex}
+            peerPublicKeyHex={state.shareKey}
         >
             <ChatSection
                 post={state.post}
@@ -176,7 +184,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
                 partnerAvailable={state.partnerAvailable}
                 roomData={state.currentRoom}
                 localUser={localUser}
-                peerPublicKeyHex={state.peerPublicKeyHex}
+                shareKey={state.shareKey}
             />
         </PhoenixChatBridgeProvider>
     );
