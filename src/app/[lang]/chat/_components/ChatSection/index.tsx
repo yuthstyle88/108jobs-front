@@ -105,7 +105,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         : (t("profileChat.userNotAvailable") || "This user is currently not accepting messages. You can read history but cannot send new messages.");
     // Set of message IDs received during this session, used by history hook to deduplicate pages.
     const receivedIds = useMemo(() => new Set<string>(), []);
-    const roomId = roomData.room.room.id;
+    const roomId = String(roomData?.room?.room?.id ?? "");
     // Hydrate UI from the local store (messages + pending) so leftover local data shows immediately
     const {send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
@@ -123,7 +123,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const {setActiveRoomId, markRoomRead} = useRoomsStore();
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
-    const roomPostId = currentRoom.room.post?.id;
+    const _rawPostId: unknown = (currentRoom as any)?.room?.post?.id;
+    const roomPostId: number | undefined = typeof _rawPostId === 'number'
+      ? _rawPostId
+      : (typeof _rawPostId === 'string' && _rawPostId.trim() !== '' && !Number.isNaN(Number(_rawPostId))
+          ? Number(_rawPostId)
+          : undefined);
     const roomCommentId = currentRoom?.room?.currentComment?.id;
     const postCreatorId = post?.creatorId;
     const isEmployer = postCreatorId != null && person?.id != null ? String(postCreatorId) === String(person?.id) : undefined;
@@ -134,7 +139,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         return Boolean(getLatestProposedQuotePayload(messages as any));
     }, [messages]);
     // Determine latest quotation amount and whether employer has sufficient balance to approve
-    const latestQuoteAmount = currentRoom.room.post?.budget;
+    const latestQuoteAmount = currentRoom?.room?.post?.budget ?? 0;
 
     // --- Quotation & balance helpers ---
     // Compute available wallet balance and whether it is insufficient to approve the latest quotation.
@@ -372,7 +377,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         approveQuotationApi,
         submitStartWorkApi,
         approveWorkApi,
-        postId: roomPostId,
+        postId: roomPostId ?? null,
         walletId: wallet?.id,
         currentStatus,
     });
@@ -633,7 +638,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         setIsFlowOpen={setIsFlowOpen}
                         renderFlowContent={renderFlowContent}
                         setShowJobDetailModal={setShowJobDetailModal}
-                        currentRoom={currentRoom.room}
+                        currentRoom={currentRoom?.room ?? "" }
                     />
                 </div>
                 {isFlowOpen && (
@@ -687,8 +692,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 postId={roomPostId as number}
                 commentId={roomCommentId as number}
                 partnerId={partnerId as number}
-                projectName={currentRoom.room.post?.name || t("profileChat.noJobTitle")}
-                amount={currentRoom.room.post?.budget}
+                projectName={currentRoom?.room?.post?.name || t("profileChat.noJobTitle")}
+                amount={currentRoom?.room?.post?.budget}
             />
         </>
     );

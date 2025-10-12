@@ -48,23 +48,25 @@ export default function MessageClient({roomId}: { roomId: string }) {
                 // 1. Ensure local user's key pair and send public key to server
                 let publicKeyHex: string | undefined;
                 try {
-                    const {publicKeyHex: localPubKeyHex} = await ensureIdentityKeyPair();
+                    const { publicKeyHex: localPubKeyHex, privateKey: clientPrivateKey } = await ensureIdentityKeyPair();
                     publicKeyHex = localPubKeyHex;
                     // Send public key to server
                     const exchangeRes = await HttpService.client.exchangePublicKey({
                         publicKey: publicKeyHex,
                     });
                     if (exchangeRes.state === REQUEST_STATE.SUCCESS) {
-                        const serverPublicKeyHex = String(exchangeRes.data.publicKey || "").trim();
-                        // derive shared AES-256 (hex) using client private key + server public key (hex)
-                        const clientPrivateKey: CryptoKey | undefined = (await ensureIdentityKeyPair()).privateKey;
+                        const serverPublicKeyHex = String(
+                            exchangeRes.data?.publicKey ?? exchangeRes.data?.publicKey ?? ""
+                        ).trim();
+                        if (!serverPublicKeyHex) throw new Error("Server returned empty public key");
                         if (!clientPrivateKey) throw new Error("Missing client private key from ensureIdentityKeyPair()");
+
+                        // derive shared AES-256 (hex) using client private key + server public key (hex)
                         const shareKeyHex = await deriveAesGcmKeyHex(clientPrivateKey, serverPublicKeyHex);
 
                         setState((prev) => ({
                             ...prev,
-                            shareKey: shareKeyHex, // store derived AES-256 key in hex (server uses the same bytes)
-                            loading: false,
+                            shareKey: shareKeyHex, // shared AES-256 key (hex) aligned with backend
                         }));
                     } else {
                         console.warn("Failed to exchange public key:", exchangeRes);

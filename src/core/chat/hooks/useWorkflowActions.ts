@@ -42,7 +42,7 @@ export type UseWorkflowActionsDeps = {
     approveQuotationApi: (form: ApproveQuotationForm) => Promise<any>;
     submitStartWorkApi: (form: any) => Promise<any>;
     approveWorkApi: (form: any) => Promise<any>;
-    postId?: PostId | null;
+    postId?: PostId | null | undefined;
     walletId?: number | null;
     currentStatus: StatusKey;
 };

@@ -1,180 +1,120 @@
-import {UserService} from "@/services";
-import {idbGet, idbSet} from "@/utils";
+import { UserService } from "@/services";
+import { idbGet, idbSet } from "@/utils";
 
 export type AESKey = CryptoKey;
 
-// Helpers for identity key persistence using IndexedDB and non-extractable CryptoKey
-const ID_PRIV_KEY_IDB = "identity_priv_ecdh_p256";
-const ID_PUB_SEC1_HEX_KEY = "identity_pub_sec1_hex"; // public is safe in localStorage/IDB
+// === Constants ===
+const ID_PRIV_KEY_IDB = "identity_priv_ecdh_p256"; // non-extractable CryptoKey in IDB
+const ID_PUB_SEC1_HEX_KEY = "identity_pub_sec1_hex"; // uncompressed SEC1 public key hex (65B, starts with 04)
 
+// WebCrypto handle
+const subtle = typeof window !== "undefined" ? window.crypto?.subtle : undefined;
+
+// === Hex helpers ===
+const hexToBytes = (hex: string) => new Uint8Array(hex.match(/.{1,2}/g)!.map(h => parseInt(h, 16)));
+const bytesToHex = (buf: ArrayBuffer | Uint8Array) => {
+  const a = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
+  return Array.from(a).map(b => b.toString(16).padStart(2, "0")).join("");
+};
+
+// === Identity keypair (ECDH P-256) ===
 export async function ensureIdentityKeyPair(): Promise<{ privateKey: CryptoKey; publicKeyHex: string }> {
-  if (typeof window === "undefined") throw new Error("ensureIdentityKeyPair requires browser environment");
+  if (!subtle) throw new Error("WebCrypto not available");
 
-  // Try to load non-extractable CryptoKey from IDB
   const existingPriv = await idbGet<CryptoKey>(ID_PRIV_KEY_IDB);
   const existingPubHex = localStorage.getItem(ID_PUB_SEC1_HEX_KEY) || undefined;
-  if (existingPriv && existingPubHex) {
-    return { privateKey: existingPriv, publicKeyHex: existingPubHex };
-  }
+  if (existingPriv && existingPubHex) return { privateKey: existingPriv, publicKeyHex: existingPubHex };
 
-  // Migration: if legacy pkcs8 is found in localStorage, import once, store CryptoKey in IDB, then delete
-  const legacyPrivB64 = localStorage.getItem("identity_priv_pkcs8_b64");
-  const legacyPubHex = localStorage.getItem(ID_PUB_SEC1_HEX_KEY) || undefined;
-  if (legacyPrivB64) {
-    try {
-      const pkcs8 = Uint8Array.from(atob(legacyPrivB64), c => c.charCodeAt(0)).buffer;
-      const imported = await crypto.subtle.importKey(
-        "pkcs8",
-        pkcs8,
-        { name: "ECDH", namedCurve: "P-256" },
-        false,
-        ["deriveBits", "deriveKey"]
-      );
-      await idbSet(ID_PRIV_KEY_IDB, imported);
-      if (legacyPubHex) {
-        localStorage.setItem(ID_PUB_SEC1_HEX_KEY, legacyPubHex);
-      }
-      localStorage.removeItem("identity_priv_pkcs8_b64");
-      return { privateKey: imported, publicKeyHex: legacyPubHex || (await exportPublicHex(imported)) };
-    } catch {}
-  }
+  // Generate extractable pair to export public, then re-import private as non-extractable
+  const pair = (await subtle.generateKey({ name: "ECDH", namedCurve: "P-256" }, true, ["deriveBits"])) as CryptoKeyPair;
+  const pubRaw = await subtle.exportKey("raw", pair.publicKey); // 65 bytes, SEC1 uncompressed
+  const publicKeyHex = bytesToHex(pubRaw);
 
-  // Generate new pair: temporarily extractable to export public; then re-import private as non-extractable
-  const tmpPair = await crypto.subtle.generateKey(
-    { name: "ECDH", namedCurve: "P-256" },
-    true,
-    ["deriveBits", "deriveKey"]
-  ) as CryptoKeyPair;
-  // Export public as raw -> hex
-  const pubRaw = new Uint8Array(await crypto.subtle.exportKey("raw", tmpPair.publicKey));
-  const publicKeyHex = Array.from(pubRaw).map(b => b.toString(16).padStart(2, "0")).join("");
-  // Re-import private as non-extractable
-  const pkcs8 = await crypto.subtle.exportKey("pkcs8", tmpPair.privateKey);
-  const privateKey = await crypto.subtle.importKey(
-    "pkcs8",
-    pkcs8,
-    { name: "ECDH", namedCurve: "P-256" },
-    false,
-    ["deriveBits", "deriveKey"]
-  );
+  const pkcs8 = await subtle.exportKey("pkcs8", pair.privateKey);
+  const privateKey = await subtle.importKey("pkcs8", pkcs8, { name: "ECDH", namedCurve: "P-256" }, false, ["deriveBits"]);
+
   await idbSet(ID_PRIV_KEY_IDB, privateKey);
   localStorage.setItem(ID_PUB_SEC1_HEX_KEY, publicKeyHex);
   return { privateKey, publicKeyHex };
 }
 
-async function exportPublicHex(privateKey: CryptoKey): Promise<string> {
-  // Recreate public key by generating a pair is not possible; we need the public key.
-  // Workaround: generate a throwaway pair and ignore; but we actually had only private here.
-  // Better: in generate flow we already had public. In migration, we don't. So we derive from an ECDH import of pkcs8 missing public isn't possible.
-  // Therefore, only used in generate path; for migration we keep legacyPubHex.
-  throw new Error("exportPublicHex should not be called without available public key");
-}
-
+// === Peer public key (strict SEC1 uncompressed hex) ===
 async function importPeerPublicKeyHex(sec1Hex: string): Promise<CryptoKey> {
-  const bytes = new Uint8Array(sec1Hex.match(/.{1,2}/g)!.map(h => parseInt(h, 16)));
-  if (bytes.length !== 65 || bytes[0] !== 0x04) {
-    throw new Error("Invalid SEC1 uncompressed P-256 public key");
+  if (!subtle) throw new Error("WebCrypto not available");
+  const hex = String(sec1Hex || "").trim().toLowerCase();
+  if (hex.length !== 130 || !hex.startsWith("04")) {
+    throw new Error("Public key must be uncompressed SEC1 hex (130 chars, starts with 04)");
   }
-  return crypto.subtle.importKey("raw", bytes, { name: "ECDH", namedCurve: "P-256" }, true, []);
+  return subtle.importKey("raw", hexToBytes(hex), { name: "ECDH", namedCurve: "P-256" }, true, []);
 }
 
-function utf8(s: string): Uint8Array {
-  return new TextEncoder().encode(s);
-}
-
-async function deriveRoomAesGcmKey(privateKey: CryptoKey, peerPubHex: string, roomId: string): Promise<CryptoKey> {
+// === Derive AES-GCM-256 directly from ECDH (no HKDF) ===
+async function deriveRoomAesGcmKey(privateKey: CryptoKey, peerPubHex: string): Promise<CryptoKey> {
   const peerPub = await importPeerPublicKeyHex(peerPubHex);
-  const shared = await crypto.subtle.deriveBits({ name: "ECDH", public: peerPub }, privateKey, 256);
-  const ikm = await crypto.subtle.importKey("raw", shared, "HKDF", false, ["deriveKey"]);
-  // Derive an AES-GCM key. It must be extractable to export raw bytes for in-memory caching/base64.
-  return crypto.subtle.deriveKey(
-    { name: "HKDF", hash: "SHA-256", salt: utf8(roomId), info: utf8("108jobs-chat") },
-    ikm,
-    { name: "AES-GCM", length: 256 },
-    true,
-    ["encrypt", "decrypt"]
-  );
+  const shared = await subtle!.deriveBits({ name: "ECDH", public: peerPub }, privateKey, 256); // 32 bytes
+  return subtle!.importKey("raw", shared, { name: "AES-GCM", length: 256 }, true, ["encrypt", "decrypt"]);
 }
 
-// In-memory cache for per-room AES-GCM keys (base64 raw). Not persisted.
+// In-memory cache: roomId -> AES key (hex)
 const ROOM_KEYS_MEM = new Map<string, string>();
 
-// Derive and cache a per-room AES-GCM key based on peer's public key.
+// Ensure a shared AES key for a room using the peer's public key (hex, strict 130)
 export async function ensureSharedKeyForRoom(roomId: string, peerPublicSec1Hex?: string): Promise<void> {
   const token = UserService.Instance.auth();
-  if (!token) return;
+  if (!token || !subtle) return;
 
-  try {
-    const cached = ROOM_KEYS_MEM.get(roomId);
-    if (cached) {
-      UserService.Instance.authInfo = {
-        ...(UserService.Instance.authInfo || { auth: token }),
-        sharedKey: cached,
-        claims: UserService.Instance.authInfo?.claims,
-      };
-      return;
-    }
-
-    const { privateKey } = await ensureIdentityKeyPair();
-
-    if (!peerPublicSec1Hex) {
-      throw new Error("Peer public key is required to derive room key");
-    }
-
-    const aesGcmKey = await deriveRoomAesGcmKey(privateKey, peerPublicSec1Hex, roomId);
-    const raw = new Uint8Array(await crypto.subtle.exportKey("raw", aesGcmKey));
-    const rawB64 = btoa(String.fromCharCode(...raw));
-
-    ROOM_KEYS_MEM.set(roomId, rawB64);
-
-    UserService.Instance.authInfo = {
-      ...(UserService.Instance.authInfo || { auth: token }),
-      sharedKey: rawB64,
-      claims: UserService.Instance.authInfo?.claims,
-    };
-  } catch (ex) {
-    console.warn(`ensureSharedKeyForRoom: Key derivation failed for room ${roomId}`, ex);
+  const cached = ROOM_KEYS_MEM.get(roomId);
+  if (cached) {
+    UserService.Instance.authInfo = { ...(UserService.Instance.authInfo || { auth: token }), sharedKey: cached, claims: UserService.Instance.authInfo?.claims };
+    return;
   }
+
+  // If peer key is missing, don't block data loading; skip silently.
+  if (!peerPublicSec1Hex) {
+    return;
+  }
+
+  // Normalize and accept a few strict forms:
+  let hex = String(peerPublicSec1Hex).trim().toLowerCase().replace(/^0x/, "");
+
+  // If 64 hex chars → already a shared AES-256 key; store and return.
+  if (hex.length === 64) {
+    ROOM_KEYS_MEM.set(roomId, hex);
+    UserService.Instance.authInfo = { ...(UserService.Instance.authInfo || { auth: token }), sharedKey: hex, claims: UserService.Instance.authInfo?.claims };
+    return;
+  }
+
+  // If 128 hex chars → treat as SEC1 without 0x04, prepend it.
+  if (hex.length === 128) {
+    hex = `04${hex}`;
+  }
+
+  // If not 130 now, skip to avoid breaking initial data load.
+  if (hex.length !== 130 || !hex.startsWith("04")) {
+    return;
+  }
+
+  const { privateKey } = await ensureIdentityKeyPair();
+  const aes = await deriveRoomAesGcmKey(privateKey, hex);
+  const rawHex = bytesToHex(await subtle.exportKey("raw", aes));
+
+  ROOM_KEYS_MEM.set(roomId, rawHex);
+  UserService.Instance.authInfo = { ...(UserService.Instance.authInfo || { auth: token }), sharedKey: rawHex, claims: UserService.Instance.authInfo?.claims };
 }
 
-// Import the cached per-room AES-GCM key (base64 raw) for encrypt/decrypt usage
-export async function importAesKey(sharedKeyBase64Raw: string, usage: KeyUsage): Promise<AESKey> {
-  const raw = Uint8Array.from(atob(sharedKeyBase64Raw), c => c.charCodeAt(0));
-  return crypto.subtle.importKey("raw", raw, { name: "AES-GCM", length: 256 }, false, [usage]);
+// Import AES key from hex (64 chars)
+export async function importAesKey(sharedKeyHex: string, usage: KeyUsage): Promise<AESKey> {
+  if (!subtle) throw new Error("WebCrypto not available");
+  const hex = String(sharedKeyHex || "").trim().toLowerCase();
+  if (hex.length !== 64) throw new Error("AES-256 key must be 32 bytes (64 hex chars)");
+  return subtle.importKey("raw", hexToBytes(hex), { name: "AES-GCM", length: 256 }, false, [usage]);
 }
 
-const subtle = typeof window !== "undefined" ? window.crypto?.subtle : undefined;
-
-async function importServerPubFromHex(hex: string): Promise<CryptoKey> {
-    if (!subtle) throw new Error("WebCrypto not available");
-    const raw = hexToBytes(hex.trim()); // SEC1 uncompressed 65B (0x04 + X + Y)
-    return subtle.importKey(
-      "raw",
-      raw,
-      { name: "ECDH", namedCurve: "P-256" },
-      true,
-      []
-    );
-}
-
+// Derive AES key hex using a known private key and the server's public key hex
 export async function deriveAesGcmKeyHex(clientPrivateKey: CryptoKey, serverPubHex: string): Promise<string> {
-    if (!subtle) throw new Error("WebCrypto not available");
-    const serverPubKey = await importServerPubFromHex(serverPubHex);
-    const aesKey = await subtle.deriveKey(
-      { name: "ECDH", public: serverPubKey },
-      clientPrivateKey,
-      { name: "AES-GCM", length: 256 },
-      true,
-      ["encrypt", "decrypt"]
-    );
-    const raw = await subtle.exportKey("raw", aesKey); // 32 bytes
-    return bytesToHex(raw);
-}
-export function hexToBytes(hex: string): Uint8Array {
-    return new Uint8Array(hex.match(/.{1,2}/g)!.map(b => parseInt(b, 16)));
-}
-
-export function bytesToHex(buf: ArrayBuffer | Uint8Array): string {
-    const arr = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
-    return Array.from(arr).map(x => x.toString(16).padStart(2, "0")).join("");
+  if (!subtle) throw new Error("WebCrypto not available");
+  const serverPub = await importPeerPublicKeyHex(serverPubHex);
+  const shared = await subtle.deriveBits({ name: "ECDH", public: serverPub }, clientPrivateKey, 256);
+  const aes = await subtle.importKey("raw", shared, { name: "AES-GCM", length: 256 }, true, ["encrypt", "decrypt"]);
+  return bytesToHex(await subtle.exportKey("raw", aes));
 }
