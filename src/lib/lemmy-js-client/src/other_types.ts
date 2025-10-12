@@ -35,6 +35,7 @@ import {ListUserChatRoomsQuery} from "./types/ListUserChatRoomsQuery";
 import {GetBankAccounts} from "./types/GetBankAccounts";
 import {ChatHistoryQuery} from "./types/ChatHistoryQuery";
 import {GetBillingByRoomQuery} from "./types/GetBillingByRoomQuery";
+import {LastReadQuery} from "./types/LastReadQuery";
 
 export const VERSION = "v4";
 
@@ -115,6 +116,7 @@ export interface CommunityIdQueryI extends CommunityIdQuery {}
 export interface ListUserChatRoomsQueryI extends ListUserChatRoomsQuery {}
 
 export interface ChatHistoryQueryI extends ChatHistoryQuery {}
+export interface LastReadQueryI extends LastReadQuery {}
 
 export interface GetBillingByRoomQueryI extends GetBillingByRoomQuery {}
 
