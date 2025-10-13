@@ -77,14 +77,13 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
       set((s) => {
           // Upsert/merge the message (keeps latest fields if same id)
           const messages = mergeIntoMessages(s.messages, msg);
-          dbg('[chatStore.upsertMessage]', msg);
           // Update read-last-id based on this message (avoid import cycles via require)
           try {
-              if (typeof window !== 'undefined') {
+              if (typeof window !== 'undefined') {``
                   const api = require('@/core/chat/store/readLastIdStore');
                   const { setLastReadAt } = api.useReadLastIdStore.getState?.() || {};
-                  if (typeof setLastReadAt === 'function' && (msg as any).roomId && (msg as any).senderId && (msg as any).createdAt) {
-                      setLastReadAt(String((msg as any).roomId), String((msg as any).senderId), (msg as any).createdAt);
+                  if (typeof setLastReadAt === 'function' && msg.roomId && msg.senderId && msg.createdAt) {
+                      setLastReadAt(msg.roomId, msg.senderId , msg.createdAt);
                   }
               }
           } catch (e) {
