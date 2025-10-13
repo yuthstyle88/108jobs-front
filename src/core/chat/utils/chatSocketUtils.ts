@@ -9,8 +9,7 @@ import type {
     ChatStatus,
     LocalUserId
 } from "lemmy-js-client";
-import {decrypt} from "@/lib/web-crypto";
-import {importAesKey} from "@/utils";
+import {decrypt, importAesKey} from "@/utils";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {dbg} from "@/core/chat/utils/helpers";
 
@@ -223,7 +222,6 @@ export async function handleIncomingPayload(
         const mapOne = async (raw: any): Promise<ChatMessage | null> => {
             // prefer explicit message node if present
             const flat = raw?.message ? {...raw.message, roomId: raw?.room?.id ?? raw?.message?.roomId} : raw;
-
             return mapIncomingToChatMessage(flat, {
                 token: ctx.token,
                 sharedKeyHex: ctx.sharedKeyHex,
@@ -231,7 +229,7 @@ export async function handleIncomingPayload(
                 localUserId: ctx.localUserId,
                 receivedSet: ctx.receivedSet,
                 decryptLabel: 'ws frame',
-            });
+            },false);
         };
 
         // HISTORY PAGE PUSHED FROM SERVER
@@ -385,7 +383,8 @@ export async function mapIncomingToChatMessage(
         localUserId: number;
         receivedSet: Set<string>;
         decryptLabel?: string;
-    }
+    },
+   secure?: boolean,
 ): Promise<ChatMessage | null> {
     try {
         // Skip empty content frames
@@ -406,7 +405,7 @@ export async function mapIncomingToChatMessage(
         // Optional decrypt (only when looks like base64 and we have key+token)
         let content = m.content;
 
-        if (opts.token && opts.sharedKeyHex && typeof m.content === 'string' && isBase64Like(m.content)) {
+        if (secure && opts.token && opts.sharedKeyHex && typeof m.content === 'string' && isBase64Like(m.content)) {
             try {
                 const aesKey = await importAesKey(opts.sharedKeyHex, 'decrypt');
                 const plain = await decrypt(m.content, aesKey);
@@ -554,6 +553,7 @@ export async function fetchHistoryPage(
             id: view.message?.msgRefId,
             roomId: view.message?.roomId,
         };
+        dbg("fetchHistoryPage", m)
         const mapped = await mapIncomingToChatMessage(m, {
             token: realToken,
             sharedKeyHex: sharedKey,
