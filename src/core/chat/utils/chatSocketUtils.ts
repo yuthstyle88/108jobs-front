@@ -26,6 +26,8 @@ export type NormalizedEnvelope =
     | {
     event: string;
     roomId: string;
+    readerId?: ChatRoomId;
+    lastReadMessageId?: string;
     message?: ChatMessage;
     room?: ChatRoom;
     typing?: boolean;
@@ -33,6 +35,7 @@ export type NormalizedEnvelope =
     prevStatus?: string,
     statusTarget?: string,
     sender?: ChatMessageView['sender']
+    updatedAt?: string;
 };
 
 // Server-side payload shapes (mirroring Rust `MessageModel` and `IncomingEvent`)
@@ -40,7 +43,7 @@ interface ServerMessageModel {
     id?: string;
     senderId: LocalUserId;
     readerId?: ChatRoomId;
-    readLastId?: string;
+    lastReadMessageId?: string;
     content?: string;
     status?: 'pending' | 'sent' | 'failed' | string;
     typing?: boolean;
@@ -48,6 +51,7 @@ interface ServerMessageModel {
     statusTarget?: string;
     prevStatus?: string;
     createdAt?: string;
+    updatedAt?: string;
 }
 
 interface IncomingEventLike {
@@ -132,6 +136,17 @@ export function normalizePhoenixEnvelope(
                 prevStatus: p?.prevStatus,
                 statusTarget: p?.statusTarget,
                 sender: p?.senderId ? ({id: p.senderId} as unknown as ChatMessageView['sender']) : undefined,
+            };
+        }
+
+        // --- read_up_to events ---
+        if (evLower === 'chat:read_up_to') {
+            return {
+                event: ev,
+                roomId: rid,
+                lastReadMessageId: p?.lastReadMessageId,
+                updatedAt: p?.updatedAt,
+                readerId: p?.readerId,
             };
         }
     }
@@ -426,7 +441,7 @@ export async function mapIncomingToChatMessage(
             senderId: senderIdMapped,
             roomId: roomIdMapped,
             content,
-            status: m.status,
+            status: "sent" as ChatStatus,
             createdAt: createdAtMapped,
             isOwner: senderIdMapped === opts.localUserId,
         } as ChatMessage;

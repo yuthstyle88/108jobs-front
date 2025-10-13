@@ -429,7 +429,7 @@ export function useChatRoom({
 
     const flushPending = useCallback(async () => {
         try {
-            await useChatStore.getState().flushPending?.();
+            useChatStore.getState().flushPending?.();
         } catch {
         }
     }, []);

@@ -1,6 +1,6 @@
 "use client";
 
-import type {ChatMessage} from "lemmy-js-client";
+import type {ChatMessage, LocalUserId} from "lemmy-js-client";
 import ChatMessageItem from "../ChatMessageItem";
 import {StaticImageData} from "next/image";
 import {Virtuoso, VirtuosoHandle} from "react-virtuoso";
@@ -19,9 +19,8 @@ interface ChatMessagesProps {
     hasMore?: boolean;
     isFetching?: boolean;
     onAtBottomChange?: (isAtBottom: boolean) => void;
-    sendReadReceipt: (roomIdArg: string, lastMessageId: string) => void;
-    roomId: string;
     initialLoadDone?: boolean;
+    partnerId: LocalUserId;
 }
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
@@ -32,9 +31,8 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                                                        hasMore,
                                                        isFetching,
                                                        onAtBottomChange,
-                                                       sendReadReceipt,
-                                                       roomId,
                                                        initialLoadDone = false,
+                                                       partnerId
                                                    }) => {
     const {t} = useTranslation();
     const params = useParams();
@@ -84,7 +82,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     const handleRangeChanged = React.useCallback((range: { startIndex: number; endIndex: number }) => {
         rangeRef.current = range;
 
-        // ⚠️ CRITICAL: Skip initial load - let parent useEffect handle it
+        // CRITICAL: Skip initial load - let parent useEffect handle it
         if (!initialLoadDoneRef.current && range.startIndex === 0) {
             return;
         }
@@ -153,7 +151,6 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
             }}
             alignToBottom
             rangeChanged={handleRangeChanged}
-            // REMOVED: atTopStateChange to prevent duplicate triggers
             atTopStateChange={(atTop) => {
                 // Don't trigger loading here - we use rangeChanged instead
                 // This prevents double fetching
@@ -161,12 +158,6 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
             atBottomStateChange={(bottom) => {
                 setIsAtBottom(bottom);
                 onAtBottomChange?.(bottom);
-                if (bottom && data.length > 0) {
-                    const lastId = (data[data.length - 1] as any)?.id;
-                    if (lastId != null) {
-                        sendReadReceipt(roomId, String(lastId));
-                    }
-                }
             }}
             components={{
                 Footer: () => <div style={{height: 10}}/>,
@@ -196,7 +187,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                                 </div>
                             </div>
                         )}
-                        <ChatMessageItem message={msg} partnerAvatar={partnerAvatar}/>
+                        <ChatMessageItem message={msg} partnerAvatar={partnerAvatar} partnerId={partnerId}/>
                     </div>
                 );
             }}

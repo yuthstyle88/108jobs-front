@@ -5,9 +5,7 @@ interface Props {
     msgStatus: "pending" | "sent" | "failed";
     unread?: boolean;
     showReceipt: boolean | undefined;
-    readByPeer: boolean | undefined;
     readTime: string | null
-    deliveredButUnread: boolean | undefined;
     t: any;
     onRetry?: () => void; // <- allow parent to wire resend.flushActive(roomId)
 }
@@ -20,13 +18,7 @@ const SentIcon = () => (
 
 const ReadIcon = () => (
     <svg className="w-4 h-4 inline-block text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path d="M1 13l4-4 6 6 11-11" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-);
-
-const DeliveredIcon = () => (
-    <svg className="w-4 h-4 inline-block text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path d="M2 12l9 7 11-14" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M3 13l4 4 9-9M12 15l2 2 9-9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
 );
 
@@ -57,9 +49,7 @@ const MessageReceipt: React.FC<Props> = ({
                                              msgStatus,
                                              unread,
                                              showReceipt,
-                                             readByPeer,
                                              readTime,
-                                             deliveredButUnread,
                                              t,
                                              onRetry,
                                          }) => {
@@ -105,30 +95,22 @@ const MessageReceipt: React.FC<Props> = ({
         );
     }
 
-    // msgStatus === "sent"
-    if (showReceipt) {
-        if (readByPeer) {
-            return (
-                <span className="ml-1 inline-flex items-center gap-1 text-green-600 text-xs">
-                    <ReadIcon/>
-                    <span>{t("profileChat.read") || "Read"}</span>
-                    <span className="opacity-70">{readTime}</span>
-                </span>
-            );
-        }
-        if (deliveredButUnread) {
-            return (
-                <span className="ml-1 inline-flex items-center gap-1 text-blue-600">
-                    <DeliveredIcon/>
-                    <span className="text-xs">{t("profileChat.unread") || "Delivered"}</span>
-                </span>
-            );
-        }
+    if (msgStatus === "sent" && !showReceipt) {
         return (
             <span className="ml-1 inline-flex items-center gap-1 text-gray-500">
                 <SentIcon/>
                 <span className="text-xs">{t("profileChat.sent") || "Sent"}</span>
             </span>
+        );
+    }
+
+    if (showReceipt) {
+        return (
+            <span className="ml-1 inline-flex items-center gap-1 text-green-600 text-xs">
+                    <ReadIcon/>
+                    <span>{t("profileChat.read") || "Read"}</span>
+                    <span className="opacity-70">{readTime}</span>
+                </span>
         );
     }
 

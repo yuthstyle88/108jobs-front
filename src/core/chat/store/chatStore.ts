@@ -108,7 +108,7 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
         const byId = new Map(s.pendingMessages.map(m => [String(m.id), m]));
         const k = String(msg.id);
         const prev = byId.get(k);
-        byId.set(k, { ...(prev ?? ({} as ChatMessage)), ...msg, status: 'pending' as ChatStatus });
+        byId.set(k, { ...(prev ?? ({} as ChatMessage)), ...msg, isOwner: true, status: 'pending' as ChatStatus });
         return { pendingMessages: Array.from(byId.values()) };
       }),
 

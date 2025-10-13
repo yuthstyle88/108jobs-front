@@ -163,7 +163,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
     }, [accessToken, roomId, localUser?.id]);
 
 
-    if (!accessToken || !roomId || !localUser || !state.shareKey || state.loading) {
+    if (!accessToken || !roomId || !localUser || !state.shareKey || !state.partnerId || state.loading) {
         return <LoadingBlur text=""/>;
     }
 

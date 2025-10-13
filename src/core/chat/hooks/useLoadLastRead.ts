@@ -1,34 +1,23 @@
 import {useEffect} from "react";
 import {HttpService, REQUEST_STATE} from "@/services/HttpService";
 import {useReadLastIdStore} from "@/core/chat/store/readLastIdStore";
-import {ChatRoomId, LocalUserId} from "@/lib/lemmy-js-client/src";
+import {ChatRoomId, LocalUserId} from "lemmy-js-client";
 
-export function useLoadLastRead(roomId: ChatRoomId, myUserId: LocalUserId) {
+export function useLoadLastRead(roomId: ChatRoomId, peerId: LocalUserId) {
     useEffect(() => {
-        if (!roomId || !myUserId) return;
+        if (!roomId || !peerId) return;
 
         let active = true;
 
-        HttpService.client.getLastRead({roomId}).then((res) => {
+        HttpService.client.getLastRead({roomId, peerId}).then((res) => {
             if (!active || !res || res.state !== REQUEST_STATE.SUCCESS || !res.data?.lastRead) return;
-
             const lastRead = res.data.lastRead;
-            console.log("last_read", lastRead)
-            const {setLastReadAt, setPeerLastReadAt, getLastReadAt} = useReadLastIdStore.getState();
-
-            if (Number(lastRead.localUserId) === Number(myUserId)) {
-                // It's me → store my read timestamp
-                setLastReadAt(roomId, myUserId, lastRead.updatedAt);
-                console.log("myUserId", myUserId)
-                console.log("lastRead.localUserId", getLastReadAt(roomId, myUserId))
-            } else {
-                // It's another peer in the room
-                setPeerLastReadAt(roomId, lastRead.localUserId, lastRead.updatedAt);
-            }
+            const {setPeerLastReadAt} = useReadLastIdStore.getState();
+            setPeerLastReadAt(roomId, lastRead.localUserId, lastRead.updatedAt);
         });
 
         return () => {
             active = false;
         };
-    }, [roomId, myUserId]);
+    }, [roomId, peerId]);
 }

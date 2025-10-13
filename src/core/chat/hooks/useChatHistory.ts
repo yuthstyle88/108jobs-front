@@ -40,7 +40,6 @@ export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResul
         setHasMore(true);
         fetchingRef.current = false;
         lastCursorRef.current = null;
-        // console.debug('[useChatHistory] reset for room', roomId);
     }, [roomId]);
 
     const fetchHistory = useCallback(async () => {

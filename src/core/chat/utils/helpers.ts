@@ -4,7 +4,7 @@ import {REQUEST_STATE} from "@/services/HttpService";
 import {emitReadReceipt} from "@/core/chat/events";
 import {ChatMessage} from "lemmy-js-client";
 import {NormalizedEnvelope} from "@/core/chat/utils/chatSocketUtils";
-import type { ChatMessageView } from "lemmy-js-client";
+import type {ChatMessageView} from "lemmy-js-client";
 
 // Type guard: narrow a NormalizedEnvelope to the typing envelope (explicit interface)
 export type TypingEnv = {
@@ -13,11 +13,16 @@ export type TypingEnv = {
     typing: boolean;
     sender?: ChatMessageView['sender'];
 };
+
 function isTypingEnvelope(env: NormalizedEnvelope): env is TypingEnv {
     return !!env && (env as any).event === 'chat:typing' && typeof (env as any).roomId === 'string';
 }
 
-export function parseTypingDetail(env: NormalizedEnvelope, _fallbackRoomId: string, localUserId: number): { roomId: string; senderId: number; typing: boolean } | null {
+export function parseTypingDetail(env: NormalizedEnvelope, _fallbackRoomId: string, localUserId: number): {
+    roomId: string;
+    senderId: number;
+    typing: boolean
+} | null {
     try {
         if (!isTypingEnvelope(env)) return null;
         const roomId = env.roomId?.trim();
@@ -28,14 +33,14 @@ export function parseTypingDetail(env: NormalizedEnvelope, _fallbackRoomId: stri
 
         const typing = Boolean(env.typing);
 
-        return { roomId, senderId, typing };
+        return {roomId, senderId, typing};
     } catch {
         return null;
     }
 }
 
 // ---- helpers: status-change ----
-export async function maybeHandleStatusChange(env: any, roomId: string, setRefreshRoomData: (d:any)=>void): Promise<boolean> {
+export async function maybeHandleStatusChange(env: any, roomId: string, setRefreshRoomData: (d: any) => void): Promise<boolean> {
     try {
 
         const evName = String(env?.event);
@@ -46,35 +51,52 @@ export async function maybeHandleStatusChange(env: any, roomId: string, setRefre
                 setRefreshRoomData(chatRoomRes.data);
             }
         } catch (err) {
-            try { if (localStorage.getItem('chat_debug') === '1') console.error("Error fetching room:", err); } catch {}
+            try {
+                if (localStorage.getItem('chat_debug') === '1') console.error("Error fetching room:", err);
+            } catch {
+            }
         }
         return true;
-    } catch { return false; }
+    } catch {
+        return false;
+    }
 }
 
-// ---- helpers: read-receipt ----
+// ---- helpers: status-change ----
 export function maybeHandleReadReceipt(env: any, fallbackRoomId: string): boolean {
     try {
         const evName = String(env?.event || env?.content || "");
-        if (evName !== "chat:read") return false;
-        const roomId = env?.roomId || env?.topic || fallbackRoomId;
-        const lastReadMessageId = env?.lastReadMessageId;
+        if (evName !== "chat:read_up_to") return false;
+
+        const roomId = String(env?.roomId || env?.topic || fallbackRoomId);
+        const lastReadMessageId = String(env?.lastReadMessageId || "");
         const readerId = Number(env?.readerId ?? 0);
-        emitReadReceipt(String(roomId), String(lastReadMessageId || ""), readerId);
+        const updatedAt = env?.updatedAt || env?.createdAt || null; // <- depending on backend payload
+
+        // Emit event for internal WS listeners
+        emitReadReceipt(roomId, lastReadMessageId, readerId);
+        const api = require('@/core/chat/store/readLastIdStore');
+        const { setPeerLastReadAt, getPeerLastReadAt } = api.useReadLastIdStore.getState?.() || {};
+        if (typeof setPeerLastReadAt === 'function' && updatedAt) {
+            setPeerLastReadAt(roomId, readerId, updatedAt);
+        }
         return true;
-    } catch { return false; }
+    } catch {
+        return false;
+    }
 }
+
 
 // ---- helpers: new messages merge ----
 export function mergeNewMessages(
-  prev: ChatMessage[],
-  incoming: ChatMessage[],
+    prev: ChatMessage[],
+    incoming: ChatMessage[],
 ) {
     const map = new Map<string, ChatMessage>();
     for (const m of prev) map.set(String(m.id), m);
     for (const m of incoming) map.set(String(m.id), m);
     const arr = Array.from(map.values());
-    return arr.sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return arr.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
 // ---- helpers: auto-ack ----
@@ -88,13 +110,20 @@ export function tryFlushAutoAck(handleWSMessageFn: any, roomIdStr: string, readA
         const lastAcked = (handleWSMessageFn as any)._lastAckedId as string | undefined;
 
         const requireFocus = (() => {
-            try { return localStorage.getItem("read_ack_require_focus") !== "0"; } catch { return true; }
+            try {
+                return localStorage.getItem("read_ack_require_focus") !== "0";
+            } catch {
+                return true;
+            }
         })();
         const isActiveTab = typeof document !== "undefined"
-          ? (document.visibilityState === "visible" && (typeof (document as any).hasFocus === 'function' ? (document as any).hasFocus() : true))
-          : true;
+            ? (document.visibilityState === "visible" && (typeof (document as any).hasFocus === 'function' ? (document as any).hasFocus() : true))
+            : true;
         if (requireFocus && !isActiveTab) {
-            try { if (localStorage.getItem("debug_read_ack") === "1") console.log("[read-ack] skip: tab not active (visibility/focus required)"); } catch {}
+            try {
+                if (localStorage.getItem("debug_read_ack") === "1") console.log("[read-ack] skip: tab not active (visibility/focus required)");
+            } catch {
+            }
             return;
         }
         if (lastAcked === batchId) return;
@@ -103,18 +132,30 @@ export function tryFlushAutoAck(handleWSMessageFn: any, roomIdStr: string, readA
         readAckRef.current?.(batchId);
         (handleWSMessageFn as any)._lastAckedId = batchId;
         ackCooldownRef.current = now + 900;
-    } catch {}
+    } catch {
+    }
 }
 
 // ---- helpers: failure cleanup ----
-export function cleanupFetch(setIsFetching?: (b:boolean)=>void, fetchTimeoutRef?: RefObject<any>, fetchResolveRef?: RefObject<(()=>void)|null>) {
-    try { setIsFetching?.(false); } catch {}
+export function cleanupFetch(setIsFetching?: (b: boolean) => void, fetchTimeoutRef?: RefObject<any>, fetchResolveRef?: RefObject<(() => void) | null>) {
     try {
-        if (fetchTimeoutRef?.current) { clearTimeout(fetchTimeoutRef.current); fetchTimeoutRef.current = null as any; }
-    } catch {}
+        setIsFetching?.(false);
+    } catch {
+    }
     try {
-        if (fetchResolveRef?.current) { fetchResolveRef.current(); fetchResolveRef.current = null; }
-    } catch {}
+        if (fetchTimeoutRef?.current) {
+            clearTimeout(fetchTimeoutRef.current);
+            fetchTimeoutRef.current = null as any;
+        }
+    } catch {
+    }
+    try {
+        if (fetchResolveRef?.current) {
+            fetchResolveRef.current();
+            fetchResolveRef.current = null;
+        }
+    } catch {
+    }
 }
 
 export function buildMessageSignature(msg: any): string {
@@ -123,7 +164,7 @@ export function buildMessageSignature(msg: any): string {
     if (id != null) return String(id);
 
     // Fallback: composite signature (room|sender|ts|content)
-    const room = msg?.roomId  ?? "";
+    const room = msg?.roomId ?? "";
     const sender = msg?.senderId ?? "";
     const ts = msg?.createdAt ?? "";
     const c = msg?.content;
@@ -143,8 +184,8 @@ export function dbg(label: string, data?: unknown) {
     try {
         // Gate – support both browser/local flag and env flag.
         const enabled =
-          (typeof localStorage !== 'undefined' && localStorage.getItem('debugWs') === '1') ||
-          (typeof process !== 'undefined' && (process as any)?.env?.NEXT_PUBLIC_DEBUG_WS === '1');
+            (typeof localStorage !== 'undefined' && localStorage.getItem('debugWs') === '1') ||
+            (typeof process !== 'undefined' && (process as any)?.env?.NEXT_PUBLIC_DEBUG_WS === '1');
         if (!enabled) return;
 
         // Timestamped, namespaced header
@@ -198,8 +239,8 @@ export function dbg(label: string, data?: unknown) {
  * Accepts objects with `createdAt` or raw date strings/Date.
  */
 export function isOlder(
-  lastReadAt: string | Date,
-  createdAt: string | Date,
+    lastReadAt: string | Date,
+    createdAt: string | Date,
 ): boolean {
     const normalize = (v: any) => {
         if (typeof v === "string") {

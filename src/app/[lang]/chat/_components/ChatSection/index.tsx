@@ -27,7 +27,7 @@ import {useTranslation} from "react-i18next";
 import {v4 as uuidv4} from "uuid";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {ProfileImage} from "@/constants/images";
-import type {ChatMessage, ChatRoomData, LocalUser, Post} from "lemmy-js-client";
+import type {ChatMessage, ChatRoomData, LocalUser, LocalUserId, Post} from "lemmy-js-client";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";
@@ -54,8 +54,6 @@ import {useChatStore} from "@/core/chat/store/chatStore";
 import {useShallow} from 'zustand/react/shallow';
 import {selectRoomMessages} from '@/core/chat/utils/selectors';
 import {useLoadLastRead} from "@/core/chat/hooks/useLoadLastRead";
-import {useReadLastIdStore} from "@/core/chat/store/readLastIdStore";
-import {dbg} from "@/core/chat/utils";
 
 
 /** Shape of the form submitted by ChatInput. */
@@ -77,7 +75,7 @@ interface ChatSectionProps {
     post?: Post;
     partnerName: string;
     partnerAvatar: string;
-    partnerId?: number;
+    partnerId: LocalUserId;
     partnerAvailable?: boolean;
     roomData: ChatRoomData;
     localUser: LocalUser;
@@ -125,11 +123,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
     const _rawPostId: unknown = (currentRoom as any)?.room?.post?.id;
+    const hasFocusedRef = useRef(false);
     const roomPostId: number | undefined = typeof _rawPostId === 'number'
-      ? _rawPostId
-      : (typeof _rawPostId === 'string' && _rawPostId.trim() !== '' && !Number.isNaN(Number(_rawPostId))
-          ? Number(_rawPostId)
-          : undefined);
+        ? _rawPostId
+        : (typeof _rawPostId === 'string' && _rawPostId.trim() !== '' && !Number.isNaN(Number(_rawPostId))
+            ? Number(_rawPostId)
+            : undefined);
     const roomCommentId = currentRoom?.room?.currentComment?.id;
     const postCreatorId = post?.creatorId;
     const isEmployer = postCreatorId != null && person?.id != null ? String(postCreatorId) === String(person?.id) : undefined;
@@ -178,10 +177,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     } = useFileUpload({setError, t: (k: string) => t(k)});
     const upsertHistory = useChatStore(s => s.upsertHistory);
 
-    console.log("messages: ", messages)
-
     // fetch the last read timestamp from the backend and store it into useReadLastIdStore
-    useLoadLastRead(roomId, localUser.id);
+    useLoadLastRead(roomId, partnerId);
 
     // --- History management ---
     // Pulls paginated history for this room and writes pages into the global store via upsertHistory.
@@ -208,17 +205,38 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const lastReadSentRef = useRef<string | null>(null);
 
     const sendLatestRead = useCallback(() => {
-      const last = messages[messages.length - 1];
-      if (!last) return;
-      // Only send if last message is not mine
-      if (String(last.senderId) === String(localUser.id)) return;
-      const lastIdStr = String(last.id);
-      if (lastReadSentRef.current === lastIdStr) return; // already sent for this message
-      try {
-        sendReadReceipt(roomId, lastIdStr);
-      } catch {}
-      lastReadSentRef.current = lastIdStr;
+        // Prevent sending when tab is hidden or unfocused
+        if (document.visibilityState !== "visible" || !document.hasFocus()) {
+            return;
+        }
+        const last = messages[messages.length - 1];
+        if (!last) return;
+        // Only send if last message is not mine
+        if (Number(last.senderId) === Number(localUser.id)) return;
+        const lastIdStr = String(last.id);
+        if (lastReadSentRef.current === lastIdStr) return; // already sent for this message
+        try {
+            sendReadReceipt(roomId, lastIdStr);
+        } catch {
+        }
+        lastReadSentRef.current = lastIdStr;
     }, [messages, localUser.id, roomId, sendReadReceipt]);
+
+    // Reset dedupe tracker whenever a new message appears
+    useEffect(() => {
+        const last = messages[messages.length - 1];
+        if (last) {
+            const lastIdStr = String(last.id);
+            if (lastReadSentRef.current !== lastIdStr) {
+                lastReadSentRef.current = null; // reset so we can send again
+            }
+        }
+    }, [messages]);
+
+    // Also reset when switching rooms
+    useEffect(() => {
+        lastReadSentRef.current = null;
+    }, [roomId]);
 
     // Single source of truth for sending read-receipts (deduped by last message id)
     useEffect(() => {
@@ -555,11 +573,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                     markSeen(roomId);
                                 } catch {
                                 }
-                                sendLatestRead();
+                                // sendLatestRead();
                             }
                         }}
-                        sendReadReceipt={sendReadReceipt}
-                        roomId={roomId}
+                        partnerId={partnerId}
                     />
                     <div ref={inputContainerRef} className="border-t px-3 py-2 sm:px-4 sm:py-3 bg-white">
                         <div className="flex items-center gap-2">
@@ -624,7 +641,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         setIsFlowOpen={setIsFlowOpen}
                         renderFlowContent={renderFlowContent}
                         setShowJobDetailModal={setShowJobDetailModal}
-                        currentRoom={currentRoom?.room ?? "" }
+                        currentRoom={currentRoom?.room ?? ""}
                     />
                 </div>
                 {isFlowOpen && (

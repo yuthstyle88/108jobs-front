@@ -53,7 +53,7 @@ export function sendTyping(deps: SendEventDeps, typing: boolean) {
 export function sendReadReceipt(deps: SendEventDeps, lastMessageId: string) {
     const { roomId , senderId } = deps as any;
     const adapter = (deps as any).adapter as SendMessageDeps['adapter'];
-    const packet = createEvent('chat:read-up-to', {
+    const packet = createEvent('chat:read_up_to', {
       roomId: roomId,
       readerId: senderId,
       lastReadMessageId: lastMessageId ?? '',

@@ -1,7 +1,7 @@
 "use client";
 
 import Image, { StaticImageData } from "next/image";
-import type { ChatMessage } from "lemmy-js-client";
+import type {ChatMessage, LocalUserId} from "lemmy-js-client";
 import { MessageImage } from "@/constants/images";
 import { useTranslation } from "react-i18next";
 import { useChatStore } from "@/core/chat/store/chatStore";
@@ -16,6 +16,7 @@ import { useChatRoomsContext } from "@/core/chat/contexts/ChatRoomsContext";
 interface ChatMessageItemProps {
     message: ChatMessage;
     partnerAvatar?: string | StaticImageData;
+    partnerId: LocalUserId;
 }
 
 interface ProposedQuoteMessage {
@@ -48,6 +49,7 @@ interface ProposedQuoteMessage {
 const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                                              message,
                                                              partnerAvatar,
+                                                             partnerId
                                                          }) => {
     const { t, i18n } = useTranslation();
     const { resend } = useChatServices();
@@ -64,28 +66,24 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     const viewMsg = liveMessage || message;
     const roomIdStr = String((viewMsg as any)?.roomId ?? "");
     const lastReadAt = useReadLastIdStore(
-        (s) => (s as any).getLastReadAt?.(roomIdStr, viewMsg.senderId) ?? null
+        (s) => (s as any).getPeerLastReadAt?.(roomIdStr, partnerId) ?? null
     );
     const isIncoming = !viewMsg.isOwner;
 
     const time = toLocalTime(viewMsg.createdAt as any, i18n?.language || "th-TH");
     const isOwner = !!viewMsg.isOwner;
-    const isPeerOnline = peerPresence[roomIdStr] === true;
+    const isPeerOnline = peerPresence[roomIdStr];
     const isReadByLastAt =
         !!lastReadAt &&
         (isOlder(viewMsg.createdAt as any, lastReadAt) ||
             String(viewMsg.createdAt) === String(lastReadAt));
-    const msgStatus = "sent" as const;
-    // Only show as read if peer has read the message AND is currently online
-    const readByPeer = isOwner && isReadByLastAt && isPeerOnline;
+    const readByPeer = isOwner && isReadByLastAt;
     const readTime = readByPeer
         ? toLocalTime(lastReadAt, i18n?.language || "th-TH")
         : null;
-    // Calculate if message is delivered but unread (sent by owner but not read by peer)
-    const deliveredButUnread = isOwner && !readByPeer && msgStatus === "sent";
-    // Removed redundant isLastRead - it duplicated readByPeer logic for exact timestamp matches
-    // readByPeer already covers the same conditions including exact timestamp equality
-    const showReceipt = readByPeer || deliveredButUnread;
+    const isLastRead =
+        isOwner && !!lastReadAt && String(viewMsg.createdAt) === String(lastReadAt);
+    const showReceipt = readByPeer || isLastRead;
 
     const parsed = useMemo<ProposedQuoteMessage | null>(() => {
         const c = viewMsg?.content;
@@ -121,7 +119,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     return (
         <div
             data-testid="chat-message"
-            data-status={msgStatus}
+            data-status={viewMsg.status}
             className={`flex ${isIncoming ? "justify-start" : "justify-end"}`}
         >
             {isIncoming && (
@@ -141,11 +139,9 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                     <MessageReceipt
                         isOwner={viewMsg.isOwner}
                         unread={(viewMsg as any).unread}
-                        msgStatus={msgStatus}
+                        msgStatus={viewMsg.status}
                         showReceipt={showReceipt}
-                        readByPeer={readByPeer}
                         readTime={readTime}
-                        deliveredButUnread={deliveredButUnread}
                         t={t}
                         onRetry={
                             viewMsg.isOwner
@@ -226,7 +222,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                     <summary
                                         className="cursor-pointer select-none font-medium text-gray-800 hover:text-blue-600 transition-colors"
                                     >
-                                        Project Details
+                                        {t('profileChat.projectDetails')}
                                     </summary>
                                     <div
                                         className="mt-2 text-sm text-gray-600 whitespace-pre-line bg-gray-50 rounded-lg p-3"
@@ -260,7 +256,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                                 d="M3 3h18v2H3V3zm0 4h12v2H3V7zm0 4h18v2H3v-2zm0 4h12v2H3v-2zm0 4h18v2H3v-2z"
                                             />
                                         </svg>
-                                        Work Steps
+                                        {t('profileChat.workSteps')}
                                     </div>
                                     <div className="space-y-2">
                                         {parsed!.quote!.workSteps.map((ws, i) => (
