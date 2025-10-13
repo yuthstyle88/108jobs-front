@@ -78,12 +78,12 @@ export function sendRoomUpdateEvent(
 async function doSend(deps: SendMessageDeps, msg: ChatMessage): Promise<{ id: string; sent: boolean; }> {
     const { sender } = deps as any;
     if (!sender) return { id: String(msg.id), sent: false };
-
     const sent = deps.sender ? Boolean(await deps.sender.sendMessage('chat:message', msg)) : false;
     if (sent) {
-        const acked = await waitForAck(deps, msg.id, 4000)
+       const acked = await waitForAck(deps, msg.id, 4000)
           .catch((err) => { dbg('waitForAck error', err); return false; });
         if (acked) {
+            dbg('waitForAck success', acked);
             try { (deps as any).onAfterSend?.(); } catch {}
             return { id: String(msg.id), sent };
         }
