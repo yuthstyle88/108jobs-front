@@ -9,7 +9,7 @@ import { useChatServices } from "@/core/chat/contexts/PhoenixChatBridgeProvider"
 import React, { useMemo } from "react";
 import { toLocalTime } from "@/utils/date";
 import MessageReceipt from "@/components/MessageReceipt";
-import { isOlder } from "@/core/chat/utils";
+import {dbg, isOlder} from "@/core/chat/utils";
 import { useReadLastIdStore } from "@/core/chat/store/readLastIdStore";
 
 interface ChatMessageItemProps {

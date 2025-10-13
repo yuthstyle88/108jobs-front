@@ -199,13 +199,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         },
         upsertHistory,
     });
-    const upsertMessage = useChatStore(s => s.upsertMessage);
     const {
         actions: {sendMessage, sendTyping, sendRoomUpdate, sendReadReceipt},
         state: {refreshRoomData, isPartnerTyping},
-    } = useChatRoom({roomId, shareKey, localUser, roomData: currentRoom, upsertMessage});
-
-    const {setLastReadAt} = useReadLastIdStore.getState();
+    } = useChatRoom({roomId, shareKey, localUser, roomData: currentRoom});
 
     // Deduplicate read-receipts: remember last sent message id
     const lastReadSentRef = useRef<string | null>(null);
@@ -220,11 +217,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
       try {
         sendReadReceipt(roomId, lastIdStr);
       } catch {}
-      try {
-        setLastReadAt(roomId, localUser.id, last.createdAt);
-      } catch {}
       lastReadSentRef.current = lastIdStr;
-    }, [messages, localUser.id, roomId, sendReadReceipt, setLastReadAt]);
+    }, [messages, localUser.id, roomId, sendReadReceipt]);
 
     // Single source of truth for sending read-receipts (deduped by last message id)
     useEffect(() => {

@@ -38,7 +38,6 @@ export interface UseChatRoomParams {
     onRemoteTyping?: (detail: { roomId: string; senderId: number; typing: boolean }) => void;
     localUser: LocalUser,
     roomData: ChatRoomData;
-    upsertMessage: (msg: ChatMessage) => void
 }
 
 export function useChatRoom({
@@ -47,7 +46,6 @@ export function useChatRoom({
     onRemoteTyping,
     localUser,
     roomData,
-    upsertMessage
 }: UseChatRoomParams) {
     const [pageCursor, setPageCursor] = useState<string | null>(null);
     const fetchingRef = useRef(false);
@@ -115,6 +113,7 @@ export function useChatRoom({
     const joinedRoomRef = useRef<string | null>(null);
     // Normalize readiness flag for legacy socket vs new adapter
     const isReady = !!((ws as any)?.isReady ?? (ws as any)?.adapter?.isReady);
+    const upsertMessage = useChatStore(s => s.upsertMessage);
     // Normalized addMessageListener for both legacy socket and new adapter (or EventEmitter-style .on/.off)
     const addMessageListener = React.useCallback((handler: (data: unknown) => void) => {
         const a: any = (ws as any)?.adapter ?? null;
