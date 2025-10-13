@@ -1,3 +1,4 @@
+const crypto = globalThis.crypto;
 import { UserService } from "@/services";
 import { idbGet, idbSet } from "@/utils";
 
@@ -118,3 +119,62 @@ export async function deriveAesGcmKeyHex(clientPrivateKey: CryptoKey, serverPubH
   const aes = await subtle.importKey("raw", shared, { name: "AES-GCM", length: 256 }, true, ["encrypt", "decrypt"]);
   return bytesToHex(await subtle.exportKey("raw", aes));
 }
+/**
+ * AES-GCM-encrypt a UTF-8 string and return Base64 ciphertext with prepended nonce.
+ *
+ * The nonce is randomly generated (12 bytes, recommended for GCM) and prepended to the ciphertext.
+ * The nonce is included in the output to allow decryption without separate storage.
+ *
+ * @param data       Plaintext string.
+ * @param key        Symmetric `CryptoKey` (AES-GCM, 128/192/256-bit).
+ * @returns          Base64 string containing nonce (12 bytes) + ciphertext.
+ */
+export async function encrypt(
+  data: string,
+  key: CryptoKey,
+): Promise<string> {
+    const nonce = crypto.getRandomValues(new Uint8Array(12)); // 12 bytes is recommended for GCM
+    const encoded = new TextEncoder().encode(data);
+
+    const ciphertextBuffer = await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv: nonce },
+      key,
+      encoded,
+    );
+
+    // Prepend nonce to ciphertext
+    const combined = new Uint8Array(nonce.length + ciphertextBuffer.byteLength);
+    combined.set(nonce, 0);
+    combined.set(new Uint8Array(ciphertextBuffer), nonce.length);
+
+    return Buffer.from(combined).toString("base64");
+}
+
+/**
+ * Decrypt ciphertext produced by {@link encrypt}.
+ *
+ * @param ciphertextBase64  Base64 string containing nonce (12 bytes) + ciphertext.
+ * @param key               Symmetric `CryptoKey` (same as encryption).
+ * @returns                 Decrypted plaintext string (UTF-8).
+ */
+export async function decrypt(
+  ciphertextBase64: string,
+  key: CryptoKey,
+): Promise<string> {
+    const combined = Buffer.from(ciphertextBase64, "base64");
+    if (combined.length < 12) {
+        throw new Error("Ciphertext too short to contain valid nonce");
+    }
+
+    const nonce = combined.slice(0, 12); // Extract first 12 bytes as nonce
+    const ciphertext = combined.slice(12); // Remainder is ciphertext
+
+    const decryptedBuffer = await crypto.subtle.decrypt(
+      { name: "AES-GCM", iv: nonce },
+      key,
+      ciphertext,
+    );
+
+    return new TextDecoder().decode(decryptedBuffer);
+}
+

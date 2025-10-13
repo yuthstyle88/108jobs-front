@@ -1,7 +1,6 @@
 import type {ChatMessage, LocalUserId} from "lemmy-js-client";
 import {UserService} from "@/services";
-import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
-import {encrypt} from "@/lib/web-crypto";
+import {encrypt, ensureSharedKeyForRoom, importAesKey} from "@/utils";
 import {dbg} from "@/core/chat/utils";
 import {PhoenixEvent, PhoenixPacket, SendMessageDeps} from "@/core/chat/types";
 import {createMessage} from "@/core/chat/domain/entities/message";

@@ -9,8 +9,7 @@ import type {
     ChatStatus,
     LocalUserId
 } from "lemmy-js-client";
-import {decrypt} from "@/lib/web-crypto";
-import {importAesKey} from "@/utils";
+import {decrypt, importAesKey} from "@/utils";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {dbg} from "@/core/chat/utils/helpers";
 
