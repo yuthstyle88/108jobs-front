@@ -18,6 +18,7 @@ interface ChatInputProps {
     onTyping?: (typing: boolean) => void;
     /** Optional hint to show when the other participant is typing (e.g., "กำลังพิมพ์...") */
     typingHint?: string;
+    sendLatestRead: () => void
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({
@@ -28,6 +29,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
                                                  onFileUpload,
                                                  onTyping,
                                                  typingHint,
+                                                 sendLatestRead
                                              }) => {
     const {t} = useTranslation();
     const {register, handleSubmit, reset, watch} = useForm<MessageForm>();
@@ -107,6 +109,9 @@ const ChatInput: React.FC<ChatInputProps> = ({
                       const form = e.currentTarget.closest("form");
                       if (form) form.requestSubmit();
                   }
+              }}
+              onFocus={() => {
+                  try { sendLatestRead(); } catch {}
               }}
               onChange={(e) => {
                   // keep RHF in sync

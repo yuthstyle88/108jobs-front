@@ -573,7 +573,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                     markSeen(roomId);
                                 } catch {
                                 }
-                                // sendLatestRead();
                             }
                         }}
                         partnerId={partnerId}
@@ -625,6 +624,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                         }
                                     }}
                                     typingHint={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
+                                    sendLatestRead={sendLatestRead}
                                 />
                             </div>
                         </div>
