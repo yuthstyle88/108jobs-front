@@ -11,6 +11,7 @@ import { toLocalTime } from "@/utils/date";
 import MessageReceipt from "@/components/MessageReceipt";
 import {dbg, isOlder} from "@/core/chat/utils";
 import { useReadLastIdStore } from "@/core/chat/store/readLastIdStore";
+import { useChatRoomsContext } from "@/core/chat/contexts/ChatRoomsContext";
 
 interface ChatMessageItemProps {
     message: ChatMessage;
@@ -50,6 +51,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                                          }) => {
     const { t, i18n } = useTranslation();
     const { resend } = useChatServices();
+    const { peerPresence } = useChatRoomsContext();
 
     const liveMessage = useChatStore((s) => {
         const mid = message?.id;
@@ -68,19 +70,22 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
 
     const time = toLocalTime(viewMsg.createdAt as any, i18n?.language || "th-TH");
     const isOwner = !!viewMsg.isOwner;
+    const isPeerOnline = peerPresence[roomIdStr] === true;
     const isReadByLastAt =
         !!lastReadAt &&
         (isOlder(viewMsg.createdAt as any, lastReadAt) ||
             String(viewMsg.createdAt) === String(lastReadAt));
     const msgStatus = "sent" as const;
-    const readByPeer = isOwner && isReadByLastAt;
+    // Only show as read if peer has read the message AND is currently online
+    const readByPeer = isOwner && isReadByLastAt && isPeerOnline;
     const readTime = readByPeer
         ? toLocalTime(lastReadAt, i18n?.language || "th-TH")
         : null;
-    const deliveredButUnread = false;
-    const isLastRead =
-        isOwner && !!lastReadAt && String(viewMsg.createdAt) === String(lastReadAt);
-    const showReceipt = readByPeer || isLastRead;
+    // Calculate if message is delivered but unread (sent by owner but not read by peer)
+    const deliveredButUnread = isOwner && !readByPeer && msgStatus === "sent";
+    // Removed redundant isLastRead - it duplicated readByPeer logic for exact timestamp matches
+    // readByPeer already covers the same conditions including exact timestamp equality
+    const showReceipt = readByPeer || deliveredButUnread;
 
     const parsed = useMemo<ProposedQuoteMessage | null>(() => {
         const c = viewMsg?.content;

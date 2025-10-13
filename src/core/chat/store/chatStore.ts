@@ -3,6 +3,24 @@ import { create } from 'zustand'
 import { ChatMessage, ChatStatus } from 'lemmy-js-client'
 import {normRoom} from "@/utils/helpers";
 import {dbg} from "@/core/chat/utils";
+import { useReadLastIdStore } from '@/core/chat/store/readLastIdStore';
+
+// Utility function for read-last-id store interaction
+const readLastIdUtils = {
+  setLastReadAt: (roomId: string, senderId: number, createdAt: string) => {
+    try {
+      const state = useReadLastIdStore.getState();
+      if (typeof state.setLastReadAt === 'function') {
+        state.setLastReadAt(roomId, senderId, createdAt);
+      }
+    } catch (e) {
+      if (process.env.NODE_ENV !== 'production') {
+        // eslint-disable-next-line no-console
+        console.debug('[chatStore.readLastIdUtils] setLastReadAt failed', e);
+      }
+    }
+  }
+};
 
 
 // --- local pure helpers (no Zustand refs) ---
@@ -77,20 +95,9 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
       set((s) => {
           // Upsert/merge the message (keeps latest fields if same id)
           const messages = mergeIntoMessages(s.messages, msg);
-          // Update read-last-id based on this message (avoid import cycles via require)
-          try {
-              if (typeof window !== 'undefined') {``
-                  const api = require('@/core/chat/store/readLastIdStore');
-                  const { setLastReadAt } = api.useReadLastIdStore.getState?.() || {};
-                  if (typeof setLastReadAt === 'function' && msg.roomId && msg.senderId && msg.createdAt) {
-                      setLastReadAt(msg.roomId, msg.senderId , msg.createdAt);
-                  }
-              }
-          } catch (e) {
-              if (process.env.NODE_ENV !== 'production') {
-                  // eslint-disable-next-line no-console
-                  console.debug('[chatStore.upsertMessage] setLastReadAt failed', e);
-              }
+          // Update read-last-id based on this message
+          if (typeof window !== 'undefined' && msg.roomId && msg.senderId && msg.createdAt) {
+              readLastIdUtils.setLastReadAt(msg.roomId, msg.senderId, msg.createdAt);
           }
 
           return { messages };

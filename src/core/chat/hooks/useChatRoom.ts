@@ -90,7 +90,7 @@ export function useChatRoom({
             // Start the one-and-only timer
             peerActiveDecayRef.current = setTimeout(tick, PEER_ACTIVE_DECAY_MS);
         }
-    }, []);
+    }, [roomId, updatePeerPresence]);
 
     const isE2EMock = process.env.NEXT_PUBLIC_E2E_MODE === 'mock';
     const [refreshRoomData, setRefreshRoomData] = useState<ChatRoomData>(roomData);

@@ -80,6 +80,7 @@ export function createHandleWSMessage(deps: HandlerDeps) {
         try {
             payload = unwrapPhoenixFrame(event);
             const evt = payload?.data?.event;
+
             if (evt === 'chat:message' && !isValidIncomingChatPayload(payload)) {
                 // Keep log lightweight; the permissive mapper below will try its best.
                 try {
@@ -88,8 +89,17 @@ export function createHandleWSMessage(deps: HandlerDeps) {
             }
             // Normalize once only
             const env: NormalizedEnvelope = normalizePhoenixEnvelope(payload.data, roomIdStr);
+            
+            // Only mark peer as active if the message is from the peer, not from local user
             try {
-                markPeerActive();
+                // Prefer normalized env ids; fall back to raw/nested payload (e.g., chat:active_rooms → data.payload.readerId)
+                const rawSender = payload?.data?.payload?.senderId
+                  ?? payload?.data?.payload?.readerId;
+                const senderId = rawSender != null ? Number(rawSender) : undefined;
+                const isFromPeer = senderId && Number(senderId) !== meId;
+                if (isFromPeer) {
+                    markPeerActive();
+                }
             } catch {
             }
             // 1) status-change → refresh & return

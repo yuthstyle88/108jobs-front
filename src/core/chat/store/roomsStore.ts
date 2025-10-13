@@ -1,5 +1,86 @@
 import { create } from 'zustand';
 
+// Import store modules at top level to avoid async imports in functions
+import { useUnreadStore } from '@/core/chat/store/unreadStore';
+import { useReadLastIdStore } from '@/core/chat/store/readLastIdStore';
+
+// Utility functions for store interactions
+const unreadStoreUtils = {
+  getState: () => useUnreadStore.getState(),
+  pruneByRooms: async (rooms: Room[]) => {
+    try {
+      const { pruneUnreadByRooms } = await import('@/core/chat/store/unreadStore');
+      if (typeof pruneUnreadByRooms === 'function') {
+        pruneUnreadByRooms(rooms);
+      }
+    } catch {}
+  },
+  removeRoom: (roomId: string) => {
+    const state = useUnreadStore.getState();
+    if (typeof state.removeRoom === 'function') {
+      state.removeRoom(roomId);
+    }
+  },
+  resetRoom: (roomId: string) => {
+    const state = useUnreadStore.getState();
+    if (typeof state.reset === 'function') {
+      state.reset(roomId);
+    } else if (typeof state._setCount === 'function') {
+      state._setCount(roomId, 0);
+    }
+  },
+  setCount: (roomId: string, count: number) => {
+    const state = useUnreadStore.getState();
+    const val = Math.max(0, Number(count) || 0);
+    if (typeof state._setCount === 'function') {
+      state._setCount(roomId, val);
+    } else if (val === 0 && typeof state.reset === 'function') {
+      state.reset(roomId);
+    }
+  },
+  incrementCount: (roomId: string, delta: number) => {
+    const state = useUnreadStore.getState();
+    const step = Number.isFinite(delta) ? Number(delta) : 1;
+    if (typeof state._inc === 'function') {
+      state._inc(roomId, step);
+    } else if (typeof state._setCount === 'function') {
+      const cur = Math.max(0, Number(state?.perRoom?.[roomId]) || 0);
+      state._setCount(roomId, Math.max(0, cur + step));
+    }
+  },
+  getUnreadCount: (roomId: string) => {
+    const state = useUnreadStore.getState();
+    const cur = state?.perRoom?.[roomId];
+    return Math.max(0, Number(cur) || 0);
+  }
+};
+
+const readLastIdStoreUtils = {
+  getState: () => useReadLastIdStore.getState(),
+  pruneByRooms: async (rooms: Room[]) => {
+    try {
+      const { pruneReadLastByRooms } = await import('@/core/chat/store/readLastIdStore');
+      if (typeof pruneReadLastByRooms === 'function') {
+        pruneReadLastByRooms(rooms);
+      }
+    } catch {}
+  },
+  clearRoom: (roomId: string) => {
+    try {
+      const { clearRoom } = require('@/core/chat/store/readLastIdStore');
+      if (typeof clearRoom === 'function') {
+        clearRoom(roomId);
+      }
+    } catch {}
+  },
+  setPeerLastAt: (roomId: string, userId: number, timestamp: string) => {
+    const state = useReadLastIdStore.getState();
+    if (typeof state.setPeerLastReadAt === 'function') {
+      state.setPeerLastReadAt(roomId, userId, timestamp);
+    }
+  }
+};
+
 // Each Room represents a 1-to-1 conversation, so it has exactly one participant besides the current user.
 export type Room = {
   id: string;
@@ -61,47 +142,19 @@ export const useRoomsStore = create<RoomsState>((set, get) => ({
     const next = Array.isArray(rooms) ? rooms : [];
     set({ rooms: next });
     // Prune child stores to avoid stale entries
-    (async () => {
-      try {
-        const mod = await import("@/core/chat/store/unreadStore");
-        const prune = (mod as any).pruneUnreadByRooms as undefined | ((rooms: any[]) => void);
-        prune?.(next);
-      } catch {}
-      try {
-        const mod2 = await import("@/core/chat/store/readLastIdStore");
-        const prune2 = (mod2 as any).pruneReadLastByRooms as undefined | ((rooms: any[]) => void);
-        prune2?.(next);
-      } catch {}
-    })();
+    unreadStoreUtils.pruneByRooms(next);
+    readLastIdStoreUtils.pruneByRooms(next);
   },
   addRoom: (room) =>
     set((s) => ({ rooms: s.rooms.some((r) => r.id === room.id) ? s.rooms : [...s.rooms, room] })),
   removeRoom: (roomId) => {
     set((s) => ({ rooms: s.rooms.filter((r) => r.id !== roomId) }));
-    (async () => {
-      try {
-        const mod = await import("@/core/chat/store/unreadStore");
-        const useUnreadStore = (mod as any).useUnreadStore as { getState: () => any };
-        useUnreadStore?.getState?.().removeRoom?.(roomId);
-      } catch {}
-      try {
-        const mod2 = await import("@/core/chat/store/readLastIdStore");
-        const clearRoom = (mod2 as any).clearRoom as undefined | ((roomId: string) => void);
-        clearRoom?.(roomId);
-      } catch {}
-    })();
+    unreadStoreUtils.removeRoom(roomId);
+    readLastIdStoreUtils.clearRoom(roomId);
   },
   // Delegate read-marking to unreadStore (roomsStore no longer owns unread counts)
   markRoomRead: (roomId) => {
-    (async () => {
-      try {
-        const mod = await import("@/core/chat/store/unreadStore");
-        const useUnreadStore = (mod as any).useUnreadStore as { getState: () => any };
-        const us = useUnreadStore?.getState?.();
-        if (typeof us?.reset === 'function') us.reset(roomId);
-        else if (typeof us?._setCount === 'function') us._setCount(roomId, 0);
-      } catch {}
-    })();
+    unreadStoreUtils.resetRoom(roomId);
   },
   setActiveRoomId: (roomId) =>
     set((s) => ({
@@ -142,62 +195,21 @@ export const useRoomsStore = create<RoomsState>((set, get) => ({
 
     // forward who-read info to readLastIdStore
     if (readerUserId != null && lastMessageAt) {
-      (async () => {
-        try {
-          const mod = await import("@/core/chat/store/readLastIdStore");
-          const api: any = mod;
-          if (typeof api.setPeerLastAt === 'function') {
-            api.setPeerLastAt(roomId, readerUserId, lastMessageAt);
-          }
-        } catch {}
-      })();
+      readLastIdStoreUtils.setPeerLastAt(roomId, readerUserId, lastMessageAt);
     }
   },
 
   // Delegate unread mutations to unreadStore to avoid duplication
   setUnread: (roomId, count) => {
-    (async () => {
-      try {
-        const mod = await import("@/core/chat/store/unreadStore");
-        const useUnreadStore = (mod as any).useUnreadStore as { getState: () => any };
-        const us = useUnreadStore?.getState?.();
-        const val = Math.max(0, Number(count) || 0);
-        if (typeof us?._setCount === 'function') {
-          us._setCount(roomId, val);
-        } else if (val === 0 && typeof us?.reset === 'function') {
-          us.reset(roomId);
-        }
-      } catch {}
-    })();
+    unreadStoreUtils.setCount(roomId, count);
   },
 
   incrementUnread: (roomId, delta = 1) => {
-    (async () => {
-      try {
-        const mod = await import("@/core/chat/store/unreadStore");
-        const useUnreadStore = (mod as any).useUnreadStore as { getState: () => any };
-        const us = useUnreadStore?.getState?.();
-        const step = Number.isFinite(delta) ? Number(delta) : 1;
-        if (typeof us?._inc === 'function') {
-          us._inc(roomId, step);
-        } else if (typeof us?._setCount === 'function') {
-          const cur = Math.max(0, Number(us?.perRoom?.[roomId]) || 0);
-          us._setCount(roomId, Math.max(0, cur + step));
-        }
-      } catch {}
-    })();
+    unreadStoreUtils.incrementCount(roomId, delta);
   },
 
   getUnread: (roomId) => {
-    try {
-      const mod = require("@/core/chat/store/unreadStore");
-      const useUnreadStore = mod?.useUnreadStore;
-      const us = useUnreadStore?.getState?.();
-      const cur = us?.perRoom?.[roomId];
-      return Math.max(0, Number(cur) || 0);
-    } catch {
-      return 0;
-    }
+    return unreadStoreUtils.getUnreadCount(roomId);
   },
 
   findByParticipant: (participantId) =>

@@ -9,6 +9,7 @@ import {useParams} from "next/navigation";
 import {formatDateToLong} from "@/utils";
 import {getLocale} from "@/utils/date";
 import {useTranslation} from "react-i18next";
+import {useReadReceiptListener} from "@/core/chat/hooks/useReadReceiptListener";
 
 interface ChatMessagesProps {
     messages: ChatMessage[];
@@ -37,6 +38,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                                                    }) => {
     const {t} = useTranslation();
     const params = useParams();
+    
+    // Initialize read receipt listener to connect WebSocket events to readLastIdStore
+    useReadReceiptListener();
     const currentLang = (params?.lang as string) || "th";
     const currentLocale = getLocale(currentLang);
 

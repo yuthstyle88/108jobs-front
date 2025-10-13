@@ -5,6 +5,7 @@ import type {LocalUser} from "lemmy-js-client";
 import Link from "next/link";
 import {useChatRoomsContext} from "@/core/chat/contexts/ChatRoomsContext";
 import AvatarBadge from "@/components/AvatarBadge";
+import {dbg} from "@/core/chat/utils";
 
 interface ChatListItemProps {
     room: ChatRoom;
@@ -16,7 +17,6 @@ interface ChatListItemProps {
 function ChatListItemComponent({room, isActive, currentLang}: ChatListItemProps) {
     const {markRoomRead, peerPresence} = useChatRoomsContext();
     const online = peerPresence?.[String(room.id)] ?? false;
-
     const handleClick = () => {
         try {
             markRoomRead(String(room.id));
