@@ -13,11 +13,14 @@ export function useLoadLastRead(roomId: ChatRoomId, myUserId: LocalUserId) {
             if (!active || !res || res.state !== REQUEST_STATE.SUCCESS || !res.data?.lastRead) return;
 
             const lastRead = res.data.lastRead;
-            const {setLastReadAt, setPeerLastReadAt} = useReadLastIdStore.getState();
+            console.log("last_read", lastRead)
+            const {setLastReadAt, setPeerLastReadAt, getLastReadAt} = useReadLastIdStore.getState();
 
             if (Number(lastRead.localUserId) === Number(myUserId)) {
                 // It's me → store my read timestamp
                 setLastReadAt(roomId, myUserId, lastRead.updatedAt);
+                console.log("myUserId", myUserId)
+                console.log("lastRead.localUserId", getLastReadAt(roomId, myUserId))
             } else {
                 // It's another peer in the room
                 setPeerLastReadAt(roomId, lastRead.localUserId, lastRead.updatedAt);

@@ -6,7 +6,7 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {CreatePost, IntendedUse, JobType, PostId, PostView} from "lemmy-js-client";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faExclamationCircle, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
+import {faCoins, faExclamationCircle, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import {z} from "zod";
 import {useLanguage} from "@/contexts/LanguageContext";
 import {getNumericCode} from "@/actions/getClientCurrentLanguage";
@@ -16,6 +16,8 @@ import {REQUEST_STATE} from "@/services/HttpService";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {useCommunities} from "@/hooks/communites-api/useCommunities";
+import {ProfileIcon} from "@/constants/icons";
+import Image from "next/image";
 
 
 interface PostFormProps {
@@ -407,29 +409,25 @@ export const PostForm: React.FC<PostFormProps> = ({
                                     {t("createJob.budgetLabel")}
                                 </label>
                                 <div className="relative">
+                                    <div className="absolute left-3 top-1/2 -translate-y-1/2  text-yellow-500 ">
+                                        <FontAwesomeIcon icon={faCoins} />
+                                    </div>
                                     <input
                                         type="number"
                                         id="budget"
                                         {...register("budget")}
                                         placeholder="0"
                                         onFocus={(e) => e.target.select()}
-                                        className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                                        className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 pl-10 border rounded-lg focus:outline-none focus:ring-1 ${
                                             errors.budget
                                                 ? "border-red-200 focus:ring-red-500"
                                                 : "border-gray-300 focus:ring-blue-500"
                                         }`}
                                     />
-
-                                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                                        {t("createJob.budgetPlaceholder")}
-                                    </div>
                                 </div>
                                 {errors.budget && (
                                     <p className="mt-1 text-red-500 text-sm flex items-center">
-                                        <FontAwesomeIcon
-                                            icon={faExclamationCircle}
-                                            className="mr-1"
-                                        />
+                                        <FontAwesomeIcon icon={faExclamationCircle} className="mr-1" />
                                         {errors.budget.message}
                                     </p>
                                 )}

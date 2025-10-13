@@ -195,7 +195,6 @@ export function useChatRoom({
 
     const handleRemoteTyping = useCallback((detail: { roomId: ChatRoomId; senderId: LocalUserId; typing: boolean }) => {
         try {
-            console.log('[chat] handleRemoteTyping', detail);
             if(!detail) return;
             if(detail.roomId !== roomId) return;
             const me = Number(localUser.id) || 0;

@@ -177,6 +177,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     } = useFileUpload({setError, t: (k: string) => t(k)});
     const upsertHistory = useChatStore(s => s.upsertHistory);
 
+    console.log("messages: ", messages)
+
     // fetch the last read timestamp from the backend and store it into useReadLastIdStore
     useLoadLastRead(roomId, localUser.id);
 
