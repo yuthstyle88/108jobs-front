@@ -53,12 +53,13 @@ export function sendTyping(deps: SendEventDeps, typing: boolean) {
 export function sendReadReceipt(deps: SendEventDeps, lastMessageId: string) {
     const { roomId , senderId } = deps as any;
     const adapter = (deps as any).adapter as SendMessageDeps['adapter'];
-    const packet = createEvent('chat:read', {
+    const packet = createEvent('chat:read-up-to', {
       roomId: roomId,
       readerId: senderId,
-      lastReadMessageId: String(lastMessageId ?? ''),
+      lastReadMessageId: lastMessageId ?? '',
     });
     if (!adapter) return;
+    dbg('sendReadReceipt', packet);
     wsSend(adapter, packet);
 }
 

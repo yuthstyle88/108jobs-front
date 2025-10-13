@@ -40,6 +40,7 @@ export type PhoenixEvent =
   | "chat:message"
   | "chat:typing"
   | "chat:read"
+  | "chat:read-up-to"
   | "chat:update"
   | "history_page";
 

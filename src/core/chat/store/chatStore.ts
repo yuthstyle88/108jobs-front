@@ -2,6 +2,7 @@
 import { create } from 'zustand'
 import { ChatMessage, ChatStatus } from 'lemmy-js-client'
 import {normRoom} from "@/utils/helpers";
+import {dbg} from "@/core/chat/utils";
 
 
 // --- local pure helpers (no Zustand refs) ---
@@ -73,7 +74,28 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
         return { messages: merged };
       }),
     upsertMessage: (msg) =>
-      set((s) => ({ messages: mergeIntoMessages(s.messages, msg) })),
+      set((s) => {
+          // Upsert/merge the message (keeps latest fields if same id)
+          const messages = mergeIntoMessages(s.messages, msg);
+          dbg('[chatStore.upsertMessage]', msg);
+          // Update read-last-id based on this message (avoid import cycles via require)
+          try {
+              if (typeof window !== 'undefined') {
+                  const api = require('@/core/chat/store/readLastIdStore');
+                  const { setLastReadAt } = api.useReadLastIdStore.getState?.() || {};
+                  if (typeof setLastReadAt === 'function' && (msg as any).roomId && (msg as any).senderId && (msg as any).createdAt) {
+                      setLastReadAt(String((msg as any).roomId), String((msg as any).senderId), (msg as any).createdAt);
+                  }
+              }
+          } catch (e) {
+              if (process.env.NODE_ENV !== 'production') {
+                  // eslint-disable-next-line no-console
+                  console.debug('[chatStore.upsertMessage] setLastReadAt failed', e);
+              }
+          }
+
+          return { messages };
+      }),
 
     addPending: (msg) =>
       set((s) => {

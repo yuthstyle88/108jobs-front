@@ -452,10 +452,10 @@ export function useChatRoom({
         if(!adapter) return;
         try {
             if(localStorage.getItem('debug_read_ack') === '1') {
-                // console.log('[read-ack] sendReadReceipt() 1', { roomId: roomIdArg, senderId: me, lastMessageAt });
+                console.log('[read-ack] sendReadReceipt() 1', { roomId: roomIdArg, senderId: me, lastMessageAt });
             }
-            (sendReadReceiptEvent as any)({adapter, roomId: roomIdArg, senderId: me}, {lastReadAt: lastMessageAt});
-            // console.log('[read-ack] sendReadReceipt() 2', { roomId: roomIdArg, senderId: me, lastMessageAt });
+            (sendReadReceiptEvent as any)({adapter, roomId: roomIdArg, senderId: me}, lastMessageAt);
+            console.log('[read-ack] sendReadReceipt() 2', { roomId: roomIdArg, senderId: me, lastMessageAt });
             try {
                 (readAckRef.current as any)?.(lastMessageAt);
             } catch {

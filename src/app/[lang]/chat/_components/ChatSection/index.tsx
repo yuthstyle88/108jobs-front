@@ -55,6 +55,7 @@ import {useShallow} from 'zustand/react/shallow';
 import {selectRoomMessages} from '@/core/chat/utils/selectors';
 import {useLoadLastRead} from "@/core/chat/hooks/useLoadLastRead";
 import {useReadLastIdStore} from "@/core/chat/store/readLastIdStore";
+import {dbg} from "@/core/chat/utils";
 
 
 /** Shape of the form submitted by ChatInput. */
@@ -206,36 +207,36 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
     const {setLastReadAt} = useReadLastIdStore.getState();
 
-    useEffect(() => {
-        if (!messages.length) return;
-        const lastMessage = messages[messages.length - 1];
-        // Only send if message is not yours
-        if (lastMessage.senderId !== localUser.id) {
-            const lastIdStr = String(lastMessage.id);
-            sendReadReceipt(roomId, lastIdStr);
-            try {
-                setLastReadAt(roomId, localUser.id, lastMessage.createdAt);
-            } catch {
-            }
-        }
-    }, [messages, roomId, localUser.id, sendReadReceipt, setLastReadAt]);
+    // Deduplicate read-receipts: remember last sent message id
+    const lastReadSentRef = useRef<string | null>(null);
 
-    // When the window regains focus, send a read receipt for the newest message (if any).
+    const sendLatestRead = useCallback(() => {
+      const last = messages[messages.length - 1];
+      if (!last) return;
+      // Only send if last message is not mine
+      if (String(last.senderId) === String(localUser.id)) return;
+      const lastIdStr = String(last.id);
+      if (lastReadSentRef.current === lastIdStr) return; // already sent for this message
+      try {
+        sendReadReceipt(roomId, lastIdStr);
+      } catch {}
+      try {
+        setLastReadAt(roomId, localUser.id, last.createdAt);
+      } catch {}
+      lastReadSentRef.current = lastIdStr;
+    }, [messages, localUser.id, roomId, sendReadReceipt, setLastReadAt]);
+
+    // Single source of truth for sending read-receipts (deduped by last message id)
     useEffect(() => {
-        const onVisible = () => {
-            const lastMsg = messages[messages.length - 1];
-            if (lastMsg) {
-                const lastIdStr = String(lastMsg.id);
-                sendReadReceipt(roomId, lastIdStr);
-                try {
-                    setLastReadAt(roomId, localUser.id, lastMsg.createdAt);
-                } catch {
-                }
-            }
-        };
+        sendLatestRead();
+    }, [sendLatestRead]);
+
+    // On window focus, retry once via the same helper
+    useEffect(() => {
+        const onVisible = () => sendLatestRead();
         window.addEventListener("focus", onVisible);
         return () => window.removeEventListener("focus", onVisible);
-    }, [roomId, messages, sendReadReceipt, setLastReadAt]);
+    }, [sendLatestRead]);
 
     // Auto-collapse the workflow panel on narrow viewports to preserve space for the conversation.
     useEffect(() => {
@@ -560,18 +561,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                     markSeen(roomId);
                                 } catch {
                                 }
-                                const last = messages[messages.length - 1];
-                                if (last) {
-                                    const lastIdStr = String((last as any).id);
-                                    try {
-                                        setLastReadAt?.(roomId, localUser.id, last.createdAt);
-                                    } catch {
-                                    }
-                                    try {
-                                        sendReadReceipt(roomId, lastIdStr);
-                                    } catch {
-                                    }
-                                }
+                                sendLatestRead();
                             }
                         }}
                         sendReadReceipt={sendReadReceipt}
