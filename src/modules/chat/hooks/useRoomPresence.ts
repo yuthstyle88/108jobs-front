@@ -4,7 +4,7 @@
 import {useEffect} from 'react';
 import {usePresenceStore} from '@/modules/chat/store/presenceStore';
 import {HttpService} from "@/services";
-import {ChatRoomId, LocalUserId} from "@/lib/lemmy-js-client/src";
+import {ChatRoomId, LocalUserId} from "lemmy-js-client";
 
 export function useRoomPresence(roomId: ChatRoomId, peerId: LocalUserId) {
     const { setSnapshot } = usePresenceStore.getState();
@@ -14,7 +14,7 @@ export function useRoomPresence(roomId: ChatRoomId, peerId: LocalUserId) {
         let cancelled = false;
         (async () => {
             try {
-                const res = await HttpService.client.getPeerStatus({ localUserId: peerId });
+                const res = await HttpService.client.getPeerStatus({roomId, peerId });
                 console.log("res", res)
                 // Support either `res.json()` or direct data depending on client impl
                 const data = Array.isArray((res as any)?.peers)
