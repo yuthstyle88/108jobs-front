@@ -44,7 +44,7 @@ export interface WebSocketAPI {
     // ควบคุมการเชื่อมต่อ/เข้าช่อง
     connect: () => void;
     disconnect: () => void;
-    join: (params?: { roomId?: string; senderId?: number }) => Promise<void> | void;
+    join: (params?: { roomId: string; senderId: number }) => Promise<void> | void;
     leave: () => Promise<void> | void;
 
     // สั่งงานดิบ
@@ -154,10 +154,10 @@ export function useWebSocket(options: Partial<UseWebSocketOptions> = {}): WebSoc
 
     setStatus('connecting');
     if (topic !== nextTopic) setTopic(nextTopic);
-    const adapter = getChannelAdapter(token, nextTopic);
+    const adapter = getChannelAdapter(token, nextTopic, roomId, Number(senderId) ?? 0);
     adapterRef.current = adapter;
     bindAdapterHandlers(adapter);
-  }, [token, roomId, autoConnect, topicBuilder, bindAdapterHandlers, status, topic]);
+  }, [token, roomId, senderId, autoConnect, topicBuilder, bindAdapterHandlers, status, topic]);
 
   const disconnect = useCallback(() => {
     const a = adapterRef.current;
@@ -169,7 +169,7 @@ export function useWebSocket(options: Partial<UseWebSocketOptions> = {}): WebSoc
     log('disconnect');
   }, []);
 
-  const join = useCallback(async (params?: { roomId?: string; senderId?: number }) => {
+  const join = useCallback(async (params?: { roomId: string; senderId: number }) => {
     const a = adapterRef.current; if (!a) return;
     const rid = params?.roomId ?? roomId; if (!rid) return;
     const sid = params?.senderId ?? senderId; if (sid === undefined) return;

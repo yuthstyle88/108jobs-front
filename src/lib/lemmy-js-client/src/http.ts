@@ -13,7 +13,7 @@ import {
     Tags,
     UploadedFile,
 } from "@tsoa/runtime";
-import {
+import type {
     AdminListUsersI,
     ChatHistoryQueryI,
     CommunityIdQueryI,

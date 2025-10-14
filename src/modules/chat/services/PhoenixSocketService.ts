@@ -41,22 +41,42 @@ class PhoenixChannelHub {
   private socketByToken = new Map<string, PhoenixSocket>();
   private channelsByKey = new Map<string, any>();
 
-  getSocket(token: string): PhoenixSocket {
+  getSocket(token: string, roomId?: string, senderId?: number): PhoenixSocket {
     let sock = this.socketByToken.get(token);
     if (!sock) {
       const url = buildActixWsUrl();
       sock = new PhoenixSocket(url, { params: { token } } as any);
+      
+      // Override sendHeartbeat method to include senderId
+      if (senderId != null) {
+        const originalSendHeartbeat = (sock as any).sendHeartbeat;
+        (sock as any).sendHeartbeat = function() {
+          if ((this as any).pendingHeartbeatRef && !(this as any).isConnected()) { return; }
+          (this as any).pendingHeartbeatRef = (this as any).makeRef();
+          (this as any).push({
+            topic: `room:${roomId}`,
+            event: "heartbeat",
+            payload: { senderId },
+            ref: (this as any).pendingHeartbeatRef
+          });
+          (this as any).heartbeatTimeoutTimer = setTimeout(
+            () => (this as any).heartbeatTimeout(),
+            (this as any).heartbeatIntervalMs
+          );
+        };
+      }
+      
       sock.connect();
       this.socketByToken.set(token, sock);
     }
     return sock;
   }
 
-  getOrCreateChannel(token: string, topic: string) {
+  getOrCreateChannel(token: string, topic: string, roomId?: string, senderId?: number) {
     const key = `${token}:${topic}`;
     const existing = this.channelsByKey.get(key);
     if (existing) return existing;
-    const socket = this.getSocket(token);
+    const socket = this.getSocket(token, roomId, senderId);
     const ch = socket.channel(topic, { token });
     this.channelsByKey.set(key, ch);
     return ch;
@@ -72,11 +92,11 @@ class PhoenixChannelHub {
   }
 }
 
-export function getChannelAdapter(token: string, topic: string): RealtimeChannelAdapter {
+export function getChannelAdapter(token: string, topic: string, roomId: string, senderId: number): RealtimeChannelAdapter {
   const hub = PhoenixChannelHub.getInstance();
 
   // Create channels (primary + alias) and join both. If alias is unused, it will be idle.
-  let channel = hub.getOrCreateChannel(token, topic);
+  let channel = hub.getOrCreateChannel(token, topic, roomId, senderId);
 
   let readyState = 0;
   const adapter: RealtimeChannelAdapter = {

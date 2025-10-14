@@ -4,6 +4,7 @@
 
 import {create} from 'zustand';
 import {subscribeWithSelector} from 'zustand/middleware';
+import * as React from 'react';
 
 export type PeerPresence = {
     userId: number;
@@ -133,6 +134,7 @@ export function usePeerOnline(userId: number, thresholdMs = 20_000) {
       }
     );
 }
+
 
 /** React hook to read phase. */
 export function usePresencePhase() {

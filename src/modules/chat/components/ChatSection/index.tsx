@@ -577,6 +577,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         typingText={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
                         onToggleFlow={() => setIsFlowOpen((v) => !v)}
                         isFlowOpen={isFlowOpen}
+                        partnerId={partnerId}
                     />
                     <ChatMessages
                         messages={messages}

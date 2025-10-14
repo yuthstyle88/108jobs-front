@@ -6,7 +6,6 @@ import {ChatRoomId, LocalUserId} from "lemmy-js-client";
 import ChatWrapper from "@/containers/ChatWrapper";
 import {List} from "lucide-react";
 import {usePeerOnline} from "@/modules/chat/store/presenceStore";
-import {PeerBadge} from "@/modules/chat/components/PeerBadge";
 
 interface ChatHeaderProps {
     avatarUrl?: string;
@@ -27,7 +26,9 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
                                                    onToggleFlow,
                                                    isFlowOpen,
                                                }) => {
-    const online = usePeerOnline(partnerId ? Number(partnerId) : 0) ?? false;
+
+
+    const online = usePeerOnline(Number(partnerId) ?? 0);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const onToggleSidebar = () => setIsSidebarOpen((prev) => !prev);
