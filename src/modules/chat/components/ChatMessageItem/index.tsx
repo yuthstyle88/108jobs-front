@@ -50,8 +50,8 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                                              partnerAvatar,
                                                              partnerId
                                                          }) => {
-    const { t, i18n } = useTranslation();
-    const { resend } = useChatServices();
+    const {t, i18n} = useTranslation();
+    const {resend} = useChatServices();
 
     const liveMessage = useChatStore((s) => {
         const mid = message?.id;
@@ -148,7 +148,8 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                     if (rid) {
                                         try {
                                             resend?.flushActive(rid);
-                                        } catch {}
+                                        } catch {
+                                        }
                                     }
                                 }
                                 : undefined
@@ -638,18 +639,18 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                     <div
                         className={`max-w-[80vw] sm:max-w-xs px-3 py-2 rounded-2xl text-[15px] leading-relaxed font-sans break-words whitespace-pre-line shadow-sm ${
                             isIncoming
-                                ? "bg-white text-gray-800 rounded-bl-sm ring-1 ring-gray-200"
+                                ? "bg-[#E5E5E5] text-gray-800 rounded-bl-sm ring-1 ring-gray-200"
                                 : "bg-primary text-white rounded-br-sm"
                         }`}
                     >
-                        <div className="flex items-baseline gap-2 flex-wrap">
+                        <div className="flex items-center gap-2 flex-wrap">
                             <span className="flex-1">{viewMsg.content}</span>
                             <span
                                 className="text-xs min-w-fit"
                                 style={{ color: isIncoming ? "gray" : "rgba(255, 255, 255, 0.7)" }}
                             >
-                {time}
-              </span>
+            {time}
+        </span>
                         </div>
                     </div>
                 )}
