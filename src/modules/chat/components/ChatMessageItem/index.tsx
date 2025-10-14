@@ -50,8 +50,8 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                                              partnerAvatar,
                                                              partnerId
                                                          }) => {
-    const { t, i18n } = useTranslation();
-    const { resend } = useChatServices();
+    const {t, i18n} = useTranslation();
+    const {resend} = useChatServices();
 
     const liveMessage = useChatStore((s) => {
         const mid = message?.id;
@@ -148,7 +148,8 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                     if (rid) {
                                         try {
                                             resend?.flushActive(rid);
-                                        } catch {}
+                                        } catch {
+                                        }
                                     }
                                 }
                                 : undefined
@@ -299,11 +300,11 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                     </div>
                 ) : isEmployerStarted ? (
                     <div
-                        className="max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ring-teal-200 bg-teal-50 px-4 py-3 transition-all duration-200 hover:ring-teal-300"
+                        className="max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 px-4 py-3 transition-all duration-200 mt-2 bg-green-50"
                     >
-                        <div className="flex items-start gap-3 flex-wrap">
+                        <div className="flex items-start gap-3 flex-wrap text-primary">
                             <svg
-                                className="w-5 h-5 text-teal-600 flex-shrink-0 mt-0.5"
+                                className="w-5 h-5 flex-shrink-0 mt-0.5"
                                 viewBox="0 0 24 24"
                                 fill="currentColor"
                                 aria-hidden="true"
@@ -314,7 +315,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                             </svg>
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-4 flex-wrap">
-                                    <div className="text-sm font-semibold text-teal-800">
+                                    <div className="text-sm font-semibold">
                                         {t("profileChat.startHiring") || "Employer started hiring."}
                                     </div>
                                     <span className="text-xs text-gray-500 ml-auto min-w-fit">{time}</span>
@@ -389,7 +390,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                     </div>
                 ) : isCancelJob ? (
                     <div
-                        className="max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ring-red-200 bg-red-50 px-4 py-3"
+                        className="max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ring-red-200 bg-red-50 px-4 py-3 mt-2"
                     >
                         <div className="flex items-start gap-3 flex-wrap">
                             <svg
@@ -638,18 +639,18 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                     <div
                         className={`max-w-[80vw] sm:max-w-xs px-3 py-2 rounded-2xl text-[15px] leading-relaxed font-sans break-words whitespace-pre-line shadow-sm ${
                             isIncoming
-                                ? "bg-white text-gray-800 rounded-bl-sm ring-1 ring-gray-200"
+                                ? "bg-[#E5E5E5] text-gray-800 rounded-bl-sm ring-1 ring-gray-200"
                                 : "bg-primary text-white rounded-br-sm"
                         }`}
                     >
-                        <div className="flex items-baseline gap-2 flex-wrap">
+                        <div className="flex items-center gap-2 flex-wrap">
                             <span className="flex-1">{viewMsg.content}</span>
                             <span
                                 className="text-xs min-w-fit"
                                 style={{ color: isIncoming ? "gray" : "rgba(255, 255, 255, 0.7)" }}
                             >
-                {time}
-              </span>
+            {time}
+        </span>
                         </div>
                     </div>
                 )}

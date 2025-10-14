@@ -177,9 +177,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 return (
                     <div className="last:mb-0">
                         {showDate && (
-                            <div className="w-full flex justify-center my-2">
+                            <div className="w-full flex justify-center my-4">
                                 <div
-                                    className="inline-block rounded-[10px] bg-border-secondary p-1 min-w-[120px] text-[#728197] text-[12.8px] text-center">
+                                    className="inline-block rounded-[10px] p-1 min-w-[120px] text-[#728197] text-[12.8px] text-center">
                                     {currentDate}
                                 </div>
                             </div>
