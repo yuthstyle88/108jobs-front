@@ -10,7 +10,7 @@ import React, {useEffect, useState} from "react";
 import LanguageBottomSheet from "../SpBottomTab";
 import SpUserAvatar from "./components/SpUserProfile";
 import {UserService} from "@/services";
-import {useTotalUnread} from "@/core/chat/utils";
+import {useTotalUnread} from "@/modules/chat/utils";
 import Search from "@/components/Header/components/Search";
 
 type SpHeaderProps = {

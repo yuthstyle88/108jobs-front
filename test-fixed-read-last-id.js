@@ -17,7 +17,7 @@ console.log("6. ✅ readLastIdStore is updated");
 console.log("7. ✅ UI can now reflect updated read status");
 
 console.log("\n✅ FILES MODIFIED:");
-console.log("- Created: src/core/chat/hooks/useReadReceiptListener.ts");
+console.log("- Created: src/modules/chat/hooks/useReadReceiptListener.ts");
 console.log("- Modified: src/app/[lang]/chat/_components/ChatMessages/index.tsx");
 
 console.log("\n✅ INTEGRATION POINTS:");

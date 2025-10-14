@@ -4,10 +4,10 @@ import {useLanguage} from "@/contexts/LanguageContext";
 import {useParams} from "next/navigation";
 import React, {useCallback, useMemo, useState, useEffect} from "react";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import {useChatRoomsContext} from "@/core/chat/contexts/ChatRoomsContext";
+import {useChatRoomsContext} from "@/modules/chat/contexts/ChatRoomsContext";
 import type {ChatRoom} from "@/types/chat";
 import {debounce} from "lodash";
-import ChatListItem from "@/app/[lang]/chat/_components/ChatListItem";
+import ChatListItem from "@/modules/chat/components/ChatListItem";
 import {useTranslation} from "react-i18next";
 
 const ChatWrapper = ({

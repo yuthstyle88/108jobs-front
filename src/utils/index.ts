@@ -1,6 +1,6 @@
 // Centralized utils barrel
 
-// core util modules
+// modules util modules
 export * from "./browser";
 export * from "./config";
 export * from "./env";

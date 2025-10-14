@@ -19,7 +19,7 @@ import {buildCommunitiesTree} from "@/utils/helpers";
 import {useCommunities} from "@/hooks/communites-api/useCommunities";
 import {LandingImage} from "@/constants/images";
 import ChatWrapper from "@/containers/ChatWrapper";
-import {ChatRoomsProvider} from "@/core/chat/contexts/ChatRoomsContext";
+import {ChatRoomsProvider} from "@/modules/chat/contexts/ChatRoomsContext";
 import {ChatLanguageProvider} from "@/contexts/ChatLanguage";
 
 export default function Home() {

@@ -42,7 +42,7 @@ const nextConfig = {
     },
     experimental: {
         optimizeCss: true,
-        optimizePackageImports: ['@fortawesome/fontawesome-svg-core', '@fortawesome/free-solid-svg-icons'],
+        optimizePackageImports: ['@fortawesome/fontawesome-svg-modules', '@fortawesome/free-solid-svg-icons'],
         serverActions: {
             bodySizeLimit: '2mb',
         },

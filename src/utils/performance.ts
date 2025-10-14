@@ -222,7 +222,7 @@ export function monitorFID(callback: (value: number) => void): () => void {
 }
 
 /**
- * Initializes performance monitoring for core web vitals
+ * Initializes performance monitoring for modules web vitals
  * @returns An object with functions to disconnect the observers
  */
 export function initPerformanceMonitoring(): {

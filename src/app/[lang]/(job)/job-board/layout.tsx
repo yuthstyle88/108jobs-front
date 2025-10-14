@@ -4,7 +4,7 @@ import SpHeader from "@/containers/SpHeader";
 import React, {ReactNode, useState} from "react";
 import ChatWrapper from "@/containers/ChatWrapper";
 import {ChatLanguageProvider} from "@/contexts/ChatLanguage";
-import {ChatRoomsProvider} from "@/core/chat/contexts/ChatRoomsContext";
+import {ChatRoomsProvider} from "@/modules/chat/contexts/ChatRoomsContext";
 
 interface ConsentManagementLayoutProps {
     children: ReactNode;
