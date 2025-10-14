@@ -88,6 +88,7 @@ export default function ProfileLayout({children}: LayoutProps) {
                             <WebSocketProvider
                                 options={{
                                     token,
+                                    senderId,
                                     roomId: activeRoomId,
                                 }}
                             >

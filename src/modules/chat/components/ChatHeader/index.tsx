@@ -6,6 +6,7 @@ import {ChatRoomId, LocalUserId} from "lemmy-js-client";
 import ChatWrapper from "@/containers/ChatWrapper";
 import {List} from "lucide-react";
 import {usePeerOnline} from "@/modules/chat/store/presenceStore";
+import {PeerBadge} from "@/modules/chat/components/PeerBadge";
 
 interface ChatHeaderProps {
     avatarUrl?: string;
@@ -75,6 +76,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
                 {isSidebarOpen && (
                     <div className="fixed inset-0 z-40 bg-black bg-opacity-30">
                         <div className="absolute inset-y-0 left-0 w-64 bg-white shadow-lg overflow-y-auto">
+
                             <ChatWrapper
                                 isSidebarOpen={isSidebarOpen}
                                 onToggleSidebar={onToggleSidebar}

@@ -17,8 +17,11 @@ interface WebSocketContextValue extends WebSocketAPI {
 
 const WebSocketContext = createContext<WebSocketContextValue | undefined>(undefined);
 
+// Track (roomId:senderId) pairs we've joined to avoid duplicates across mounts
+const __joinedOnce = new Set<string>();
+
 // This should be the only place where WebSocket context is provided; other providers (like useRoomWebSocket) have been deprecated.
-export const WebSocketProvider: React.FC<React.PropsWithChildren<{ options?: UseWebSocketOptions }>> = ({ children, options }) => {
+export const WebSocketProvider: React.FC<React.PropsWithChildren<{ options?: UseWebSocketOptions; joinInProvider?: boolean }>> = ({ children, options, joinInProvider = true }) => {
 
   const ws = useWebSocket(options);
   const value = React.useMemo(() => {
@@ -58,6 +61,42 @@ export const WebSocketProvider: React.FC<React.PropsWithChildren<{ options?: Use
       addMessageListener,
     } as any as WebSocketContextValue;
   }, [ws]);
+
+  // Optional: perform room join here (centralized) when allowed via options
+  React.useEffect(() => {
+    const { allowJoin = false, autoJoin = true } = (options ?? {}) as any;
+    const roomId = (options as any)?.roomId as string | undefined;
+    const senderId = (options as any)?.senderId as number | undefined;
+
+    const anyWs: any = ws as any;
+    const adapter: any = anyWs?.adapter ?? null;
+
+    // guard conditions (centralized join here only)
+    if (!joinInProvider) return;                   // join only if Provider allows
+    if (!roomId || typeof senderId !== 'number') return;
+    if (anyWs?.status !== 'connected') return;
+
+    // avoid duplicate joins for the same pair across re-mounts
+    const key = `${roomId}:${senderId}`;
+    if (__joinedOnce.has(key)) return;
+
+    // some adapters expose `requiresManualJoin` when they don't auto-join internally
+    const requiresManual = adapter?.requiresManualJoin === true || typeof anyWs?.join === 'function';
+    if (!requiresManual) return;
+
+    try {
+      if (typeof anyWs.join === 'function') {
+        void anyWs.join({ roomId, senderId });
+        __joinedOnce.add(key);
+      } else if (adapter && typeof adapter.emit === 'function') {
+        // Phoenix wire format expects payload nesting
+        void adapter.emit('phx_join', { topic: roomId, payload: { sender_id: senderId } });
+        __joinedOnce.add(key);
+      }
+    } catch (e) {
+      console.warn('[WebSocketContext] join failed', e);
+    }
+  }, [ws, options, joinInProvider]);
 
   return (
     <WebSocketContext.Provider value={value}>

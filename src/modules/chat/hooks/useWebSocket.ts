@@ -12,11 +12,15 @@ export interface SendMessageInput {
 export interface UseWebSocketOptions {
     // การยืนยันตัวตน/สโคป
     token?: string | null;
-    roomId?: string;
+    roomId: string;
+    senderId: number;
     // การเชื่อมต่อ
     autoConnect?: boolean;               // default: true
     // NOTE: autoJoin only runs when the underlying adapter sets `requiresManualJoin === true`
     autoJoin?: boolean;                  // default: true
+    // ปิด/เปิดการ join room จาก hook นี้ (ค่าเริ่มต้น: ปิด)
+    allowJoin?: boolean;
+
     topicBuilder?: (roomId: string) => string;
 
     // callbacks ระดับ socket (ดิบ)
@@ -40,7 +44,7 @@ export interface WebSocketAPI {
     // ควบคุมการเชื่อมต่อ/เข้าช่อง
     connect: () => void;
     disconnect: () => void;
-    join: (params?: { roomId?: string;}) => Promise<void> | void;
+    join: (params?: { roomId?: string; senderId?: number }) => Promise<void> | void;
     leave: () => Promise<void> | void;
 
     // สั่งงานดิบ
@@ -53,10 +57,11 @@ export interface WebSocketAPI {
  * It assumes the adapter behaves like a WebSocket/Channel bridge with
  * optional methods: connect(), disconnect()/close(), join(), leave(), emit().
  */
-export function useWebSocket(options: UseWebSocketOptions = {}): WebSocketAPI {
+export function useWebSocket(options: Partial<UseWebSocketOptions> = {}): WebSocketAPI {
   const {
     token,
     roomId,
+    senderId,
     autoConnect = true,
     autoJoin = true,
     topicBuilder = (roomId: string) => `room:${roomId}`,
@@ -164,12 +169,14 @@ export function useWebSocket(options: UseWebSocketOptions = {}): WebSocketAPI {
     log('disconnect');
   }, []);
 
-  const join = useCallback(async (params?: { roomId?: string;}) => {
+  const join = useCallback(async (params?: { roomId?: string; senderId?: number }) => {
     const a = adapterRef.current; if (!a) return;
     const rid = params?.roomId ?? roomId; if (!rid) return;
+    const sid = params?.senderId ?? senderId; if (sid === undefined) return;
+    console.log('[------------useWebSocket] join', { roomId: rid, senderId: sid });
     const t = topicBuilder(rid);
     if (typeof a.join === 'function') { return await a.join(t); }
-    if (typeof a.emit === 'function') { return await a.emit('phx_join', { topic: t }); }
+    if (typeof a.emit === 'function') { return await a.emit('phx_join', { topic: t, senderId: sid  }); }
   }, [roomId, topicBuilder]);
 
   const leave = useCallback(async () => {
@@ -203,9 +210,11 @@ export function useWebSocket(options: UseWebSocketOptions = {}): WebSocketAPI {
     const a = adapterRef.current as any;
     // Only adapters that declare they require manual join will be joined here.
     if (a && a.requiresManualJoin === true) {
-      void join({ roomId });
+      if (roomId && typeof senderId === 'number') {
+        void join({ roomId, senderId });
+      }
     }
-  }, [autoJoin, status, roomId, join]);
+  }, [autoJoin, status, roomId, senderId, join]);
 
   return {
     status,

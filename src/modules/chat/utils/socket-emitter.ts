@@ -21,7 +21,7 @@ export function makeReadAckEmitter(
 
     // Normalize only for chat:read — backend expects camelCase keys: roomId, readerId, lastReadMessageId
     if (evt === 'chat:read') {
-      const roomId = enriched.roomId ?? enriched.topic ?? enriched.room_id;
+      const roomId = enriched.roomId ?? enriched.topic ?? enriched.roomId;
       const lastReadMessageId =
         enriched.lastReadMessageId ??
         enriched.last_read_message_id ??
