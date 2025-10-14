@@ -26,7 +26,7 @@ const ChatWrapper = ({
     const {lang: currentLang} = useLanguage();
     const {localUser} = useMyUser();
     const chatCtx = useChatRoomsContext();
-    const { rooms, isLoading, error } = chatCtx || {} as any;
+    const {rooms, isLoading, error} = chatCtx || {} as any;
     const [searchQuery, setSearchQuery] = useState("");
 
     // Debounce search input to prevent excessive re-renders
@@ -44,21 +44,23 @@ const ChatWrapper = ({
     useEffect(() => {
         if (!activeRoomId || !chatCtx) return;
         try {
-            // Ensure connection exists (no-op if already connected)
             (chatCtx as any)?.connect?.();
-            // Prefer ensureJoined if available, otherwise joinRoom/openRoom
+
             const roomKey = activeRoomId;
             const ensured = (chatCtx as any)?.ensureJoined?.(roomKey);
             if (!ensured) {
-                (chatCtx as any)?.joinRoom?.(roomKey) ?? (chatCtx as any)?.openRoom?.(roomKey);
+                const joinFn = (chatCtx as any)?.joinRoom ?? (chatCtx as any)?.openRoom;
+                joinFn?.(roomKey);
             }
-            // Optionally set active for local store/views
+
             (chatCtx as any)?.setActiveRoom?.(roomKey);
         } catch (e) {
             console.warn('[ChatWrapper] auto-join failed', e);
         }
+
         if (isSidebarOpen) setIsSidebarOpen(false);
     }, [activeRoomId, chatCtx, isSidebarOpen, setIsSidebarOpen]);
+
 
     // Memoized filtered rooms to optimize search performance
     const filteredRooms = useMemo(() => {

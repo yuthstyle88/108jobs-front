@@ -13,7 +13,7 @@ import {
     Tags,
     UploadedFile,
 } from "@tsoa/runtime";
-import type {
+import {
     AdminListUsersI,
     ChatHistoryQueryI,
     CommunityIdQueryI,
@@ -49,7 +49,7 @@ import type {
     ListRegistrationApplicationsI,
     ListReportsI,
     ListTaglinesI,
-    ListUserChatRoomsQueryI, PeerQueryI,
+    ListUserChatRoomsQueryI, PeerStatusQueryI,
     ResolveObjectI,
     SearchI,
     UploadImage,
@@ -270,6 +270,7 @@ import type {LastReadQuery} from "./types/LastReadQuery";
 import type {LastReadResponse} from "./types/LastReadResponse";
 import type {PeerReadQuery} from "./types/PeerReadQuery";
 import type {PeerReadResponse} from "./types/PeerReadResponse";
+import {PeerStatusQuery} from "./types/PeerStatusQuery";
 
 enum HttpType {
     Get = "GET",
@@ -3302,15 +3303,15 @@ export class LemmyHttp extends Controller {
      * @summary Fetch last read for a user of a room.
      */
     @Security("bearerAuth")
-    @Get("/chat/get-peer-status")
+    @Get("/chat/peer-status")
     @Tags("Chat")
     async getPeerStatus(
-        @Queries() form: PeerQueryI,
+        @Queries() form: PeerStatusQueryI,
         @Inject() options?: RequestOptions,
     ) {
-        return this.#wrapper<PeerReadQuery, PeerReadResponse>(
+        return this.#wrapper<PeerStatusQuery, PeerReadResponse>(
             HttpType.Get,
-            "/chat/get-peer-status",
+            "/chat/peer-status",
             form,
             options,
         );

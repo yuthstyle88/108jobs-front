@@ -14,7 +14,8 @@ export function useRoomPresence(roomId: ChatRoomId, peerId: LocalUserId) {
         let cancelled = false;
         (async () => {
             try {
-                const res = await HttpService.client.getPeerStatus({ roomId, peerId });
+                const res = await HttpService.client.getPeerStatus({ localUserId: peerId });
+                console.log("res", res)
                 // Support either `res.json()` or direct data depending on client impl
                 const data = Array.isArray((res as any)?.peers)
                   ? (res as any).peers

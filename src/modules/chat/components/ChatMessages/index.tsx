@@ -39,7 +39,6 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     // Initialize read receipt listener to connect WebSocket events to readLastIdStore
     const currentLang = (params?.lang as string) || "th";
     const currentLocale = getLocale(currentLang);
-
     // Keep natural order (oldest -> newest) for Virtuoso
     const data = React.useMemo(() => [...messages], [messages]);
     const virtuosoRef = React.useRef<VirtuosoHandle | null>(null);
@@ -176,9 +175,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 const showDate = currentDate !== prevDate;
 
                 return (
-                    <div className="mb-2 last:mb-0">
+                    <div className="last:mb-0">
                         {showDate && (
-                            <div className="w-full flex justify-center my-4">
+                            <div className="w-full flex justify-center my-2">
                                 <div
                                     className="inline-block rounded-[10px] bg-border-secondary p-1 min-w-[120px] text-[#728197] text-[12.8px] text-center">
                                     {currentDate}
