@@ -1,6 +1,6 @@
 import {FlowActions, StatusKey} from '@/modules/chat/components/FreelanceChatFlow';
 import {v4 as uuidv4} from 'uuid';
-import type {ChatMessage, ChatMessage as WsChatMessage, ChatRoomData, LocalUser} from 'lemmy-js-client';
+import type {ChatRoomData, LocalUser} from 'lemmy-js-client';
 import {emitChatNewMessage, sendChatMessage} from "@/modules/chat/events";
 import React from "react";
 

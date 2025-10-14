@@ -8,7 +8,6 @@
  */
 import {Socket as PhoenixSocket} from "phoenix";
 import {buildActixWsUrl} from "@/modules/chat/utils/chatSocketUtils";
-import {dbg} from "@/modules/chat/utils";
 
 export interface RealtimeChannelAdapter {
   readyState: number; // 0 connecting, 1 open, 2 closing, 3 closed

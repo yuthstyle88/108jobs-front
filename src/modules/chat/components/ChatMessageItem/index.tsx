@@ -1,17 +1,16 @@
 "use client";
 
-import Image, { StaticImageData } from "next/image";
+import Image, {StaticImageData} from "next/image";
 import type {ChatMessage, LocalUserId} from "lemmy-js-client";
-import { MessageImage } from "@/constants/images";
-import { useTranslation } from "react-i18next";
-import { useChatStore } from "@/modules/chat/store/chatStore";
-import { useChatServices } from "@/modules/chat/contexts/PhoenixChatBridgeProvider";
-import React, { useMemo } from "react";
-import { toLocalTime } from "@/utils/date";
+import {MessageImage} from "@/constants/images";
+import {useTranslation} from "react-i18next";
+import {useChatStore} from "@/modules/chat/store/chatStore";
+import {useChatServices} from "@/modules/chat/contexts/PhoenixChatBridgeProvider";
+import React, {useMemo} from "react";
+import {toLocalTime} from "@/utils/date";
 import MessageReceipt from "@/components/MessageReceipt";
-import {dbg, isOlder} from "@/modules/chat/utils";
-import { useReadLastIdStore } from "@/modules/chat/store/readLastIdStore";
-import { useChatRoomsContext } from "@/modules/chat/contexts/ChatRoomsContext";
+import {isOlder} from "@/modules/chat/utils";
+import {useReadLastIdStore} from "@/modules/chat/store/readLastIdStore";
 
 interface ChatMessageItemProps {
     message: ChatMessage;
@@ -53,7 +52,6 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                                          }) => {
     const { t, i18n } = useTranslation();
     const { resend } = useChatServices();
-    const { peerPresence } = useChatRoomsContext();
 
     const liveMessage = useChatStore((s) => {
         const mid = message?.id;
@@ -72,7 +70,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
 
     const time = toLocalTime(viewMsg.createdAt as any, i18n?.language || "th-TH");
     const isOwner = !!viewMsg.isOwner;
-    const isPeerOnline = peerPresence[roomIdStr];
+    // const isPeerOnline = false; // TODO: Implement with userId-based presence when available
     const isReadByLastAt =
         !!lastReadAt &&
         (isOlder(viewMsg.createdAt as any, lastReadAt) ||

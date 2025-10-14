@@ -1,5 +1,6 @@
 import * as React from "react";
 import {UserService} from "@/services";
+import type {NormalizedEnvelope} from "@/modules/chat/utils/chatSocketUtils";
 import {
     broadcastToListeners,
     handleIncomingPayload,
@@ -8,12 +9,11 @@ import {
     normalizePhoenixEnvelope,
     unwrapPhoenixFrame,
 } from "@/modules/chat/utils/chatSocketUtils";
-import type {NormalizedEnvelope} from "@/modules/chat/utils/chatSocketUtils";
 import {emitChatTyping,} from "@/modules/chat/events/index";
 import type {ChatMessage, ChatRoomData} from "lemmy-js-client";
 import {
     buildMessageSignature,
-    cleanupFetch, dbg,
+    cleanupFetch,
     maybeHandleReadReceipt,
     maybeHandleStatusChange,
     parseTypingDetail,

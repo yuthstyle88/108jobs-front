@@ -82,6 +82,25 @@ interface ChatSectionProps {
     shareKey: string;
 }
 
+function ResponsiveFlowPanel({ isOpen, children }: { isOpen: boolean; children: React.ReactNode }) {
+  const desktop = "hidden md:flex md:static md:order-last h-full md:w-64 lg:w-80 xl:w-96 max-w-[360px] border-l bg-gray-50 shadow-none flex-col";
+  const mobile = `md:hidden fixed top-16 sm:top-20 right-0 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] w-[80vw] sm:w-[70vw] max-w-[360px] bg-white border-l shadow-xl z-40 flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`;
+  return (
+    <>
+      {/* Desktop: right column, static */}
+      <aside className={desktop} role="complementary" aria-label="Job Flow Sidebar">
+        {children}
+      </aside>
+      {/* Mobile: overlay from right */}
+      {isOpen && (
+        <aside className={mobile} role="dialog" aria-modal="true" aria-label="Job Flow Sidebar">
+          {children}
+        </aside>
+      )}
+    </>
+  );
+}
+
 const ChatSection: React.FC<ChatSectionProps> = ({
                                                      post,
                                                      partnerName,
@@ -552,6 +571,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         avatarUrl={partnerAvatar}
                         displayName={partnerName || "User"}
                         roomId={roomId}
+                        partnerId={partnerId}
                         typingText={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
                         onToggleFlow={() => setIsFlowOpen((v) => !v)}
                         isFlowOpen={isFlowOpen}
@@ -630,32 +650,14 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         </div>
                     </div>
                 </div>
-                <div
-                    className={`hidden md:flex border-l bg-gray-50 h-full transition-all duration-300 ${
-                        isFlowOpen ? "translate-x-0" : "translate-x-full"
-                    } md:translate-x-0 fixed md:static top-16 sm:top-20 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] w-[80vw] sm:w-[70vw] md:w-64 lg:w-80 xl:w-96 max-w-[360px] z-40 flex-col shadow-lg md:shadow-none`}
-                    role="complementary"
-                    aria-label="Job Flow Sidebar"
-                > {/* Workflow side panel (desktop & responsive overlay) */}
-                    <JobFlowContent
-                        setIsFlowOpen={setIsFlowOpen}
-                        renderFlowContent={renderFlowContent}
-                        setShowJobDetailModal={setShowJobDetailModal}
-                        currentRoom={currentRoom?.room ?? ""}
-                    />
-                </div>
-                {isFlowOpen && (
-                    <div
-                        className="md:hidden fixed top-16 sm:top-20 right-0 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] w-[80vw] sm:w-[70vw] max-w-[360px] bg-white border-l shadow-xl z-40 flex flex-col"
-                    >
-                        <JobFlowContent
-                            setIsFlowOpen={setIsFlowOpen}
-                            renderFlowContent={renderFlowContent}
-                            setShowJobDetailModal={setShowJobDetailModal}
-                            currentRoom={currentRoom.room}
-                        />
-                    </div>
-                )}
+          <ResponsiveFlowPanel isOpen={isFlowOpen}>
+            <JobFlowContent
+              setIsFlowOpen={setIsFlowOpen}
+              renderFlowContent={renderFlowContent}
+              setShowJobDetailModal={setShowJobDetailModal}
+              currentRoom={currentRoom?.room ?? ""}
+            />
+          </ResponsiveFlowPanel>
                 {isFlowOpen && (
                     <div
                         className="md:hidden fixed inset-0 bg-black/50 z-30"

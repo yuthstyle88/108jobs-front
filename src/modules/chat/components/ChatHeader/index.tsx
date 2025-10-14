@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, {useState} from "react";
 import AvatarBadge from "@/components/AvatarBadge";
-import { useChatRoomsContext } from "@/modules/chat/contexts/ChatRoomsContext";
-import { ChatRoomId } from "lemmy-js-client";
+import {ChatRoomId, LocalUserId} from "lemmy-js-client";
 import ChatWrapper from "@/containers/ChatWrapper";
-import { List } from "lucide-react";
+import {List} from "lucide-react";
+import {usePeerOnline} from "@/modules/chat/store/presenceStore";
 
 interface ChatHeaderProps {
     avatarUrl?: string;
     displayName: string;
     roomId: ChatRoomId;
+    partnerId?: LocalUserId;
     typingText?: string;
     onToggleFlow?: () => void;
     isFlowOpen?: boolean;
@@ -21,11 +22,11 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
                                                    displayName,
                                                    typingText,
                                                    roomId,
+                                                   partnerId,
                                                    onToggleFlow,
                                                    isFlowOpen,
                                                }) => {
-    const { peerPresence } = useChatRoomsContext();
-    const online = peerPresence?.[String(roomId)] ?? false;
+    const online = usePeerOnline(partnerId ? Number(partnerId) : 0) ?? false;
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const onToggleSidebar = () => setIsSidebarOpen((prev) => !prev);

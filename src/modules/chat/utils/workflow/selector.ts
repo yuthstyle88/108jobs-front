@@ -1,4 +1,4 @@
-import { WorkFlowStatus, WORKFLOW_TRANSITIONS } from "@/modules/chat/types/workflow";
+import {WORKFLOW_TRANSITIONS, WorkFlowStatus} from "@/modules/chat/types/workflow";
 
 export const can = <E extends keyof (typeof WORKFLOW_TRANSITIONS)[WorkFlowStatus]>(ev: E) =>
   (s: WorkFlowStatus): boolean =>

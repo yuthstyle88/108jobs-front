@@ -2,8 +2,8 @@
 // Zustand presence store with snapshot-first flow, diff queueing, and robust helpers.
 // All inline comments are in English per your preference.
 
-import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
+import {create} from 'zustand';
+import {subscribeWithSelector} from 'zustand/middleware';
 
 export type PeerPresence = {
     userId: number;

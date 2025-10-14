@@ -1,7 +1,7 @@
 // WorkflowActionPanel.tsx
 import React from "react";
-import { ActionButton } from "@/modules/chat/components/ActionButton";
-import { WorkFlowAction } from "@/modules/chat/types/workflow";
+import {ActionButton} from "@/modules/chat/components/ActionButton";
+import {WorkFlowAction} from "@/modules/chat/types/workflow";
 
 interface WorkflowActionPanelProps {
     actions: WorkFlowAction[];

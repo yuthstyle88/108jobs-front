@@ -1,6 +1,5 @@
-
-import { create } from "zustand";
-import { isBrowser } from "@/utils/browser";
+import {create} from "zustand";
+import {isBrowser} from "@/utils/browser";
 
 // -----------------------------
 // Minimal unread store: counts only

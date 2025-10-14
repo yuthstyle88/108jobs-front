@@ -5,7 +5,7 @@ import type {LocalUser} from "lemmy-js-client";
 import Link from "next/link";
 import {useChatRoomsContext} from "@/modules/chat/contexts/ChatRoomsContext";
 import AvatarBadge from "@/components/AvatarBadge";
-import {dbg} from "@/modules/chat/utils";
+import {usePeerOnline} from "@/modules/chat/store/presenceStore";
 
 interface ChatListItemProps {
     room: ChatRoom;
@@ -14,9 +14,20 @@ interface ChatListItemProps {
     localUser?: Pick<LocalUser, "id"> | null;
 }
 
-function ChatListItemComponent({room, isActive, currentLang}: ChatListItemProps) {
-    const {markRoomRead, peerPresence} = useChatRoomsContext();
-    const online = peerPresence?.[String(room.id)] ?? false;
+function ChatListItemComponent({room, isActive, currentLang, localUser}: ChatListItemProps) {
+    const {markRoomRead} = useChatRoomsContext();
+    
+    // Extract peer userId from room participants
+    const peerUserId = React.useMemo(() => {
+        if (!room.participants || room.participants.length === 0) return 0;
+        const peer = room.participants.find((p: any) => {
+            const participantId = typeof p === 'object' ? p.id : p;
+            return String(participantId) !== String(localUser?.id);
+        });
+        return peer ? (typeof peer === 'object' ? Number(peer.id) : Number(peer)) : 0;
+    }, [room.participants, localUser?.id]);
+    
+    const online = usePeerOnline(peerUserId) ?? false;
     const handleClick = () => {
         try {
             markRoomRead(String(room.id));

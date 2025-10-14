@@ -2,7 +2,6 @@
 
 import React, {useState} from "react";
 import Header from "@/components/Header";
-import ChatWrapper from "@/containers/ChatWrapper";
 import SpHeader from "@/containers/SpHeader";
 import {ChatLanguageProvider} from "@/contexts/ChatLanguage";
 import {LayoutProps} from "@/types/layout";
@@ -10,6 +9,8 @@ import {ChatRoomsProvider} from "@/modules/chat/contexts/ChatRoomsContext";
 import {WebSocketProvider} from "@/modules/chat/contexts/WebSocketContext";
 import {UserService} from "@/services/UserService";
 import {useParams} from "next/navigation";
+import ChatWrapper from "@/containers/ChatWrapper";
+import {dbg} from "@/modules/chat/utils";
 
 function decodeJwtSub(token?: string | null): number {
     try {
@@ -51,7 +52,6 @@ export default function ProfileLayout({children}: LayoutProps) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const [senderId, setSenderId] = React.useState<number>(() => resolveSenderId(token));
-
     React.useEffect(() => {
         const now = resolveSenderId(token);
         if (now && now !== senderId) setSenderId(now);
@@ -91,11 +91,38 @@ export default function ProfileLayout({children}: LayoutProps) {
                                     roomId: activeRoomId,
                                 }}
                             >
-                                <ChatWrapper
-                                    isSidebarOpen={isSidebarOpen}
-                                    onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-                                    setIsSidebarOpen={setIsSidebarOpen}
-                                />
+                                {/* Left Sidebar (desktop) */}
+                                <div className="hidden md:flex md:flex-col md:w-64 lg:w-80 xl:w-96 border-r border-gray-200 h-full">
+                                    <ChatWrapper
+                                        isSidebarOpen={isSidebarOpen}
+                                        onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+                                        setIsSidebarOpen={setIsSidebarOpen}
+                                    />
+                                </div>
+
+                                {/* Mobile Sidebar Overlay (slides from left) */}
+                                <div
+                                    className={`md:hidden fixed left-0 top-16 sm:top-20 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] w-[80vw] sm:w-[70vw] max-w-[360px] bg-white border-r border-gray-200 z-50 overflow-y-auto transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+                                    role="dialog"
+                                    aria-modal="true"
+                                    aria-label="Chat rooms"
+                                >
+                                    <ChatWrapper
+                                        isSidebarOpen={isSidebarOpen}
+                                        onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+                                        setIsSidebarOpen={setIsSidebarOpen}
+                                    />
+                                </div>
+                                {/* Mobile Backdrop */}
+                                {isSidebarOpen && (
+                                    <div
+                                        className="md:hidden fixed inset-0 bg-black/40 z-40"
+                                        onClick={() => setIsSidebarOpen(false)}
+                                        aria-hidden="true"
+                                    />
+                                )}
+
+                                {/* Main Content */}
                                 <div className="flex-1 min-w-0 h-full">
                                     {children}
                                 </div>

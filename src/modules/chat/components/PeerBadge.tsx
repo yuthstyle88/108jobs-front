@@ -1,4 +1,4 @@
-import { usePeerOnline, usePresencePhase } from '@/modules/chat/store/presenceStore';
+import {usePeerOnline, usePresencePhase} from '@/modules/chat/store/presenceStore';
 
 export function PeerBadge({ userId }: { userId: number }) {
     const phase = usePresencePhase();

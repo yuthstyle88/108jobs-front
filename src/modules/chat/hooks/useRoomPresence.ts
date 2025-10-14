@@ -2,8 +2,8 @@
 // Wires HTTP/WS flows: fetch initial snapshot, then apply diffs.
 // Call this once per room page.
 
-import { useEffect } from 'react';
-import { usePresenceStore } from '@/modules/chat/store/presenceStore';
+import {useEffect} from 'react';
+import {usePresenceStore} from '@/modules/chat/store/presenceStore';
 
 type PhoenixChannel = {
     push: (event: string, payload?: any) => any;

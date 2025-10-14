@@ -8,7 +8,7 @@
 import React, {createContext, useContext} from 'react';
 import type {UseWebSocketOptions, WebSocketAPI} from '@/modules/chat/hooks/useWebSocket';
 import {useWebSocket} from '@/modules/chat/hooks/useWebSocket';
-import { PhoenixSenderAdapter } from '@/modules/chat/adapters/PhoenixSenderAdapter';
+import {PhoenixSenderAdapter} from '@/modules/chat/adapters/PhoenixSenderAdapter';
 
 // ========================= Context Layer =======================
 interface WebSocketContextValue extends WebSocketAPI {

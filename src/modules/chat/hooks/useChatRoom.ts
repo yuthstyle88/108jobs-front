@@ -10,13 +10,13 @@ import {
     sendRoomUpdateEvent,
     sendTyping as sendTypingEvent
 } from "@/modules/chat/events/sendEvents";
-import {ChatMessage, ChatRoomData, ChatRoomId, LocalUser, LocalUserId} from "lemmy-js-client";
+import {ChatRoomData, ChatRoomId, LocalUser, LocalUserId} from "lemmy-js-client";
 import {useChatStore} from "@/modules/chat/store/chatStore"
 import {makeReadAckEmitter} from "@/modules/chat/utils/socket-emitter";
 import {emitWsReconnected} from "@/modules/chat/events";
 import {MessagePayload} from "@/modules/chat/types";
-import {useChatRoomsContext} from "@/modules/chat/contexts/ChatRoomsContext";
 import {PhoenixSenderAdapter} from '@/modules/chat/adapters/PhoenixSenderAdapter';
+import {usePresenceStore} from '@/modules/chat/store/presenceStore';
 
 // Safe DOM CustomEvent dispatcher
 function dispatchDomEvent(name: string, detail: any) {
@@ -56,7 +56,13 @@ export function useChatRoom({
     const peerActiveDecayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const lastPeerActiveBumpAtRef = useRef<number>(0);
     const peerActiveExpiresAtRef = useRef<number>(0);
-    const {updatePeerPresence} = useChatRoomsContext();
+    
+    // Extract peer userId from roomData
+    const peerUserId = React.useMemo(() => {
+        const participants = roomData?.room?.participants || [];
+        const peer = participants.find((p: any) => String(p.memberId) !== String(localUser?.id));
+        return peer ? Number(peer.memberId) : 0;
+    }, [roomData?.room?.participants, localUser?.id]);
 
     const markPeerActive = useCallback(() => {
         const now = Date.now();
@@ -69,8 +75,14 @@ export function useChatRoom({
 
         // Mark active and push out the expiry
         peerActiveRef.current = true;
-        updatePeerPresence(roomId, true);
         peerActiveExpiresAtRef.current = now + PEER_ACTIVE_DECAY_MS;
+        
+        // Update presence store with userId-based tracking
+        if (peerUserId > 0) {
+            try {
+                usePresenceStore.getState().touch(peerUserId, now);
+            } catch {}
+        }
 
         // If there's already a decay timer running, do not create a new one.
         // Let the single timer extend its expiry by reading peerActiveExpiresAtRef when it wakes.
@@ -80,7 +92,6 @@ export function useChatRoom({
                 if(remaining <= 0) {
                     // Expired: flip the flag and clear the timer handle
                     peerActiveRef.current = false;
-                    updatePeerPresence(roomId, false);
                     peerActiveDecayRef.current = null;
                     return;
                 }
@@ -90,7 +101,7 @@ export function useChatRoom({
             // Start the one-and-only timer
             peerActiveDecayRef.current = setTimeout(tick, PEER_ACTIVE_DECAY_MS);
         }
-    }, [roomId, updatePeerPresence]);
+    }, [roomId, peerUserId]);
 
     const isE2EMock = process.env.NEXT_PUBLIC_E2E_MODE === 'mock';
     const [refreshRoomData, setRefreshRoomData] = useState<ChatRoomData>(roomData);

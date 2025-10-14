@@ -11,7 +11,7 @@ import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {isBrowser} from "@/utils/browser";
 import {useUnreadStore} from "@/modules/chat/store/unreadStore";
-import {useRoomsStore, useActiveRoomId} from "@/modules/chat/store/roomsStore";
+import {useActiveRoomId, useRoomsStore} from "@/modules/chat/store/roomsStore";
 import {disableBackgroundUnread, enableBackgroundUnread} from "@/modules/chat/utils/backgroundUnreadWatcher";
 // Context state for listing chat rooms with pagination and E2EE-aware lastMessage preview
 
@@ -31,8 +31,6 @@ interface ChatRoomsContextValue extends RoomsState {
     bumpRoomToTop: (roomId: string, updatedAt?: string) => void;
     activeRoomId: string | null;
     setActiveRoomId: (roomId: string | null) => void;
-    peerPresence: Record<string, boolean>;
-    updatePeerPresence: (roomId: string, isActive: boolean) => void;
 }
 
 const ChatRoomsContext = createContext<ChatRoomsContextValue | undefined>(undefined);
@@ -45,10 +43,6 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     // Persist client-known last-activity timestamps to keep room order stable across reloads
     const LOCAL_ACTIVITY_KEY = 'chat_last_activity_overrides';
     const activityOverridesRef = useRef<Record<string, string>>({});
-    const [peerPresence, setPeerPresence] = useState<Record<string, boolean>>({});
-    const updatePeerPresence = React.useCallback((roomId: string, isActive: boolean) => {
-        setPeerPresence(prev => ({...prev, [roomId]: isActive}));
-    }, []);
 
     const saveOverrides = useCallback(() => {
         try {
@@ -481,9 +475,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         bumpRoomToTop,
         activeRoomId,
         setActiveRoomId,
-        peerPresence,
-        updatePeerPresence,
-    }), [state, refresh, loadMore, markRoomRead, bumpRoomToTop, activeRoomId, setActiveRoomId, peerPresence, updatePeerPresence]);
+    }), [state, refresh, loadMore, markRoomRead, bumpRoomToTop, activeRoomId, setActiveRoomId]);
 
     return (
         <ChatRoomsContext.Provider value={value}>

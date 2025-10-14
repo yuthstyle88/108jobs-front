@@ -1,6 +1,6 @@
 const crypto = globalThis.crypto;
-import { UserService } from "@/services";
-import { idbGet, idbSet } from "@/utils";
+import {UserService} from "@/services";
+import {idbGet, idbSet} from "@/utils";
 
 export type AESKey = CryptoKey;
 

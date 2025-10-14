@@ -1,6 +1,6 @@
 // src/modules/chat/utils/selectors.ts
 import memoizeOne from 'memoize-one';
-import type { ChatMessage } from 'lemmy-js-client';
+import type {ChatMessage} from 'lemmy-js-client';
 
 const cmpMsg = (a: ChatMessage, b: ChatMessage) => {
     const ta = a.createdAt ? Date.parse(a.createdAt) : 0;

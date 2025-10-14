@@ -1,9 +1,8 @@
 // src/modules/chat/store/chatStore.ts
-import { create } from 'zustand'
-import { ChatMessage, ChatStatus } from 'lemmy-js-client'
+import {create} from 'zustand'
+import {ChatMessage, ChatStatus} from 'lemmy-js-client'
 import {normRoom} from "@/utils/helpers";
-import {dbg} from "@/modules/chat/utils";
-import { useReadLastIdStore } from '@/modules/chat/store/readLastIdStore';
+import {useReadLastIdStore} from '@/modules/chat/store/readLastIdStore';
 
 // Utility function for read-last-id store interaction
 const readLastIdUtils = {

@@ -16,8 +16,6 @@ import {REQUEST_STATE} from "@/services/HttpService";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {useCommunities} from "@/hooks/communites-api/useCommunities";
-import {ProfileIcon} from "@/constants/icons";
-import Image from "next/image";
 
 
 interface PostFormProps {

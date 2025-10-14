@@ -81,11 +81,7 @@ const ChatWrapper = ({
     return (
         <>
             {/* Sidebar */}
-            <div
-                className={`flex flex-col bg-white border-r border-gray-200 shadow-lg md:shadow-none transition-transform duration-300 ease-in-out ${
-                    isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-                } fixed top-16 sm:top-20 left-0 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] w-[80vw] sm:w-[70vw] md:w-64 lg:w-80 xl:w-96 max-w-[360px] z-40 overflow-y-auto md:static md:max-w-none md:h-auto md:flex-[0_0_20%] lg:flex-[0_0_25%]`}
-            >
+            <div className="flex flex-col bg-white border-r border-gray-200 h-full w-full md:w-64 lg:w-80 xl:w-96 md:max-w-none md:flex-[0_0_20%] lg:flex-[0_0_25%] overflow-y-auto">
                 {/* Header with Search */}
                 <div className="p-3 sm:p-4 border-b border-gray-200 bg-gray-50">
                     <input
@@ -139,14 +135,6 @@ const ChatWrapper = ({
                     )}
                 </div>
             </div>
-            {/* Overlay for Mobile */}
-            {isSidebarOpen && (
-                <div
-                    className="md:hidden fixed inset-0 bg-black/40 z-30"
-                    onClick={onToggleSidebar}
-                    aria-hidden="true"
-                />
-            )}
         </>
     );
 };

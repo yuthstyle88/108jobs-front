@@ -1,6 +1,6 @@
 import * as React from "react";
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/Button"; // uses the same style system you showed
+import {cn} from "@/lib/utils";
+import {buttonVariants} from "@/components/ui/Button"; // uses the same style system you showed
 
 export type LegacyVariant = "primary" | "secondary" | "danger";
 export type ButtonVariant = "default" | "secondary" | "destructive" | "outline" | "ghost" | "link";

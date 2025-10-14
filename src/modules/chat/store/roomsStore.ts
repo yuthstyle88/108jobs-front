@@ -1,8 +1,8 @@
-import { create } from 'zustand';
+import {create} from 'zustand';
 
 // Import store modules at top level to avoid async imports in functions
-import { useUnreadStore } from '@/modules/chat/store/unreadStore';
-import { useReadLastIdStore } from '@/modules/chat/store/readLastIdStore';
+import {useUnreadStore} from '@/modules/chat/store/unreadStore';
+import {useReadLastIdStore} from '@/modules/chat/store/readLastIdStore';
 
 // Utility functions for store interactions
 const unreadStoreUtils = {
