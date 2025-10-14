@@ -2,7 +2,7 @@ import {create} from 'zustand';
 
 // Import store modules at top level to avoid async imports in functions
 import {useUnreadStore} from '@/modules/chat/store/unreadStore';
-import {useReadLastIdStore} from '@/modules/chat/store/readLastIdStore';
+import {useReadLastIdStore} from "@/modules/chat/store/readStore";
 
 // Utility functions for store interactions
 const unreadStoreUtils = {
@@ -59,7 +59,7 @@ const readLastIdStoreUtils = {
   getState: () => useReadLastIdStore.getState(),
   pruneByRooms: async (rooms: Room[]) => {
     try {
-      const { pruneReadLastByRooms } = await import('@/modules/chat/store/readLastIdStore');
+      const { pruneReadLastByRooms } = await import('@/modules/chat/store/readStore');
       if (typeof pruneReadLastByRooms === 'function') {
         pruneReadLastByRooms(rooms);
       }
@@ -67,7 +67,7 @@ const readLastIdStoreUtils = {
   },
   clearRoom: (roomId: string) => {
     try {
-      const { clearRoom } = require('@/modules/chat/store/readLastIdStore');
+      const { clearRoom } = require('@/modules/chat/store/readStore');
       if (typeof clearRoom === 'function') {
         clearRoom(roomId);
       }

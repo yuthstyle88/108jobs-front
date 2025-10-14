@@ -10,7 +10,7 @@ import React, {useMemo} from "react";
 import {toLocalTime} from "@/utils/date";
 import MessageReceipt from "@/components/MessageReceipt";
 import {isOlder} from "@/modules/chat/utils";
-import {useReadLastIdStore} from "@/modules/chat/store/readLastIdStore";
+import {useReadLastIdStore} from "@/modules/chat/store/readStore";
 
 interface ChatMessageItemProps {
     message: ChatMessage;

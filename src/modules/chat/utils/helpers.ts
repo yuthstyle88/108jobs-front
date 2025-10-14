@@ -75,7 +75,7 @@ export function maybeHandleReadReceipt(env: any, fallbackRoomId: string): boolea
 
         // Emit event for internal WS listeners
         emitReadReceipt(roomId, lastReadMessageId, readerId);
-        const api = require('@/modules/chat/store/readLastIdStore');
+        const api = require('@/modules/chat/store/readStore');
         const { setPeerLastReadAt, getPeerLastReadAt } = api.useReadLastIdStore.getState?.() || {};
         if (typeof setPeerLastReadAt === 'function' && updatedAt) {
             setPeerLastReadAt(roomId, readerId, updatedAt);

@@ -17,6 +17,7 @@ import {emitWsReconnected} from "@/modules/chat/events";
 import {MessagePayload} from "@/modules/chat/types";
 import {PhoenixSenderAdapter} from '@/modules/chat/adapters/PhoenixSenderAdapter';
 import {usePresenceStore} from '@/modules/chat/store/presenceStore';
+import {useReadLastIdStore} from "@/modules/chat/store/readStore";
 
 // Safe DOM CustomEvent dispatcher
 function dispatchDomEvent(name: string, detail: any) {
@@ -56,7 +57,7 @@ export function useChatRoom({
     const peerActiveDecayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const lastPeerActiveBumpAtRef = useRef<number>(0);
     const peerActiveExpiresAtRef = useRef<number>(0);
-    
+
     // Extract peer userId from roomData
     const peerUserId = React.useMemo(() => {
         const participants = roomData?.room?.participants || [];
@@ -76,7 +77,7 @@ export function useChatRoom({
         // Mark active and push out the expiry
         peerActiveRef.current = true;
         peerActiveExpiresAtRef.current = now + PEER_ACTIVE_DECAY_MS;
-        
+
         // Update presence store with userId-based tracking
         if (peerUserId > 0) {
             try {
@@ -504,14 +505,10 @@ export function useChatRoom({
     }, []);
 
     // Getter: read-last (peer) — delegate to readLastIdStore (SSOT)
-    const getPeerLastReadAt = useCallback((peerUserId: number | string, roomIdArg?: string) => {
+    const getPeerLastReadAt = useCallback((peerUserId: LocalUserId, roomIdArg?: string) => {
         const rid = roomIdArg ?? roomId;
         try {
-            const mod = require("@/modules/chat/store/readLastIdStore");
-            const useReadLastIdStore = (mod as any).useReadLastIdStore as {
-                getState: () => { getPeerLastReadAt?: (roomId: string, userId: string | number) => string | undefined }
-            };
-            return useReadLastIdStore?.getState?.().getPeerLastReadAt?.(rid, peerUserId);
+            return useReadLastIdStore.getState().getPeerLastReadAt?.(rid, peerUserId);
         } catch {
             return undefined;
         }

@@ -54,6 +54,7 @@ import {useChatStore} from "@/modules/chat/store/chatStore";
 import {useShallow} from 'zustand/react/shallow';
 import {selectRoomMessages} from '@/modules/chat/utils/selectors';
 import {useLoadLastRead} from "@/modules/chat/hooks/useLoadLastRead";
+import {useRoomPresence} from "@/modules/chat/hooks/useRoomPresence";
 
 
 /** Shape of the form submitted by ChatInput. */
@@ -198,6 +199,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
     // fetch the last read timestamp from the backend and store it into useReadLastIdStore
     useLoadLastRead(roomId, partnerId);
+    // Fetch one-shot presence snapshot for the active room/peer
+    useRoomPresence(roomId, partnerId);
 
     // --- History management ---
     // Pulls paginated history for this room and writes pages into the global store via upsertHistory.

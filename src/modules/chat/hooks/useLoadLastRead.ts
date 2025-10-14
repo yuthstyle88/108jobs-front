@@ -1,7 +1,7 @@
 import {useEffect} from "react";
 import {HttpService, REQUEST_STATE} from "@/services/HttpService";
-import {useReadLastIdStore} from "@/modules/chat/store/readLastIdStore";
 import {ChatRoomId, LocalUserId} from "lemmy-js-client";
+import {useReadLastIdStore} from "@/modules/chat/store/readStore";
 
 export function useLoadLastRead(roomId: ChatRoomId, peerId: LocalUserId) {
     useEffect(() => {

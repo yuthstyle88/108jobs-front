@@ -49,7 +49,7 @@ import type {
     ListRegistrationApplicationsI,
     ListReportsI,
     ListTaglinesI,
-    ListUserChatRoomsQueryI,
+    ListUserChatRoomsQueryI, PeerQueryI,
     ResolveObjectI,
     SearchI,
     UploadImage,
@@ -266,8 +266,10 @@ import type {ScbTokenResponse} from "./types/ScbTokenResponse";
 import type {ScbQrCodeRequest, ScbQrCodeResponse} from "./types/ScbQrCode";
 import type {ScbQrInquiryRequest, ScbQrInquiryResponse} from "./types/ScbQrInquiry";
 import type {BillingId} from "./types/BillingId";
-import {LastReadQuery} from "./types/LastReadQuery";
-import {LastReadResponse} from "./types/LastReadResponse";
+import type {LastReadQuery} from "./types/LastReadQuery";
+import type {LastReadResponse} from "./types/LastReadResponse";
+import type {PeerReadQuery} from "./types/PeerReadQuery";
+import type {PeerReadResponse} from "./types/PeerReadResponse";
 
 enum HttpType {
     Get = "GET",
@@ -3292,6 +3294,23 @@ export class LemmyHttp extends Controller {
         return this.#wrapper<LastReadQuery, LastReadResponse>(
             HttpType.Get,
             "/chat/last-read",
+            form,
+            options,
+        );
+    }
+    /**
+     * @summary Fetch last read for a user of a room.
+     */
+    @Security("bearerAuth")
+    @Get("/chat/get-peer-status")
+    @Tags("Chat")
+    async getPeerStatus(
+        @Queries() form: PeerQueryI,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<PeerReadQuery, PeerReadResponse>(
+            HttpType.Get,
+            "/chat/get-peer-status",
             form,
             options,
         );
