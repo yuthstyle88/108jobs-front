@@ -3303,7 +3303,7 @@ export class LemmyHttp extends Controller {
      * @summary Fetch last read for a user of a room.
      */
     @Security("bearerAuth")
-    @Get("/chat/peer-status")
+    @Get("/chat/get-peer-status")
     @Tags("Chat")
     async getPeerStatus(
         @Queries() form: PeerStatusQueryI,
@@ -3311,7 +3311,7 @@ export class LemmyHttp extends Controller {
     ) {
         return this.#wrapper<PeerStatusQuery, PeerReadResponse>(
             HttpType.Get,
-            "/chat/peer-status",
+            "/chat/get-peer-status",
             form,
             options,
         );
