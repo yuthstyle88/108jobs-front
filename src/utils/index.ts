@@ -7,8 +7,8 @@ export * from "./env";
 export * from "./types";
 
 // security
-export * from "./security/crypto";
-export * from "./security/keystore";
+export * from "@/modules/chat/utils/security/crypto";
+export * from "@/modules/chat/utils/security/keystore";
 
 // validation
 export * from "./validation/addressSchema";

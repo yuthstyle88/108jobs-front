@@ -21,9 +21,9 @@ import ConfirmActionModal from '@/components/Common/Modal/ConfirmActionModal';
 import {useWorkflowStepper} from '@/hooks/useWorkflowMachine';
 import FileUploadModal from '@/components/Common/Modal/FileUploadModal';
 import {UploadedFile} from '@/modules/chat/hooks/useFileUpload';
-import {WorkFlowStatus, WorkFlowAction, workflowActionsMap} from "@/types/workflow";
+import {WorkFlowStatus, WorkFlowAction, workflowActionsMap} from "@/modules/chat/types/workflow";
 import WorkflowActionPanel from "@/components/WorkflowActionPanel"
-import {filterByRole} from "@/utils/workflow/helper";
+import {filterByRole} from "@/modules/chat/utils/workflow/helper";
 
 // =============================================================================
 // Types & Props

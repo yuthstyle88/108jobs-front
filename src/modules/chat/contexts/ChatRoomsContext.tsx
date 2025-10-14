@@ -1,7 +1,7 @@
 "use client";
 
 import React, {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
-import {ChatRoom as AppChatRoom} from "@/types/chat";
+import {ChatRoom as AppChatRoom} from "@/modules/chat/types/chat";
 import {HttpService, UserService} from "@/services";
 // E2EE exchange is ensured for future needs
 import {exchange} from "@/lib/api/auth";

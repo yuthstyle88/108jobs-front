@@ -1,5 +1,5 @@
-import { useStateMachineStore } from '@/store/stateMachineStore';
-import { ORDER, WorkFlowStatus, WorkFlowAction, workflowActionsMap, toWorkflowEvent } from '@/types/workflow';
+import { useStateMachineStore } from '@/modules/chat/store/stateMachineStore';
+import { ORDER, WorkFlowStatus, WorkFlowAction, workflowActionsMap, toWorkflowEvent } from '@/modules/chat/types/workflow';
 
 // A stepper-friendly hook that mirrors the issue description API
 export type StepperEvents = { type: 'NEXT' } | { type: 'BACK' } | { type: 'RESET' } | { type: 'CANCEL' };

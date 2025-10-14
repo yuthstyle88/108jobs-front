@@ -1,4 +1,4 @@
-import { WorkFlowAction } from "@/types/workflow";
+import { WorkFlowAction } from "@/modules/chat/types/workflow";
 
 /**
  * Filter workflow actions based on user role (employer or freelancer).

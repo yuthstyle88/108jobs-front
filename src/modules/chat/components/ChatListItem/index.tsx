@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import type {ChatRoom} from "@/types/chat";
+import type {ChatRoom} from "@/modules/chat/types/chat";
 import type {LocalUser} from "lemmy-js-client";
 import Link from "next/link";
 import {useChatRoomsContext} from "@/modules/chat/contexts/ChatRoomsContext";

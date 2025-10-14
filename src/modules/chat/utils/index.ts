@@ -5,3 +5,8 @@ export * from './message';
 export * from './structured';
 export * from './workflowTypes';
 export * from './helpers';
+export * from './AckMatcher';
+export * from './backgroundUnreadWatcher';
+export * from './selectors';
+export * from './socket-emitter';
+export * from './socketSend';

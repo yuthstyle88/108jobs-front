@@ -1,6 +1,6 @@
 import {create} from 'zustand';
-import type {WorkflowStatus} from 'lemmy-js-client';
-import {ORDER, WorkFlowStatus, WORKFLOW_TRANSITIONS, WorkflowEvent} from "@/types/workflow";
+import type {WorkflowStatus} from '@/lib/lemmy-js-client/src';
+import {ORDER, WorkFlowStatus, WORKFLOW_TRANSITIONS, WorkflowEvent} from "@/modules/chat/types/workflow";
 
 // Generic, reusable finite state machine store with typed states and events
 export type StateKey = string | number | symbol;

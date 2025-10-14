@@ -38,7 +38,7 @@ import {createFlowActions} from "@/modules/chat/utils/flowActions";
 import QuotationModal from "@/modules/chat/components/Modal/QuotationModal";
 import {useWorkflowStepper} from "@/hooks/useWorkflowMachine";
 import {useHttpPost} from "@/hooks/useHttpPost";
-import {apiToUiStatus, useStateMachineStore} from "@/store/stateMachineStore";
+import {apiToUiStatus, useStateMachineStore} from "@/modules/chat/store/stateMachineStore";
 import {Trash2} from "lucide-react";
 import {getLatestProposedQuotePayload} from "@/modules/chat/utils/message";
 import {JobDetailModal} from "@/modules/chat/components/Modal/JobDetailModal";

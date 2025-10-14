@@ -1,5 +1,5 @@
 import {CategoriesImage} from "@/constants/images";
-import {ChatResponse} from "@/types/chat";
+import {ChatResponse} from "@/modules/chat/types/chat";
 import Image from "next/image";
 import React from "react";
 

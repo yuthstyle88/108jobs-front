@@ -1,4 +1,4 @@
-import {TransitionMap} from "@/store/stateMachineStore";
+import {TransitionMap} from "@/modules/chat/store/stateMachineStore";
 
 export type WorkFlowStatus =
   | 'WaitForFreelancerQuotation'

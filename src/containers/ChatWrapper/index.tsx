@@ -5,7 +5,7 @@ import {useParams} from "next/navigation";
 import React, {useCallback, useMemo, useState, useEffect} from "react";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {useChatRoomsContext} from "@/modules/chat/contexts/ChatRoomsContext";
-import type {ChatRoom} from "@/types/chat";
+import type {ChatRoom} from "@/modules/chat/types/chat";
 import {debounce} from "lodash";
 import ChatListItem from "@/modules/chat/components/ChatListItem";
 import {useTranslation} from "react-i18next";
