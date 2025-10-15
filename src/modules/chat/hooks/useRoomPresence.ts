@@ -8,35 +8,81 @@ import {ChatRoomId, LocalUserId} from "lemmy-js-client";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {dbg} from "@/modules/chat/utils";
 
-export function useRoomPresence(roomId: ChatRoomId, peerId: LocalUserId) {
-    const { setSnapshot } = usePresenceStore.getState();
+export function useRoomPresence(roomId: ChatRoomId, peerId: LocalUserId, readerId?: LocalUserId) {
+  const { setSnapshot } = usePresenceStore.getState();
 
-    // 1) Fetch snapshot via HTTP on mount
-    useEffect(() => {
-        let cancelled = false;
-        (async () => {
-            try {
-                const res = await HttpService.client.getPeerStatus({ roomId, peerId });
-                // normalize payload – support both `{ data: { online: bool } }` and raw `{ online: bool }`
-                if(res.state === REQUEST_STATE.SUCCESS) {
-                    let payload: any = res.data;
-                    dbg('[useRoomPresence] getPeerStatus', {roomId, peerId, payload});
-                    const online: boolean = payload.online ?? payload.data?.online;
-                    if(!cancelled && online !== undefined) {
-                        if(online) {
-                            dbg('[useRoomPresence] peer online', {roomId, peerId});
-                            // mark peer online with current timestamp
-                            setSnapshot([{userId: Number(peerId), lastSeenAt: Date.now()}]);
-                        } else {
-                            // peer offline → empty snapshot for this room (no online peers)
-                            setSnapshot([]);
-                        }
-                    }
-                }
-            } catch (_e) {
-                // keep phase=unknown; UI may show “checking…”
-            }
-        })();
-        return () => { cancelled = true; };
-    }, [roomId, peerId, setSnapshot]);
+  // Helper: fetch & update presence snapshot once
+  const fetchPeerStatusOnce = async (reason: string) => {
+    try {
+      const res = await HttpService.client.getPeerStatus({ roomId, peerId, readerId } as any);
+      if (res.state === REQUEST_STATE.SUCCESS) {
+        const payload: any = res.data;
+        dbg('[useRoomPresence] getPeerStatus', { reason, roomId, peerId, readerId, payload });
+        const online: boolean = payload?.online ?? payload?.data?.online;
+        if (online === true) {
+          setSnapshot([{ userId: Number(peerId), lastSeenAt: Date.now() }]);
+        } else if (online === false) {
+          setSnapshot([]);
+        }
+      }
+    } catch (e) {
+      // keep phase=unknown; UI may show “checking…”
+      dbg('[useRoomPresence] getPeerStatus error', { reason, roomId, peerId, readerId, e });
+    }
+  };
+
+  // 1) Fetch snapshot via HTTP on mount/param change
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (!roomId || peerId == null) return;
+      if (cancelled) return;
+      await fetchPeerStatusOnce('mount');
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roomId, peerId, readerId]);
+
+  // 2) Re-check when tab becomes visible, window focuses, page shows from bfcache, or network comes online
+  useEffect(() => {
+    if (!roomId || peerId == null) return;
+
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const debounced = (reason: string) => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (
+          typeof document !== 'undefined' &&
+          document.visibilityState === 'visible' &&
+          document.hasFocus?.()
+        ) {
+          fetchPeerStatusOnce(reason);
+        }
+      }, 120);
+    };
+
+    const onFocus = () => debounced('focus');
+    const onVisibility = () => debounced('visibilitychange');
+    const onPageShow = () => debounced('pageshow');
+    const onOnline = () => debounced('online');
+
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('pageshow', onPageShow);
+    window.addEventListener('online', onOnline);
+
+    // Fire once if already visible and focused
+    debounced('init-visibility');
+
+    return () => {
+      if (timer) clearTimeout(timer);
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('pageshow', onPageShow);
+      window.removeEventListener('online', onOnline);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roomId, peerId, readerId]);
 }
