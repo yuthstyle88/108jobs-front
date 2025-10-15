@@ -20,6 +20,14 @@ export interface UseWebSocketOptions {
     autoJoin?: boolean;                  // default: true
     // ปิด/เปิดการ join room จาก hook นี้ (ค่าเริ่มต้น: ปิด)
     allowJoin?: boolean;
+    // Reconnection settings
+    autoReconnect?: boolean;             // default: true - automatically reconnect on disconnect
+    maxReconnectAttempts?: number;       // default: 5 - max number of reconnection attempts
+    reconnectInterval?: number;          // default: 1000ms - base interval for reconnection
+    reconnectOnVisible?: boolean;           // default: true - reconnect when tab becomes visible or window gains focus
+    // Inactivity timeout settings
+    inactivityTimeout?: number;          // default: 300000ms (5 minutes) - disconnect after no typing activity
+    disableInactivityTimeout?: boolean;  // default: false - set to true to disable inactivity timeout
 
     topicBuilder?: (roomId: string) => string;
 
@@ -30,6 +38,10 @@ export interface UseWebSocketOptions {
     onMessage?: (data: unknown) => void;
     onNewMessage?: (data: any) => void;
     onTyping?: (data: any) => void;
+    onReconnecting?: (attempt: number) => void;
+    onReconnected?: () => void;
+    onReconnectFailed?: () => void;
+    onInactivityTimeout?: () => void;    // callback when inactivity timeout triggers
     // แผนที่ event → handler (ยืดหยุ่นกว่า onNewMessage/onTyping แบบ fix ชื่อ)
     eventHandlers?: Record<string, (payload: any) => void>; // e.g. {'chat:message': fn, 'chat:typing': fn}
 
@@ -51,6 +63,9 @@ export interface WebSocketAPI {
     emit: (event: string, payload: any) => Promise<void> | void;
 
     addMessageListener: (cb: (data: unknown) => void) => () => void;
+
+    // Reset inactivity timer (call on typing or other user activity)
+    resetInactivityTimer: () => void;
 }
 /**
  * React Hook that bridges to your PhoenixSocketService adapter.
@@ -64,6 +79,12 @@ export function useWebSocket(options: Partial<UseWebSocketOptions> = {}): WebSoc
     senderId,
     autoConnect = true,
     autoJoin = true,
+    autoReconnect = true,
+    maxReconnectAttempts = 5,
+    reconnectInterval = 1000,
+    reconnectOnVisible = true,
+    inactivityTimeout = 300000,        // 5 minutes default
+    disableInactivityTimeout = false,
     topicBuilder = (roomId: string) => `room:${roomId}`,
     onOpen,
     onClose,
@@ -71,6 +92,10 @@ export function useWebSocket(options: Partial<UseWebSocketOptions> = {}): WebSoc
     onMessage,
     onNewMessage,
     onTyping,
+    onReconnecting,
+    onReconnected,
+    onReconnectFailed,
+    onInactivityTimeout,
     eventHandlers,
     debug,
   } = options;
@@ -80,7 +105,109 @@ export function useWebSocket(options: Partial<UseWebSocketOptions> = {}): WebSoc
   const [status, setStatus] = useState<WebSocketStatus>('idle');
   const [topic, setTopic] = useState<string | undefined>(undefined);
 
+  // Reconnection state
+  const reconnectAttemptsRef = useRef<number>(0);
+  const reconnectTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const isReconnectingRef = useRef<boolean>(false);
+  const isManualDisconnectRef = useRef<boolean>(false);
+
+  // Inactivity timeout state
+  const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const lastActivityTimeRef = useRef<number>(Date.now());
+  const disconnectRef = useRef<(() => void) | null>(null);
+
   const log = (...args: unknown[]) => { if (debug) console.log('[useWebSocket]', ...args); };
+
+  // Clear reconnection timer
+  const clearReconnectTimer = useCallback(() => {
+    if (reconnectTimerRef.current) {
+      clearTimeout(reconnectTimerRef.current);
+      reconnectTimerRef.current = null;
+    }
+  }, []);
+
+  // Clear inactivity timer
+  const clearInactivityTimer = useCallback(() => {
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+      inactivityTimerRef.current = null;
+    }
+  }, []);
+
+  // Start inactivity timeout
+  const startInactivityTimer = useCallback(() => {
+    if (disableInactivityTimeout) return;
+    if (status !== 'connected') return;
+
+    clearInactivityTimer();
+    lastActivityTimeRef.current = Date.now();
+
+    inactivityTimerRef.current = setTimeout(() => {
+      log('inactivity timeout reached - disconnecting');
+      try { onInactivityTimeout?.(); } catch {}
+      // Use ref to avoid circular dependency
+      if (disconnectRef.current) {
+        disconnectRef.current();
+      }
+    }, inactivityTimeout);
+
+    log(`inactivity timer started (${inactivityTimeout}ms)`);
+  }, [disableInactivityTimeout, status, inactivityTimeout, onInactivityTimeout, clearInactivityTimer]);
+
+  // Reset inactivity timer (call on any user activity)
+  const resetInactivityTimer = useCallback(() => {
+    if (disableInactivityTimeout) return;
+    if (status !== 'connected') return;
+
+    lastActivityTimeRef.current = Date.now();
+    startInactivityTimer();
+  }, [disableInactivityTimeout, status, startInactivityTimer]);
+
+  // Schedule reconnection with exponential backoff
+  const scheduleReconnect = useCallback(() => {
+    if (!autoReconnect || isManualDisconnectRef.current) {
+      log('reconnection skipped (autoReconnect disabled or manual disconnect)');
+      return;
+    }
+
+    if (reconnectAttemptsRef.current >= maxReconnectAttempts) {
+      log('max reconnect attempts reached');
+      isReconnectingRef.current = false;
+      try { onReconnectFailed?.(); } catch {}
+      return;
+    }
+
+    if (isReconnectingRef.current) {
+      log('reconnection already in progress');
+      return;
+    }
+
+    isReconnectingRef.current = true;
+    reconnectAttemptsRef.current += 1;
+
+    // Exponential backoff: 1s, 2s, 4s, 8s, 16s
+    const delay = reconnectInterval * Math.pow(2, reconnectAttemptsRef.current - 1);
+
+    log(`scheduling reconnection attempt ${reconnectAttemptsRef.current}/${maxReconnectAttempts} in ${delay}ms`);
+    try { onReconnecting?.(reconnectAttemptsRef.current); } catch {}
+
+    clearReconnectTimer();
+    reconnectTimerRef.current = setTimeout(() => {
+      log(`reconnection attempt ${reconnectAttemptsRef.current}`);
+      isReconnectingRef.current = false;
+
+      // Trigger reconnection by calling connect
+      if (token && roomId) {
+        const nextTopic = topicBuilder(roomId);
+        setStatus('connecting');
+        if (topic !== nextTopic) setTopic(nextTopic);
+
+        const adapter = getChannelAdapter(token, nextTopic, roomId, Number(senderId) ?? 0);
+        adapterRef.current = adapter;
+        bindAdapterHandlers(adapter);
+      }
+    }, delay);
+  }, [autoReconnect, maxReconnectAttempts, reconnectInterval, token, roomId, senderId, topicBuilder, topic, onReconnecting, onReconnectFailed, clearReconnectTimer]);
 
   const bindAdapterHandlers = useCallback((adapter: any) => {
     if (!adapter) return;
@@ -91,19 +218,55 @@ export function useWebSocket(options: Partial<UseWebSocketOptions> = {}): WebSoc
 
     // Wire base-level handlers
     if ('onopen' in adapter) {
-      adapter.onopen = () => { setStatus('connected'); onOpen?.(); log('onopen'); };
+      adapter.onopen = () => {
+        setStatus('connected');
+
+        // Reset reconnection state on successful connection
+        const wasReconnecting = reconnectAttemptsRef.current > 0;
+        reconnectAttemptsRef.current = 0;
+        isReconnectingRef.current = false;
+        clearReconnectTimer();
+
+        onOpen?.();
+        log('onopen');
+
+        // Start inactivity timer on successful connection
+        startInactivityTimer();
+
+        // Notify if this was a successful reconnection
+        if (wasReconnecting) {
+          try { onReconnected?.(); } catch {}
+        }
+      };
     }
     if ('onclose' in adapter) {
-      adapter.onclose = () => { setStatus('disconnected'); onClose?.(); log('onclose'); };
+      adapter.onclose = () => {
+        setStatus('disconnected');
+        onClose?.();
+        log('onclose');
+
+        // Trigger reconnection if not manually disconnected
+        scheduleReconnect();
+      };
     }
     if ('onerror' in adapter) {
-      adapter.onerror = (e: unknown) => { setStatus('error'); onError?.(e); log('onerror', e); };
+      adapter.onerror = (e: unknown) => {
+        setStatus('error');
+        onError?.(e);
+        log('onerror', e);
+
+        // Trigger reconnection on error
+        scheduleReconnect();
+      };
     }
     if ('onmessage' in adapter) {
       adapter.onmessage = (evt: any) => {
         const data = evt?.data ?? evt; // handle both {data} or raw
         let parsed: any = data;
         try { parsed = typeof data === 'string' ? JSON.parse(data) : data; } catch {}
+
+        // Reset inactivity timer on any message activity
+        resetInactivityTimer();
 
         // top-level raw handler
         try { onMessage?.(parsed); } catch {}
@@ -130,12 +293,15 @@ export function useWebSocket(options: Partial<UseWebSocketOptions> = {}): WebSoc
         } catch {}
       };
     }
-  }, [onOpen, onClose, onError, onMessage, onNewMessage, onTyping, eventHandlers, debug]);
+  }, [onOpen, onClose, onError, onMessage, onNewMessage, onTyping, onReconnected, eventHandlers, debug, clearReconnectTimer, scheduleReconnect, startInactivityTimer, resetInactivityTimer]);
 
   // Connect when token is available
   const connect = useCallback(() => {
     if (!autoConnect) { setStatus('idle'); return; }
     if (!token || !roomId) { setStatus('idle'); return; }
+
+    // Clear manual disconnect flag when explicitly connecting
+    isManualDisconnectRef.current = false;
 
     const nextTopic = topicBuilder(roomId);
 
@@ -160,6 +326,17 @@ export function useWebSocket(options: Partial<UseWebSocketOptions> = {}): WebSoc
   }, [token, roomId, senderId, autoConnect, topicBuilder, bindAdapterHandlers, status, topic]);
 
   const disconnect = useCallback(() => {
+    // Mark as manual disconnect to prevent auto-reconnection
+    isManualDisconnectRef.current = true;
+
+    // Clear any pending reconnection attempts
+    clearReconnectTimer();
+    reconnectAttemptsRef.current = 0;
+    isReconnectingRef.current = false;
+
+    // Clear inactivity timer
+    clearInactivityTimer();
+
     const a = adapterRef.current;
     try { a?.close?.(); } catch {}
     try { a?.disconnect?.(); } catch {}
@@ -167,7 +344,7 @@ export function useWebSocket(options: Partial<UseWebSocketOptions> = {}): WebSoc
     setStatus('disconnected');
     // Do not call onClose here; adapter.onclose will invoke it to avoid duplicates
     log('disconnect');
-  }, []);
+  }, [clearReconnectTimer, clearInactivityTimer]);
 
   const join = useCallback(async (params?: { roomId: string; senderId: number }) => {
     const a = adapterRef.current; if (!a) return;
@@ -204,6 +381,34 @@ export function useWebSocket(options: Partial<UseWebSocketOptions> = {}): WebSoc
     return () => { disconnect(); };
   }, [autoConnect, token, roomId]);
 
+  // Reconnect when the tab becomes visible or window gains focus
+  useEffect(() => {
+    if (!reconnectOnVisible) return;
+
+    const tryConnect = () => {
+      if (
+        autoConnect &&
+        document.visibilityState === 'visible' &&
+        token &&
+        roomId &&
+        status !== 'connected'
+      ) {
+        connect();
+      }
+    };
+
+    const onVisibility = () => tryConnect();
+    const onFocus = () => tryConnect();
+
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('focus', onFocus);
+
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('focus', onFocus);
+    };
+  }, [reconnectOnVisible, autoConnect, token, roomId, status, connect]);
+
   useEffect(() => {
     if (!autoJoin || status !== 'connected') return;
     if (!roomId) return;
@@ -216,6 +421,25 @@ export function useWebSocket(options: Partial<UseWebSocketOptions> = {}): WebSoc
     }
   }, [autoJoin, status, roomId, senderId, join]);
 
+  // Set up disconnect ref for inactivity timer
+  useEffect(() => {
+    disconnectRef.current = disconnect;
+  }, [disconnect]);
+
+  // Cleanup reconnection timer on unmount
+  useEffect(() => {
+    return () => {
+      clearReconnectTimer();
+    };
+  }, [clearReconnectTimer]);
+
+  // Cleanup inactivity timer on unmount
+  useEffect(() => {
+    return () => {
+      clearInactivityTimer();
+    };
+  }, [clearInactivityTimer]);
+
   return {
     status,
     isReady: status === 'connected',
@@ -226,5 +450,6 @@ export function useWebSocket(options: Partial<UseWebSocketOptions> = {}): WebSoc
     leave,
     emit,
     addMessageListener,
+    resetInactivityTimer,
   };
 }

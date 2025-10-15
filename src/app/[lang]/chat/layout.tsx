@@ -66,74 +66,67 @@ export default function ProfileLayout({children}: LayoutProps) {
     }, [token]);
 
     return (
-        <ChatLanguageProvider>
-            <ChatRoomsProvider>
-                {/* Desktop Header */}
-                <div className="hidden sm:block fixed top-0 left-0 right-0 z-50">
-                    <Header type="primary"/>
-                </div>
-                {/* Mobile Header */}
-                <div className="block sm:hidden fixed top-0 left-0 right-0 z-50">
-                    <SpHeader
-                        isSidebarOpen={isSidebarOpen}
-                        onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-                        showBackButton={true}
+      <ChatLanguageProvider>
+        {/* Headers remain outside providers so they always render */}
+        <div className="hidden sm:block fixed top-0 left-0 right-0 z-50">
+          <Header type="primary" />
+        </div>
+        <div className="block sm:hidden fixed top-0 left-0 right-0 z-50">
+          <SpHeader
+            isSidebarOpen={isSidebarOpen}
+            onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+            showBackButton={true}
+          />
+        </div>
+
+        {/* Main Content: fix viewport height and prevent page scroll */}
+        <div className="fixed top-16 sm:top-20 left-0 right-0 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] overflow-hidden">
+          <div className="flex h-full">
+            {senderId ? (
+              <WebSocketProvider
+                options={{ token, senderId, roomId: activeRoomId }}
+              >
+                <ChatRoomsProvider>
+                  {/* Left Sidebar (desktop) */}
+                  <div className="hidden md:flex md:flex-col md:w-64 lg:w-80 xl:w-96 border-r border-gray-200 h-full">
+                    <ChatWrapper
+                      isSidebarOpen={isSidebarOpen}
+                      onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+                      setIsSidebarOpen={setIsSidebarOpen}
                     />
-                </div>
-                {/* Main Content: fix viewport height and prevent page scroll */}
-                <div
-                    className="fixed top-16 sm:top-20 left-0 right-0 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] overflow-hidden">
-                    <div className="flex h-full">
-                        {senderId ? (
-                            <WebSocketProvider
-                                options={{
-                                    token,
-                                    senderId,
-                                    roomId: activeRoomId,
-                                }}
-                            >
-                                {/* Left Sidebar (desktop) */}
-                                <div className="hidden md:flex md:flex-col md:w-64 lg:w-80 xl:w-96 border-r border-gray-200 h-full">
-                                    <ChatWrapper
-                                        isSidebarOpen={isSidebarOpen}
-                                        onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-                                        setIsSidebarOpen={setIsSidebarOpen}
-                                    />
-                                </div>
+                  </div>
 
-                                {/* Mobile Sidebar Overlay (slides from left) */}
-                                <div
-                                    className={`md:hidden fixed left-0 top-16 sm:top-20 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] w-[80vw] sm:w-[70vw] max-w-[360px] bg-white border-r border-gray-200 z-50 overflow-y-auto transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
-                                    role="dialog"
-                                    aria-modal="true"
-                                    aria-label="Chat rooms"
-                                >
-                                    <ChatWrapper
-                                        isSidebarOpen={isSidebarOpen}
-                                        onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-                                        setIsSidebarOpen={setIsSidebarOpen}
-                                    />
-                                </div>
-                                {/* Mobile Backdrop */}
-                                {isSidebarOpen && (
-                                    <div
-                                        className="md:hidden fixed inset-0 bg-black/40 z-40"
-                                        onClick={() => setIsSidebarOpen(false)}
-                                        aria-hidden="true"
-                                    />
-                                )}
+                  {/* Mobile Sidebar Overlay (slides from left) */}
+                  <div
+                    className={`md:hidden fixed left-0 top-16 sm:top-20 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] w-[80vw] sm:w-[70vw] max-w-[360px] bg-white border-r border-gray-200 z-50 overflow-y-auto transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Chat rooms"
+                  >
+                    <ChatWrapper
+                      isSidebarOpen={isSidebarOpen}
+                      onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+                      setIsSidebarOpen={setIsSidebarOpen}
+                    />
+                  </div>
+                  {/* Mobile Backdrop */}
+                  {isSidebarOpen && (
+                    <div
+                      className="md:hidden fixed inset-0 bg-black/40 z-40"
+                      onClick={() => setIsSidebarOpen(false)}
+                      aria-hidden="true"
+                    />
+                  )}
 
-                                {/* Main Content */}
-                                <div className="flex-1 min-w-0 h-full">
-                                    {children}
-                                </div>
-                            </WebSocketProvider>
-                        ) : (
-                            <div className="flex-1 min-w-0 h-full">{/* waiting senderId */}</div>
-                        )}
-                    </div>
-                </div>
-            </ChatRoomsProvider>
-        </ChatLanguageProvider>
+                  {/* Main Content */}
+                  <div className="flex-1 min-w-0 h-full">{children}</div>
+                </ChatRoomsProvider>
+              </WebSocketProvider>
+            ) : (
+              <div className="flex-1 min-w-0 h-full">{/* waiting senderId */}</div>
+            )}
+          </div>
+        </div>
+      </ChatLanguageProvider>
     );
 }
