@@ -382,7 +382,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                     </div>
                                     <span className="text-xs text-gray-500 ml-auto min-w-fit">{time}</span>
                                 </div>
-                                <div className="mt-0.5 text-xs text-green-700">
+                                <div className="mt-0.5 text-xs text-primary">
                                     {t("profileChat.orderApprovedMessage")}
                                 </div>
                             </div>
@@ -422,12 +422,12 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                 ) : isRequestRevision ? (
                     <div
                         className={`max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ${
-                            isIncoming ? "ring-amber-200 bg-amber-50" : "ring-amber-200 bg-amber-50"
+                            isIncoming ? "ring-amber-200 bg-amber-50 mt-2" : "ring-amber-200 bg-amber-50"
                         } px-4 py-3`}
                     >
                         <div className="flex items-start gap-3 flex-wrap">
                             <svg
-                                className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"
+                                className="w-5 h-5 text-primary flex-shrink-0 mt-0.5"
                                 viewBox="0 0 24 24"
                                 fill="currentColor"
                                 aria-hidden="true"
@@ -438,12 +438,12 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                             </svg>
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-4 flex-wrap">
-                                    <div className="text-sm font-semibold text-amber-800">
+                                    <div className="text-sm text-primary font-semibold text-amber-800">
                                         {t("profileChat.requestRevision") || "Request revision"}
                                     </div>
                                     <span className="text-xs text-gray-500 ml-auto min-w-fit">{time}</span>
                                 </div>
-                                <div className="mt-1 text-xs text-amber-900 whitespace-pre-line break-words">
+                                <div className="mt-1 text-xs text-primary whitespace-pre-line break-words">
                                     {(parsed as any)?.reason && String((parsed as any).reason) ||
                                         t("profileChat.requestRevisionMsg") || "Please revise and resubmit."}
                                 </div>
@@ -453,13 +453,13 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                 ) : isSubmitDelivery ? (
                     <div
                         className={`max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ${
-                            isIncoming ? "ring-amber-200 bg-amber-50" : "ring-blue-200 bg-blue-50"
+                            isIncoming ? "ring-amber-200 bg-amber-50 mt-2" : "ring-blue-200 bg-blue-50"
                         } px-4 py-3`}
                     >
                         <div className="flex items-start gap-3 flex-wrap">
                             <svg
                                 className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
-                                    isIncoming ? "text-amber-600" : "text-blue-600"
+                                    isIncoming ? "text-primary" : "text-blue-600"
                                 }`}
                                 viewBox="0 0 24 24"
                                 fill="currentColor"
@@ -473,14 +473,14 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                 <div className="flex items-center gap-4 flex-wrap">
                                     <div
                                         className={`text-sm font-medium ${
-                                            isIncoming ? "text-amber-800" : "text-blue-800"
+                                            isIncoming ? "text-primary" : "text-blue-800"
                                         }`}
                                     >
                                         {t("profileChat.submitDeliveryMsg") || "Freelancer submitted a delivery."}
                                     </div>
                                     <span className="text-xs text-gray-500 ml-auto min-w-fit">{time}</span>
                                 </div>
-                                <div className="mt-1 text-xs text-gray-700 break-words">
+                                <div className="mt-1 text-xs text-primary break-words">
                                     {(parsed as any)?.name || (parsed as any)?.url || ""}
                                 </div>
                                 {(parsed as any)?.url && (
@@ -491,7 +491,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                             rel="noopener noreferrer"
                                             className={`inline-flex items-center gap-2 text-xs font-medium px-2.5 py-1.5 rounded-md transition-colors ${
                                                 isIncoming
-                                                    ? "bg-amber-600 hover:bg-amber-700 text-white"
+                                                    ? "bg-primary hover:bg-amber-700 text-white"
                                                     : "bg-primary hover:bg-[#063a68] text-white"
                                             }`}
                                         >
@@ -514,7 +514,8 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                     </div>
                 ) : isDeliveryAccepted ? (
                     <div
-                        className="max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ring-emerald-200 bg-emerald-50 px-4 py-3"
+                        className={`max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ring-emerald-200 bg-green-500 px-4 py-3 ${
+                            isIncoming ? "mt-2" : ""}`}
                     >
                         <div className="flex items-start gap-3 flex-wrap">
                             <svg
@@ -647,7 +648,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                             <span className="flex-1">{viewMsg.content}</span>
                             <span
                                 className="text-xs min-w-fit"
-                                style={{ color: isIncoming ? "gray" : "rgba(255, 255, 255, 0.7)" }}
+                                style={{color: isIncoming ? "gray" : "rgba(255, 255, 255, 0.7)"}}
                             >
                                 {time}
                             </span>

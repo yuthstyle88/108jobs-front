@@ -41,10 +41,6 @@ export type FlowActions = {
     onApproveQuotation?: () => void;
     /** Freelancer: start work after order approved */
     onStartWork?: () => void;
-    /** (Optional) Open upload asset flow */
-    onUploadAsset?: () => void;
-    /** (Optional) Fire a plain message to chat area */
-    onSendMessage?: () => void;
     /** Freelancer: submit delivery */
     onSubmitDelivery?: () => void;
     /** Employer: request revision during review */
@@ -76,17 +72,8 @@ export type FreelanceChatFlowProps = {
     started?: boolean;
     onStart?: () => void;
 
-    // ---- Permissions / Capabilities ----
-    /** Freelancer can show Send quotation button */
-    canProposeQuote?: boolean;
-    /** Employer can show Approve quotation button */
-    canApproveQuotation?: boolean;
-    /** Employer lacks enough balance to approve */
-    insufficientForApprove?: boolean;
     /** Viewer role flag */
     isEmployer?: boolean;
-    /** Freelancer can submit a delivery (upload modal) */
-    canSubmitDelivery?: boolean;
 
     // ---- File modal state ----
     selectedFile: UploadedFile;
@@ -94,8 +81,8 @@ export type FreelanceChatFlowProps = {
 
     // ---- Cancellation helper ----
     statusBeforeCancel?: StatusKey;
-    availableBalance?: number;
-    requiredAmount?: number;
+    availableBalance: number;
+    requiredAmount: number;
 } & FlowActions;
 
 // =============================================================================
@@ -144,18 +131,12 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  className = '',
                                                                  started = true,
                                                                  onStart,
-                                                                 canProposeQuote = true,
-                                                                 canApproveQuotation = true,
-                                                                 insufficientForApprove = true,
                                                                  isEmployer = false,
-                                                                 canSubmitDelivery = false,
                                                                  selectedFile,
                                                                  isDeletingFile,
                                                                  onProposeQuote,
                                                                  onApproveQuotation,
                                                                  onStartWork,
-                                                                 onUploadAsset,
-                                                                 onSendMessage,
                                                                  onSubmitDelivery,
                                                                  onRequestRevision,
                                                                  onReleasePayment,

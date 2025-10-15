@@ -40,7 +40,6 @@ import {useWorkflowStepper} from "@/hooks/useWorkflowMachine";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {apiToUiStatus, useStateMachineStore} from "@/modules/chat/store/stateMachineStore";
 import {Trash2} from "lucide-react";
-import {getLatestProposedQuotePayload} from "@/modules/chat/utils/message";
 import {JobDetailModal} from "@/modules/chat/components/Modal/JobDetailModal";
 import {ReviewDeliveryModal} from "@/modules/chat/components/Modal/ReviewDeliveryModal";
 import {JobFlowContent} from "@/modules/chat/components/JobFlowContent";
@@ -143,7 +142,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
     const _rawPostId: unknown = (currentRoom as any)?.room?.post?.id;
-    const hasFocusedRef = useRef(false);
     const roomPostId: number | undefined = typeof _rawPostId === 'number'
         ? _rawPostId
         : (typeof _rawPostId === 'string' && _rawPostId.trim() !== '' && !Number.isNaN(Number(_rawPostId))
@@ -155,9 +153,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const lastClientUpdateRef = useRef<{ status: StatusKey | null; timestamp: number }>({status: null, timestamp: 0});
     const currentStatus = useStateMachineStore((s) => s.state);
     const statusBeforeCancel = useStateMachineStore((s) => s.statusBeforeCancel);
-    const calculatedProposedQuote = useMemo(() => {
-        return Boolean(getLatestProposedQuotePayload(messages as any));
-    }, [messages]);
     // Determine latest quotation amount and whether employer has sufficient balance to approve
     const latestQuoteAmount = currentRoom?.room?.post?.budget ?? 0;
 
@@ -173,10 +168,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     }, [isEmployer, latestQuoteAmount, availableBalance]);
 
     const isEmployerKnown = typeof isEmployer === 'boolean';
-    const canProposeQuoteProp =
-        isEmployerKnown ? (!isEmployer && Boolean(roomPostId) && !calculatedProposedQuote) : false;
-    const canApproveQuotationProp =
-        isEmployerKnown ? (Boolean(isEmployer) && calculatedProposedQuote) : false;
     const {execute: createInvoice} = useHttpPost("createInvoice");
     const {execute: startWorkflow} = useHttpPost("startWorkflow");
     const {execute: approveQuotationApi} = useHttpPost("approveQuotation");
@@ -578,16 +569,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 className="space-y-4"
                 started={hasStarted}
                 onStart={startWorkflowAction}
-                canProposeQuote={canProposeQuoteProp}
-                canApproveQuotation={canApproveQuotationProp}
-                insufficientForApprove={insufficientForApprove}
                 isEmployer={isEmployerKnown ? isEmployer : undefined}
-                canSubmitDelivery={!!selectedFile}
                 onProposeQuote={flowActions.onProposeQuote}
                 onApproveQuotation={flowActions.onApproveQuotation}
                 onStartWork={!isEmployer ? flowActions.onStartWork : undefined}
-                onUploadAsset={!isEmployer ? flowActions.onUploadAsset : undefined}
-                onSendMessage={flowActions.onSendMessage}
                 onSubmitDelivery={!isEmployer ? flowActions.onSubmitDelivery : undefined}
                 onRequestRevision={isEmployer ? flowActions.onRequestRevision : undefined}
                 onReleasePayment={isEmployer ? flowActions.onReleasePayment : undefined}
