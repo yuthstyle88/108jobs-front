@@ -261,15 +261,53 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     }, [roomId]);
 
     // Single source of truth for sending read-receipts (deduped by last message id)
-    useEffect(() => {
-        sendLatestRead();
-    }, [sendLatestRead]);
+    // Trigger once when the latest message id changes (and when room changes)
+    const lastMsgId = React.useMemo(() => (
+        messages.length ? String(messages[messages.length - 1]?.id ?? '') : null
+    ), [messages]);
 
-    // On window focus, retry once via the same helper
     useEffect(() => {
-        const onVisible = () => sendLatestRead();
-        window.addEventListener("focus", onVisible);
-        return () => window.removeEventListener("focus", onVisible);
+        if (!lastMsgId) return;
+        sendLatestRead();
+    }, [lastMsgId, roomId, sendLatestRead]);
+
+    // Re-send latest read receipt when the page becomes visible/active again
+    useEffect(() => {
+        let timer: ReturnType<typeof setTimeout> | null = null;
+
+        const trySend = () => {
+            // Debounce a bit to avoid flapping when multiple events fire together
+            if (timer) clearTimeout(timer);
+            timer = setTimeout(() => {
+                // Only attempt when page is actually visible and focused
+                if (typeof document !== 'undefined' && document.visibilityState === 'visible' && document.hasFocus()) {
+                    try {
+                        sendLatestRead();
+                    } catch {}
+                }
+            }, 120);
+        };
+
+        const onFocus = () => trySend();
+        const onVisibility = () => trySend();
+        const onPageShow = () => trySend();
+        const onOnline = () => trySend();
+
+        window.addEventListener('focus', onFocus);
+        document.addEventListener('visibilitychange', onVisibility);
+        window.addEventListener('pageshow', onPageShow);
+        window.addEventListener('online', onOnline);
+
+        // Fire once on mount if already visible + focused
+        trySend();
+
+        return () => {
+            if (timer) clearTimeout(timer);
+            window.removeEventListener('focus', onFocus);
+            document.removeEventListener('visibilitychange', onVisibility);
+            window.removeEventListener('pageshow', onPageShow);
+            window.removeEventListener('online', onOnline);
+        };
     }, [sendLatestRead]);
 
     // Auto-collapse the workflow panel on narrow viewports to preserve space for the conversation.
@@ -577,7 +615,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         typingText={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
                         onToggleFlow={() => setIsFlowOpen((v) => !v)}
                         isFlowOpen={isFlowOpen}
-                        partnerId={partnerId}
                     />
                     <ChatMessages
                         messages={messages}

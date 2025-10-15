@@ -117,9 +117,6 @@ const ChatInput: React.FC<ChatInputProps> = ({
                       if (form) form.requestSubmit();
                   }
               }}
-              onFocus={() => {
-                  try { sendLatestRead(); } catch {}
-              }}
               onChange={(e) => {
                   // keep RHF in sync
                   try { (rest as any).onChange?.(e); } catch {}
