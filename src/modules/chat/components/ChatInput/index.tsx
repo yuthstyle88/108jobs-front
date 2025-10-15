@@ -38,6 +38,11 @@ const ChatInput: React.FC<ChatInputProps> = ({
     const {ref, ...rest} = register("message");
     const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+    const typingLastSentAtRef = useRef<number>(0);
+    const typingLastStateRef = useRef<boolean | null>(null);
+    const TYPING_TRUE_THROTTLE_MS = 5000; // 5 seconds throttle for typing=true
+    const TYPING_STOP_DEBOUNCE_MS = 1500; // stop-typing debounce
+
     const resizeTextarea = () => {
         const textarea = messageRef.current;
         if (textarea) {
@@ -57,6 +62,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
         onSubmit(data);
         // stop typing on submit
         try { onTyping?.(false); } catch {}
+        typingLastStateRef.current = false;
+        typingLastSentAtRef.current = Date.now();
         if (typingTimerRef.current) { try { clearTimeout(typingTimerRef.current); } catch {} typingTimerRef.current = null; }
         reset();
         setTimeout(() => resizeTextarea(), 0);
@@ -119,20 +126,40 @@ const ChatInput: React.FC<ChatInputProps> = ({
                   resizeTextarea();
                   if (disabled) return;
                   const val = (e.target as HTMLTextAreaElement).value;
+                  const now = Date.now();
+                  const isTyping = !!val && val.trim().length > 0;
+
                   try {
-                      if (val && val.trim().length > 0) {
-                          onTyping?.(true);
+                      if (isTyping) {
+                          const lastState = typingLastStateRef.current;
+                          const elapsed = now - (typingLastSentAtRef.current || 0);
+                          if (lastState !== true || elapsed >= TYPING_TRUE_THROTTLE_MS) {
+                              onTyping?.(true);
+                              typingLastStateRef.current = true;
+                              typingLastSentAtRef.current = now;
+                          }
                       } else {
-                          onTyping?.(false);
+                          if (typingLastStateRef.current !== false) {
+                              onTyping?.(false);
+                              typingLastStateRef.current = false;
+                              typingLastSentAtRef.current = now;
+                          }
                       }
                   } catch {}
+
                   if (typingTimerRef.current) {
                       try { clearTimeout(typingTimerRef.current); } catch {}
                       typingTimerRef.current = null;
                   }
                   typingTimerRef.current = setTimeout(() => {
-                      try { onTyping?.(false); } catch {}
-                  }, 1500);
+                      try {
+                          if (typingLastStateRef.current !== false) {
+                              onTyping?.(false);
+                              typingLastStateRef.current = false;
+                              typingLastSentAtRef.current = Date.now();
+                          }
+                      } catch {}
+                  }, TYPING_STOP_DEBOUNCE_MS);
               }}
           />
                     <button
