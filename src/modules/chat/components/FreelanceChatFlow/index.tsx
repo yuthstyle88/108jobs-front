@@ -94,6 +94,8 @@ export type FreelanceChatFlowProps = {
 
     // ---- Cancellation helper ----
     statusBeforeCancel?: StatusKey;
+    availableBalance?: number;
+    requiredAmount?: number;
 } & FlowActions;
 
 // =============================================================================
@@ -161,6 +163,8 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  onFileUpload,
                                                                  onFileRemove,
                                                                  statusBeforeCancel,
+                                                                 availableBalance,
+                                                                 requiredAmount,
                                                              }) => {
     const [showApproveConfirm, setShowApproveConfirm] = useState(false);
     const [showUploadModal, setShowUploadModal] = useState(false);
@@ -367,6 +371,8 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                             actions={dynamicActions as any}
                             loading={false}
                             onAction={handlePanelAction}
+                            availableBalance={availableBalance}
+                            requiredAmount={requiredAmount}
                         />
                     </div>
                     <ConfirmActionModal

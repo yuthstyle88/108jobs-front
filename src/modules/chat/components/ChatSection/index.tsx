@@ -599,6 +599,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 isDeletingFile={isDeletingFile}
                 onFileRemove={handleRemoveSelectedFile}
                 statusBeforeCancel={statusBeforeCancel}
+                availableBalance={availableBalance}
+                requiredAmount={latestQuoteAmount}
             />
         </>
     );
