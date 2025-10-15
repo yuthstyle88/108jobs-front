@@ -6,6 +6,7 @@ import Link from "next/link";
 import {useChatRoomsContext} from "@/modules/chat/contexts/ChatRoomsContext";
 import AvatarBadge from "@/components/AvatarBadge";
 import {usePeerOnline} from "@/modules/chat/store/presenceStore";
+import {dbg} from "@/modules/chat/utils";
 
 interface ChatListItemProps {
     room: ChatRoom;
@@ -43,42 +44,36 @@ function ChatListItemComponent({room, isActive, currentLang, localUser}: ChatLis
             prefetch={false}
             key={room.id}
             href={`/${currentLang || "th"}/chat/message/${room.id}`}
-            className="block focus:ring-2 mx-1.5 my-1 transition-all duration-200 hover:scale-[1.01]"
+            className="block mx-2 my-1 transition-colors duration-200 focus:outline-none focus:bg-gray-100"
             aria-label={`Open chat with ${partnerName} about Job ${jobId}`}
             onClick={handleClick}
         >
             <div
-                className={`group p-3 sm:p-4 flex items-center gap-3 rounded-lg bg-gray-100 ${
-                    isActive
-                        ? "bg-blue-50 border-l-4 border-blue-600 shadow-md"
-                        : "hover:bg-gray-50 hover:shadow-sm"
-                } transition-all duration-200`}
+                className={`flex items-center gap-3 p-3 rounded-lg border-b border-blue-950 ${
+                    isActive ? "bg-blue-50 border-l-4 border-blue-500" : "bg-white hover:bg-gray-50"
+                }`} // Added border-b for horizontal line between rooms
             >
                 <AvatarBadge
                     name={partnerName}
                     online={online}
                     isActive
-                    size={48}
+                    size={40}
                 />
                 {/* Room Info */}
                 <div className="min-w-0 flex-1">
                     <div className="flex flex-col gap-0.5">
                         <h4
-                            className="font-semibold text-sm sm:text-base text-gray-900 truncate max-w-[160px] sm:max-w-[220px] transition-colors duration-200"
+                            className="text-sm font-medium text-gray-900 truncate max-w-[200px]"
                             title={partnerName}
                         >
                             {partnerName}
                         </h4>
                         {jobId && (
                             <p
-                                className="text-xs font-semibold text-blue-600 bg-blue-100 rounded px-1 py-0.5 truncate max-w-[160px] sm:max-w-[220px]"
+                                className="text-xs text-gray-500 truncate max-w-[200px]"
                                 title={`Job ${jobId}`}
                             >
-                             <span className="text-primary font-bold">
-                               {(jobId || "").length > 30
-                                   ? (jobId || "").slice(0, 30) + ".."
-                                   : (jobId || "")}
-                             </span>
+                                {(jobId || "").length > 30 ? (jobId || "").slice(0, 30) + ".." : jobId}
                             </p>
                         )}
                     </div>
@@ -86,10 +81,10 @@ function ChatListItemComponent({room, isActive, currentLang, localUser}: ChatLis
                 {/* Unread Badge */}
                 {room.unreadCount > 0 && (
                     <span
-                        className="ml-auto text-xs bg-blue-600 group-hover:bg-blue-700 text-white rounded-full px-2.5 py-1 font-medium shadow-sm transform group-hover:scale-105 transition-all duration-200"
+                        className="ml-auto text-xs bg-blue-500 text-white rounded-full px-2 py-0.5"
                     >
-            {room.unreadCount}
-          </span>
+                        {room.unreadCount}
+                    </span>
                 )}
             </div>
         </Link>
@@ -98,4 +93,6 @@ function ChatListItemComponent({room, isActive, currentLang, localUser}: ChatLis
 
 ChatListItemComponent.displayName = "ChatListItem";
 
-export default ChatListItemComponent;
+const ChatListItem = React.memo(ChatListItemComponent);
+
+export default ChatListItem;

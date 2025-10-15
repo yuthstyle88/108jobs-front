@@ -10,8 +10,7 @@ import {usePeerOnline} from "@/modules/chat/store/presenceStore";
 interface ChatHeaderProps {
     avatarUrl?: string;
     displayName: string;
-    roomId: ChatRoomId;
-    partnerId?: LocalUserId;
+    partnerId: LocalUserId;
     typingText?: string;
     onToggleFlow?: () => void;
     isFlowOpen?: boolean;
@@ -21,7 +20,6 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
                                                    avatarUrl,
                                                    displayName,
                                                    typingText,
-                                                   roomId,
                                                    partnerId,
                                                    onToggleFlow,
                                                    isFlowOpen,

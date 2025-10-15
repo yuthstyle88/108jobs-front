@@ -568,7 +568,6 @@ export async function fetchHistoryPage(
             id: view.message?.msgRefId,
             roomId: view.message?.roomId,
         };
-        dbg("fetchHistoryPage", m)
         const mapped = await mapIncomingToChatMessage(m, {
             token: realToken,
             sharedKeyHex: sharedKey,
