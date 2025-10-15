@@ -81,7 +81,7 @@ async function doSend(deps: SendMessageDeps, msg: ChatMessage): Promise<{ id: st
     if (!sender) return { id: String(msg.id), sent: false };
     const sent = deps.sender ? Boolean(await deps.sender.sendMessage('chat:message', msg)) : false;
     if (sent) {
-       const acked = await waitForAck(deps, msg.id, 4000)
+       const acked = await waitForAck(deps, msg.id, 8000)
           .catch((err) => { dbg('waitForAck error', err); return false; });
         if (acked) {
             dbg('waitForAck success', acked);
@@ -173,15 +173,17 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
         // ---- 5) Send & commit status; always call onAfterSend ----
         try {
             const res = await doSend(deps, p);
+            console.log("res", res)
             if (res?.sent) {
                 try { store?.commitStatus?.(res.id, "sent"); } catch {}
             } else {
-                try { store?.commitStatus?.(String(p.id), "pending"); } catch {}
+                try { store?.commitStatus?.(String(p.id), "failed"); } catch {}
             }
             try { (deps as any).onAfterSend?.(); } catch {}
             return res;
         } catch (err) {
             dbg("sendChatMessage: transport error", err);
+            console.log("send failed")
             try { store?.commitStatus?.(String(p.id), "failed"); } catch {}
             try { (deps as any).onAfterSend?.(); } catch {}
             return { id: String(p.id), sent: false };

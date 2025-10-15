@@ -390,7 +390,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                     </div>
                 ) : isCancelJob ? (
                     <div
-                        className="max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ring-red-200 bg-red-50 px-4 py-3 mt-2"
+                        className="max-w-[90vw] sm:max-w-md w-full rounded-xl text-primary shadow-sm ring-1 ring-red-200 bg-red-50 px-4 py-3 mt-2"
                     >
                         <div className="flex items-start gap-3 flex-wrap">
                             <svg
@@ -649,8 +649,8 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                 className="text-xs min-w-fit"
                                 style={{ color: isIncoming ? "gray" : "rgba(255, 255, 255, 0.7)" }}
                             >
-            {time}
-        </span>
+                                {time}
+                            </span>
                         </div>
                     </div>
                 )}

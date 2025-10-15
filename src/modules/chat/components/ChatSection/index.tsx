@@ -611,7 +611,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     <ChatHeader
                         avatarUrl={partnerAvatar}
                         displayName={partnerName || "User"}
-                        partnerId={partnerId}
                         typingText={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
                         onToggleFlow={() => setIsFlowOpen((v) => !v)}
                         isFlowOpen={isFlowOpen}
