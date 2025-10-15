@@ -68,16 +68,20 @@ export class ResendManager {
 
   /** ปลุกทุกห้อง (เช่นตอน OFF→ON) */
   async flushAll() {
-    if (this.isResendingAll) return
-    this.isResendingAll = true
-    try {
-      await this.flush(() => true)
-    } finally {
-      this.isResendingAll = false
-    }
+      const { pendingMessages, retryMeta } = this.store.getState();
+
+      // Instead of resending, just mark them as retryable
+      pendingMessages.forEach(msg => {
+          const meta = retryMeta[msg.id];
+          if (meta && msg.status === "failed") {
+              // UI can now show "Tap to resend"
+              this.store.upsertRetryMeta(msg.id, { retry: meta.retry, next: 0 });
+          }
+      });
   }
 
-  /** ตัวทำงานหลัก ใช้ predicate เลือกข้อความ */
+
+    /** ตัวทำงานหลัก ใช้ predicate เลือกข้อความ */
   private async flush(predicate: (m: ChatMessageModel) => boolean) {
     const { pendingMessages, retryMeta } = this.store.getState()
     const now = Date.now()

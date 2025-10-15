@@ -35,17 +35,14 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                                                    }) => {
     const {t} = useTranslation();
     const params = useParams();
-    
-    // Initialize read receipt listener to connect WebSocket events to readLastIdStore
+
     const currentLang = (params?.lang as string) || "th";
     const currentLocale = getLocale(currentLang);
-    // Keep natural order (oldest -> newest) for Virtuoso
     const data = React.useMemo(() => [...messages], [messages]);
     const virtuosoRef = React.useRef<VirtuosoHandle | null>(null);
     const [isAtBottom, setIsAtBottom] = React.useState(true);
 
     const prevLengthRef = React.useRef(data.length);
-    // Track first (head) message id to detect prepends (history loads)
     const headIdRef = React.useRef<string | null>(
         data.length ? String((data[0] as any)?.id ?? '') : null
     );
@@ -53,12 +50,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         data.length ? String((data[data.length - 1] as any)?.id ?? '') : null
     );
 
-    // Track the range to detect when we're near the top
     const rangeRef = React.useRef({startIndex: 0, endIndex: 0});
     const hasMoreRef = React.useRef(hasMore);
     const isFetchingRef = React.useRef(isFetching);
-
-    // Track initial load state internally as fallback
     const initialLoadDoneRef = React.useRef(initialLoadDone);
 
     React.useEffect(() => {
@@ -66,7 +60,6 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         isFetchingRef.current = isFetching;
     }, [hasMore, isFetching]);
 
-    // Sync with parent's initialLoadDone prop
     React.useEffect(() => {
         initialLoadDoneRef.current = initialLoadDone;
     }, [initialLoadDone]);
@@ -78,13 +71,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 
     const handleRangeChanged = React.useCallback((range: { startIndex: number; endIndex: number }) => {
         rangeRef.current = range;
-
-        // CRITICAL: Skip initial load - let parent useEffect handle it
         if (!initialLoadDoneRef.current && range.startIndex === 0) {
             return;
         }
-
-        // If we're at the 10th message from the start and have more to load
         if (range.startIndex <= 10 && hasMoreRef.current && !isFetchingRef.current) {
             handleTopReached();
         }
@@ -141,7 +130,6 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 const m: any = msg as any;
                 const id = m?.id ?? m?.clientId;
                 if (id != null) return String(id);
-                // Fallback to immutable combo; avoid content length to keep key stable
                 const created = m?.createdAt ?? '';
                 const sender = m?.senderId ?? '';
                 return `${created}|${sender}`;
@@ -149,20 +137,19 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
             alignToBottom
             rangeChanged={handleRangeChanged}
             atTopStateChange={(atTop) => {
-                // Don't trigger loading here - we use rangeChanged instead
-                // This prevents double fetching
+                // Intentionally empty to avoid double fetching
             }}
             atBottomStateChange={(bottom) => {
                 setIsAtBottom(bottom);
                 onAtBottomChange?.(bottom);
             }}
             components={{
-                Footer: () => <div style={{height: 10}}/>,
+                Footer: () => <div className="h-4 sm:h-6" />, // Responsive footer height
                 Header: hasMore
                     ? () => (
-                        <div className="w-full flex justify-center my-2">
-                            <div className="inline-block rounded bg-gray-200 text-gray-600 text-xs px-2 py-1">
-                                {isFetching ? "Loading..." : t("profileChat.previousMessages")}
+                        <div className="w-full flex justify-center my-2 sm:my-3">
+                            <div className="inline-block px-2 sm:px-3 py-1 text-gray-600 bg-gray-100 text-xs sm:text-sm font-medium text-center rounded-full min-w-[80px] sm:min-w-[100px]">
+                                {isFetching ? t("profileChat.loading") : t("profileChat.previousMessages")}
                             </div>
                         </div>
                     )
@@ -175,20 +162,21 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 const showDate = currentDate !== prevDate;
 
                 return (
-                    <div className="last:mb-0">
+                    <div className="px-2 sm:px-4 last:mb-0"> {/* Responsive padding */}
                         {showDate && (
-                            <div className="w-full flex justify-center my-4">
+                            <div className="w-full flex justify-center my-2 sm:my-3">
                                 <div
-                                    className="inline-block rounded-[10px] p-1 min-w-[120px] text-[#728197] text-[12.8px] text-center">
+                                    className="inline-block px-2 sm:px-3 py-1 min-w-[80px] sm:min-w-[100px] text-gray-600 bg-gray-100 text-xs sm:text-sm font-medium text-center rounded-full"
+                                >
                                     {currentDate}
                                 </div>
                             </div>
                         )}
-                        <ChatMessageItem message={msg} partnerAvatar={partnerAvatar} partnerId={partnerId}/>
+                        <ChatMessageItem message={msg} partnerAvatar={partnerAvatar} partnerId={partnerId} />
                     </div>
                 );
             }}
-            style={{height: "100%", width: "100%", overflowX: "hidden"}}
+            className="w-full h-full overflow-x-hidden" // Replaced inline style with className
         />
     );
 };
