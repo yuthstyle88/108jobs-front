@@ -19,9 +19,9 @@ export function useRoomPresence(roomId: ChatRoomId, peerId: LocalUserId, readerI
         const payload: any = res.data;
         dbg('[useRoomPresence] getPeerStatus', { reason, roomId, peerId, readerId, payload });
         const online: boolean = payload?.online ?? payload?.data?.online;
-        if (online === true) {
+        if (online) {
           setSnapshot([{ userId: Number(peerId), lastSeenAt: Date.now() }]);
-        } else if (online === false) {
+        } else if (!online) {
           setSnapshot([]);
         }
       }

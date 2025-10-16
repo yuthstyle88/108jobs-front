@@ -1586,6 +1586,10 @@ export const th = {
             viewWorkSample: "ดูตัวอย่างงาน",
             enlargedPortfolioImage: "ภาพผลงานที่ขยายใหญ่",
             startChat: "เริ่มแชท",
+            noSkills: "ไม่มีทักษะที่ระบุ",
+            noBio: "ไม่มีประวัติส่วนตัว",
+            noPortfolio: "ไม่มีผลงานที่ระบุ",
+            bio: "ประวัติส่วนตัว",
         },
         profileApply: {
             advantagesTitle: `เป็นฟรีแลนซ์ ${getAppName()} ดียังไง?`,
@@ -1970,7 +1974,9 @@ export const th = {
             personalHiringInfo: "ข้อมูลเพื่อจ้างในนามบุคคล",
             sectionAccount: "บัญชีของคุณ",
             sectionSetting: "การตั้งค่าและการจัดการ",
-            jobAvailability: "สถานะการรับงาน"
+            jobAvailability: "สถานะการรับงาน",
+            portfolio: "ผลงาน",
+            workSample: "ตัวอย่างงาน",
         },
         profilePoint: {
             award1000BahtCoupon: "คูปองส่วนลด 1000 บาท",

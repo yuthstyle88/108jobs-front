@@ -56,7 +56,7 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
             </Link>
             <div className="py-2">
                 <Link prefetch={false}
-                      href="/account-setting/basic-info"
+                      href="/account-setting/basic-information"
                       className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                 >
                     <FontAwesomeIcon

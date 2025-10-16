@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import {usePathname} from "next/navigation";
 import {useLanguage} from "@/contexts/LanguageContext";
 import Link from "next/link";
-import {Briefcase, CreditCard, ShieldCheck, User} from "lucide-react";
+import {Briefcase, BriefcaseBusiness, CreditCard, ShieldCheck, SquareUserRound, User} from "lucide-react";
 
 const AccountSettingWrapper = () => {
     const { t } = useTranslation();
@@ -12,9 +12,19 @@ const AccountSettingWrapper = () => {
 
     const accountMenu = [
         {
-            href: "/account-setting/basic-info",
+            href: "/account-setting/basic-information",
             label: t("profileNavbar.accountInfo"),
             icon: User
+        },
+        {
+            href: "/account-setting/portfolio",
+            label: t("profileNavbar.portfolio"),
+            icon: SquareUserRound
+        },
+        {
+            href: "/account-setting/work-sample",
+            label: t("profileNavbar.workSample"),
+            icon: BriefcaseBusiness
         },
         {
             href: "/account-setting/bank-account",

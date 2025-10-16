@@ -199,7 +199,7 @@ const SpProfile = () => {
             {!localUser?.acceptedApplication && (
               <li>
                 <Link prefetch={false}
-                      href="/account-setting/basic-info"
+                      href="/account-setting/basic-information"
                       className="flex items-center justify-between w-full px-6 py-3 text-text-primary text-[15px] font-sans cursor-pointer"
                 >
                   <span>Account Setting</span>
