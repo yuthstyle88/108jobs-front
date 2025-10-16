@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * ChatSection
+ * ChatRoomView
  * -------------
  * Purpose:
  *   High-level container for a freelancer/employer chat room. Renders header, message list,
@@ -30,7 +30,7 @@ import {ProfileImage} from "@/constants/images";
 import type {ChatMessage, ChatRoomData, LocalUser, LocalUserId, Post} from "lemmy-js-client";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
-import ChatMessages from "../ChatMessages";
+import ChatRoomMessages from "../ChatRoomMessages";
 import {useUnreadStore} from "@/modules/chat/store/unreadStore";
 import {useRoomsStore} from '@/modules/chat/store/roomsStore';
 import FreelanceChatFlow, {FlowActions, StatusKey} from "@/modules/chat/components/FreelanceChatFlow";
@@ -61,7 +61,7 @@ type MessageForm = { message: string };
 
 
 /**
- * Props for ChatSection
+ * Props for ChatRoomView
  * @property post               (Optional) Post record tied to this room; used for employer/freelancer role checks.
  * @property partnerName        Display name for the chat partner.
  * @property partnerAvatar      URL for the partner avatar (fallbacks applied at render).
@@ -71,7 +71,7 @@ type MessageForm = { message: string };
  * @property localUser          Current logged-in user record.
  * @property peerPublicKeyHex   Public key used for peer activity/typing via channel hook.
  */
-interface ChatSectionProps {
+interface ChatRoomViewProps {
     post?: Post;
     partnerName: string;
     partnerAvatar: string;
@@ -101,7 +101,7 @@ function ResponsiveFlowPanel({ isOpen, children }: { isOpen: boolean; children: 
   );
 }
 
-const ChatSection: React.FC<ChatSectionProps> = ({
+const ChatRoomView: React.FC<ChatRoomViewProps> = ({
                                                      post,
                                                      partnerName,
                                                      partnerAvatar,
@@ -354,20 +354,32 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     useEffect(() => {
         if (initialFetchRef.current) return;
 
-        if (messages.length === 0 && hasMore && !isFetching) {
-            initialFetchRef.current = true;
-            // console.log("🔄 Initial page load - fetching chat history");
+        // always load from local store first
+        const getByRoom = useChatStore.getState().getByRoom;
+        const localMessages: ChatMessage[] = getByRoom ? getByRoom(roomId) : [];
+        const hasLocalMessages = Array.isArray(localMessages) && localMessages.length > 0;
 
+        if (hasLocalMessages) {
+            // data already present in store, skip fetch
+            // console.debug('💾 Loaded messages from local store');
+            initialFetchRef.current = true;
+            return;
+        }
+
+        // only fetch from server if local store empty
+        if (hasMore && !isFetching) {
+            initialFetchRef.current = true;
+            // console.debug('🌐 Fetching history from server (store empty)');
             fetchHistory()
                 .then(() => {
-                    // console.log("✅ Initial history fetch completed");
+                    // console.debug('✅ Initial history fetch complete');
                 })
                 .catch((error) => {
-                    console.error("❌ Failed to fetch initial history:", error);
+                    console.error('❌ Failed to fetch initial history:', error);
                     initialFetchRef.current = false; // Allow retry
                 });
         }
-    }, [messages.length, hasMore, isFetching, fetchHistory, t]);
+    }, [roomId, hasMore, isFetching, fetchHistory]);
 
     const setWorkflowState = (key: StatusKey, statusBeforeCancel?: StatusKey, isClientUpdate = true) => {
         useStateMachineStore.setState({
@@ -510,7 +522,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             } catch {
             }
 
-            sendMessage({message: contentToSend, senderId: Number(localUser.id), id: messageId});
+            sendMessage({message: contentToSend, senderId: Number(localUser.id),secure: true, id: messageId});
 
             setSelectedFile(null);
             isSubmittingRef.current = false;
@@ -542,7 +554,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         if (!hasMore || isFetching) return;
         const rootEl = scrollContainerRef.current ?? scrollParentEl;
 
-        // Always fetch when ChatMessages reports top reached; preserve position if we can
+        // Always fetch when ChatRoomMessages reports top reached; preserve position if we can
         if (!rootEl) {
             fetchHistory().catch(() => {
             });
@@ -603,7 +615,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         isFlowOpen={isFlowOpen}
                         partnerId={partnerId}
                     />
-                    <ChatMessages
+                    <ChatRoomMessages
                         messages={messages}
                         partnerAvatar={ProfileImage.avatar}
                         customScrollParent={scrollParentEl}
@@ -731,4 +743,4 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     );
 };
 
-export default ChatSection;
+export default ChatRoomView;

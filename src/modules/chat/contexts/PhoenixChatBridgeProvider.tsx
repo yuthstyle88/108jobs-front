@@ -78,11 +78,13 @@ export const PhoenixChatBridgeProvider: React.FC<WebSocketProviderProps> = ({chi
             getState: () => {
                 const s = useChatStore.getState();
                 // Strict gate: only messages with complete required fields are allowed to resend.
-                // This prevents resend loops when malformed drafts slip into the pending list.
-                const rawList = Array.isArray(s.pendingMessages) ? s.pendingMessages : [];
+                // This prevents resend loops when malformed drafts slip into the failed list.
+                const rawList = Array.isArray(s.listMessages) ? s.listMessages : [];
+                // ResendManager expects a list named failedMessages, but we supply only failed ones as per the new policy.
                 const pendings: ChatMessageModel[] = rawList
                   .filter((m: any) => {
                       const ok = (
+                        m?.status === "failed" &&
                         typeof m?.id === "string" && m.id.length > 0 &&
                         typeof m?.roomId === "string" && m.roomId.length > 0 &&
                         typeof m?.senderId === "number" && Number.isFinite(m.senderId) &&
@@ -96,11 +98,11 @@ export const PhoenixChatBridgeProvider: React.FC<WebSocketProviderProps> = ({chi
                       roomId: m.roomId as ChatRoomId,
                       senderId: m.senderId as number,
                       content: m.content as string,
-                      status: "pending" as ChatStatus,
+                      status: "failed" as ChatStatus,
                       createdAt: m.createdAt as string,
                       isOwner: Boolean(m.isOwner),
                   }));
-                return {pendingMessages: pendings, retryMeta: s.retryMeta};
+                return {failedMessages: pendings, retryMeta: s.retryMeta};
             },
             upsertRetryMeta: useChatStore.getState().upsertRetryMeta,
             dropRetryMeta: useChatStore.getState().dropRetryMeta,

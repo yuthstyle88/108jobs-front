@@ -21,7 +21,7 @@ export type RetryMeta = Record<string, { retry: number; next: number }>
 /** พอร์ตขั้นต่ำของ store ที่ ResendManager ต้องใช้ */
 export interface ChatStorePort {
   getState(): {
-    pendingMessages: ChatMessageModel[]
+    failedMessages: ChatMessageModel[]
     retryMeta: RetryMeta
   }
   upsertRetryMeta: (id: string, meta: { retry: number; next: number }) => void
@@ -68,28 +68,36 @@ export class ResendManager {
 
   /** ปลุกทุกห้อง (เช่นตอน OFF→ON) */
   async flushAll() {
-      const { pendingMessages, retryMeta } = this.store.getState();
+    if (this.isResendingAll || this.isResendingActive) return
+    this.isResendingAll = true
+    try {
+      const { failedMessages, retryMeta } = this.store.getState()
+      const now = Date.now()
 
-      // Instead of resending, just mark them as retryable
-      pendingMessages.forEach(msg => {
-          const meta = retryMeta[msg.id];
-          if (meta && msg.status === "failed") {
-              // UI can now show "Tap to resend"
-              this.store.upsertRetryMeta(msg.id, { retry: meta.retry, next: 0 });
-          }
-      });
+      // สร้าง/รีเฟรช retry meta สำหรับทุก failed เพื่อให้พร้อมส่งทันที
+      for (const msg of failedMessages) {
+        const meta = retryMeta[msg.id]
+        const retry = meta?.retry ?? 0
+        this.store.upsertRetryMeta(msg.id, { retry, next: now }) // next=now → due
+      }
+
+      // ส่งทุกห้องที่ครบกำหนด (predicate = true)
+      await this.flush(() => true)
+    } finally {
+      this.isResendingAll = false
+    }
   }
 
 
     /** ตัวทำงานหลัก ใช้ predicate เลือกข้อความ */
   private async flush(predicate: (m: ChatMessageModel) => boolean) {
-    const { pendingMessages, retryMeta } = this.store.getState()
+    const { failedMessages, retryMeta } = this.store.getState()
     const now = Date.now()
 
+    // NOTE: failedMessages มีเฉพาะที่ส่งไม่สำเร็จ เราอนุญาตให้ resend ได้เมื่อ meta.next ถึงกำหนด
     // คัดเฉพาะข้อความที่ครบกำหนดและยังไม่เกินลิมิต 3 ครั้ง
-    const due = pendingMessages.filter((m) => {
+    const due = failedMessages.filter((m) => {
       if (!predicate(m)) return false
-      if (m.status === 'failed') return false
       const meta = retryMeta[m.id]
       const count = meta?.retry ?? 0
       if (!meta) return false // ต้องมี meta จาก onSendFailure ก่อน
@@ -105,7 +113,7 @@ export class ResendManager {
           senderId: msg.senderId,
           content: msg.content,
           createdAt: msg.createdAt,
-          status: msg.status ?? 'pending',
+          status: 'pending',
           id: msg.id, // ใช้ client id เพื่อให้ server ทำ idempotency ได้
         }
 

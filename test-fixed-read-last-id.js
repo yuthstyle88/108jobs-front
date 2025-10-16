@@ -4,7 +4,7 @@ console.log("=== Testing Fixed Read Last ID System ===");
 console.log("\n✅ FIXES IMPLEMENTED:");
 console.log("1. Created useReadReceiptListener hook");
 console.log("2. Connected onReadReceipt event to readLastIdStore.setPeerLastReadAt");
-console.log("3. Added hook to ChatMessages component");
+console.log("3. Added hook to ChatRoomMessages component");
 console.log("4. Fixed timestamp handling to use current time");
 
 console.log("\n✅ EXPECTED FLOW NOW:");
@@ -18,11 +18,11 @@ console.log("7. ✅ UI can now reflect updated read status");
 
 console.log("\n✅ FILES MODIFIED:");
 console.log("- Created: src/modules/chat/hooks/useReadReceiptListener.ts");
-console.log("- Modified: src/app/[lang]/chat/_components/ChatMessages/index.tsx");
+console.log("- Modified: src/app/[lang]/chat/_components/ChatRoomMessages/index.tsx");
 
 console.log("\n✅ INTEGRATION POINTS:");
 console.log("- useReadReceiptListener hook connects WebSocket events to store");
-console.log("- ChatMessages component activates the listener");
+console.log("- ChatRoomMessages component activates the listener");
 console.log("- Existing emitReadReceipt/onReadReceipt chain now complete");
 
 console.log("\n=== VERIFICATION NEEDED ===");

@@ -8,8 +8,8 @@ import {
     SendEventDeps,
     sendReadReceipt as sendReadReceiptEvent,
     sendRoomUpdateEvent,
-    sendTyping as sendTypingEvent
 } from "@/modules/chat/events/sendEvents";
+import { useTypingIndicator } from '@/modules/chat/hooks/useTypingIndicator';
 import {ChatRoomData, ChatRoomId, LocalUser, LocalUserId} from "lemmy-js-client";
 import {useChatStore} from "@/modules/chat/store/chatStore"
 import {makeReadAckEmitter} from "@/modules/chat/utils/socket-emitter";
@@ -18,6 +18,7 @@ import {MessagePayload} from "@/modules/chat/types";
 import {PhoenixSenderAdapter} from '@/modules/chat/adapters/PhoenixSenderAdapter';
 import {usePresenceStore} from '@/modules/chat/store/presenceStore';
 import {useReadLastIdStore} from "@/modules/chat/store/readStore";
+import { usePartnerTyping } from '@/modules/chat/hooks/usePartnerTyping';
 
 // Safe DOM CustomEvent dispatcher
 function dispatchDomEvent(name: string, detail: any) {
@@ -114,8 +115,7 @@ export function useChatRoom({
     const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const ackCooldownRef = useRef<number>(0);
     const readAckRef = useRef<((id: number | string) => void) | null>(null);
-    const [isPartnerTyping, setIsPartnerTyping] = useState(false);
-    const typingDecayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    // Partner typing state handled by usePartnerTyping hook below
     const [connectionError, setConnectionError] = useState(false);
     const localSenderRef = useRef<any>(null);
     const ws = useWebSocketContext();
@@ -126,6 +126,15 @@ export function useChatRoom({
     // Normalize readiness flag for legacy socket vs new adapter
     const isReady = !!((ws as any)?.isReady ?? (ws as any)?.adapter?.isReady);
     const upsertMessage = useChatStore(s => s.upsertMessage);
+    // Typing indicator helper (centralized throttle/debounce)
+    const typingEmitter = useTypingIndicator({
+        wsAdapter: adapterAny,
+        roomId,
+        senderId: Number(localUser.id) || 0,
+        onAfterSend: (v: boolean) => {
+            lastTypedSentRef.current = v;
+        },
+    });
     // Normalized addMessageListener for both legacy socket and new adapter (or EventEmitter-style .on/.off)
     const addMessageListener = React.useCallback((handler: (data: unknown) => void) => {
         const a: any = (ws as any)?.adapter ?? null;
@@ -204,62 +213,21 @@ export function useChatRoom({
         }
     }, [isReady, roomId]);
 
-    const handleRemoteTyping = useCallback((detail: { roomId: ChatRoomId; senderId: LocalUserId; typing: boolean }) => {
-        try {
-            if(!detail) return;
-            if(detail.roomId !== roomId) return;
-            const me = Number(localUser.id) || 0;
-            if(detail.senderId === me) return; // ignore self
-            setIsPartnerTyping(detail.typing);
-            if(!detail.typing) {
-                if(typingDecayRef.current) {
-                    try {
-                        clearTimeout(typingDecayRef.current);
-                    } catch {
-                    }
-                    typingDecayRef.current = null;
-                }
-                // already set to false above; ensure DOM event mirrors instant off
-                dispatchDomEvent('chat:partner-typing', {
-                    roomId,
-                    senderId: Number(detail.senderId) || 0,
-                    typing: false
-                });
-                onRemoteTyping?.(detail);
-                return;
-            }
-            dispatchDomEvent('chat:partner-typing', {
-                roomId,
-                senderId: Number(detail.senderId) || 0,
-                typing: detail.typing
-            });
-            if(detail.typing) {
-                if(typingDecayRef.current) {
-                    try {
-                        clearTimeout(typingDecayRef.current);
-                    } catch {
-                    }
-                }
-                typingDecayRef.current = setTimeout(() => {
-                    setIsPartnerTyping(false);
-                    dispatchDomEvent('chat:partner-typing', {
-                        roomId,
-                        senderId: Number(detail.senderId) || 0,
-                        typing: false
-                    });
-                }, TYPING_DECAY_MS);
-            }
-            onRemoteTyping?.(detail);
-        } catch {
-        }
-    }, [roomId, localUser.id, onRemoteTyping]);
+    const { isPartnerTyping } = usePartnerTyping({
+        channel: adapterAny,
+        roomId: roomId as any,
+        localUserId: Number(localUser.id) || 0,
+        decayMs: TYPING_DECAY_MS,
+        onRemoteTyping,
+        dispatchDomEvent: (name, detail) => dispatchDomEvent(name, detail),
+    });
 
     const handleWSMessage = React.useMemo(() => createHandleWSMessage({
         roomId,
         localUserId: Number(localUser.id) || 0,
         setRefreshRoomData,
         markPeerActive,
-        onRemoteTyping: handleRemoteTyping,
+        onRemoteTyping: () => {},
         processedMsgRef,
         peerActiveRef,
         setPageCursor,
@@ -274,7 +242,7 @@ export function useChatRoom({
         readAckRef,
         ackCooldownRef,
         upsertMessage
-    }), [roomId, localUser.id, setRefreshRoomData, markPeerActive, handleRemoteTyping, upsertMessage]);
+    }), [roomId, localUser.id, setRefreshRoomData, markPeerActive, upsertMessage]);
 
     useEffect(() => {
         if(!ws) return;
@@ -333,12 +301,6 @@ export function useChatRoom({
 
     useEffect(() => {
         return () => {
-            if(typingDecayRef.current) {
-                try {
-                    clearTimeout(typingDecayRef.current);
-                } catch {
-                }
-            }
             if(peerActiveDecayRef.current) {
                 try {
                     clearTimeout(peerActiveDecayRef.current);
@@ -371,6 +333,7 @@ export function useChatRoom({
         // Ensure payload has a senderId (fallback to localUser.id)
         const payload: MessagePayload = {
             ...data,
+            secure: true,
             senderId: Number(localUser.id) || (data as any)?.senderId,
         };
 
@@ -477,14 +440,18 @@ export function useChatRoom({
     }, [ws, localUser.id]);
 
     const sendTyping = useCallback((isTyping: boolean) => {
-        const adapter = ((ws as any)?.adapter ?? ws) as any;
-        if(!adapter) return;
         try {
-            lastTypedSentRef.current = isTyping;
-            sendTypingEvent({adapter, roomId, senderId: localUser.id}, isTyping);
-        } catch {
-        }
-    }, [roomId, localUser.id, ws]);
+            if (isTyping) {
+                // user started typing – trigger the debounced/throttled start
+                typingEmitter?.startTyping?.();
+                // optional hint that a keystroke happened; safe no-op if not provided
+                typingEmitter?.onUserTyping?.();
+            } else {
+                // user stopped typing – decay immediately
+                typingEmitter?.stopTyping?.();
+            }
+        } catch {}
+    }, [typingEmitter]);
 
     const onWsErrorDuringFetch = useCallback(() => {
         if(fetchTimeoutRef.current) {

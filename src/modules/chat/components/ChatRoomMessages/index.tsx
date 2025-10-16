@@ -1,7 +1,7 @@
 "use client";
 
 import type {ChatMessage, LocalUserId} from "lemmy-js-client";
-import ChatMessageItem from "../ChatMessageItem";
+import ChatMessageItem from "../ChatMessageBubble";
 import {StaticImageData} from "next/image";
 import {Virtuoso, VirtuosoHandle} from "react-virtuoso";
 import React from "react";
@@ -10,7 +10,7 @@ import {formatDateToLong} from "@/utils";
 import {getLocale} from "@/utils/date";
 import {useTranslation} from "react-i18next";
 
-interface ChatMessagesProps {
+interface ChatRoomMessagesProps {
     messages: ChatMessage[];
     partnerAvatar: StaticImageData | string;
     customScrollParent?: HTMLElement | null;
@@ -22,7 +22,7 @@ interface ChatMessagesProps {
     partnerId: LocalUserId;
 }
 
-const ChatMessages: React.FC<ChatMessagesProps> = ({
+const ChatRoomMessages: React.FC<ChatRoomMessagesProps> = ({
                                                        messages,
                                                        partnerAvatar,
                                                        customScrollParent,
@@ -181,4 +181,4 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     );
 };
 
-export default ChatMessages;
+export default ChatRoomMessages;

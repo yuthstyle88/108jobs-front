@@ -70,7 +70,8 @@ export const sendStructured = async (
         status: "sent"
     });
 
-    await sendMessage({senderId: senderId, message, id});
+    const secure = true;
+    await sendMessage({senderId: senderId, message, secure, id});
     return id;
 };
 

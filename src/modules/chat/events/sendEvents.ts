@@ -2,7 +2,7 @@ import type {ChatMessage, LocalUserId} from "lemmy-js-client";
 import {UserService} from "@/services";
 import {encrypt, ensureSharedKeyForRoom, importAesKey} from "@/utils";
 import {dbg} from "@/modules/chat/utils";
-import {PhoenixEvent, PhoenixPacket, SendMessageDeps} from "@/modules/chat/types";
+import {MessagePayload, PhoenixEvent, PhoenixPacket, SendMessageDeps} from "@/modules/chat/types";
 import {createMessage} from "@/modules/chat/domain/entities/message";
 import {waitForAck, wsSend} from "@/modules/chat/utils/socketSend";
 import {useChatStore} from "@/modules/chat/store/chatStore";
@@ -24,12 +24,6 @@ export function createEvent<T>(
         if (packet[k] === undefined) delete packet[k];
     });
     return packet;
-}
-
-export interface SendMessagePayload {
-    message: string;
-    senderId: LocalUserId;
-    id?: string
 }
 
 // --- Generic event-deps for socket sends ---
@@ -96,16 +90,16 @@ async function doSend(deps: SendMessageDeps, msg: ChatMessage): Promise<{ id: st
 }
 
 /** Centralized send-message flow used by PhoenixSocketProvider */
-export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePayload): Promise<{
+export async function sendChatMessage(deps: SendMessageDeps, data: MessagePayload): Promise<{
     id: string;
     sent: boolean;
 } | undefined> {
-    const { roomId, shareKey } = deps as any;
+    const { roomId } = deps as any;
     const store = useChatStore.getState();
     try {
         // ---- 0) Sanitize & validate input here (do not rely on caller) ----
         const raw = (data?.message ?? '');
-        const message = typeof raw === 'string' ? raw.replace(/\s+/g, ' ').trim() : raw;
+        const message = typeof raw === 'string' ? raw.trim() : raw;
         if (!message) {
             try { (deps as any).onAfterSend?.(); } catch {}
             return undefined; // nothing to send
@@ -121,6 +115,16 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
 
         const token = UserService.Instance.auth();
 
+        // Resolve shared key as hex string (room-level or user-level), not boolean
+        const sharedKeyHex: string | null = (
+          (typeof (deps as any)?.shareKey === 'string' && (deps as any).shareKey) ||
+          (typeof UserService.Instance?.authInfo?.sharedKey === 'string' && UserService.Instance.authInfo.sharedKey) ||
+          null
+        );
+
+        // Respect caller's intent: if data.secure === false, force plaintext
+        const allowEncrypt = data?.secure !== false;
+
         // ---- 2) Create a single pending entity and optimistically insert once ----
         const p = createMessage(message, roomId, data.senderId, data.id);
         if (!p) {
@@ -135,36 +139,43 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
 
         // mark as attempted
         try { if (msgId) sentSet?.add?.(msgId); } catch {}
-        const sharedKeyHex = shareKey && !UserService.Instance.authInfo?.sharedKey
+
         // ---- 3) Ensure shared key (best effort) and encrypt if available ----
         try {
-            if (token && sharedKeyHex) {
-                try {
-                    await ensureSharedKeyForRoom(roomId, sharedKeyHex);
-                } catch (ex) {
-                    if (process.env.NODE_ENV !== 'production') {
-                        console.warn(`[crypto] derive shared key failed, sending plaintext`, ex);
-                    }
-                }
+          if (token && sharedKeyHex) {
+            try {
+              await ensureSharedKeyForRoom(roomId, sharedKeyHex);
+            } catch (ex) {
+              if (process.env.NODE_ENV !== 'production') {
+                console.warn(`[crypto] derive shared key failed, sending plaintext`, ex);
+              }
             }
-            const shouldEncrypt = token && shareKey && sharedKeyHex && message;
-            if (shouldEncrypt) {
-                try {
-                    const aesKey = await importAesKey(sharedKeyHex!, "encrypt");
-                    const cipher = await encrypt(message, aesKey);
-                    if (cipher && cipher !== message) {
-                        p.content = cipher;
-                    }
-                } catch (err) {
-                    if (process.env.NODE_ENV !== 'production') {
-                        console.warn(`[crypto] encryption failed, falling back to plaintext`, err);
-                    }
-                }
+          }
+
+          const shouldEncrypt = Boolean(token && sharedKeyHex && message && allowEncrypt);
+          if (shouldEncrypt) {
+            try {
+              const aesKey = await importAesKey(sharedKeyHex!, 'encrypt');
+              const cipher = await encrypt(message, aesKey);
+              if (cipher && cipher !== message) {
+                (p as any).content = cipher;
+                (p as any).secure = true;            // mark payload as encrypted
+              } else {
+                (p as any).secure = false;           // fallback: plaintext
+              }
+            } catch (err) {
+              (p as any).secure = false;             // encryption failed → plaintext
+              if (process.env.NODE_ENV !== 'production') {
+                console.warn(`[crypto] encryption failed, falling back to plaintext`, err);
+              }
             }
+          } else {
+            (p as any).secure = false;               // not encrypting by design/availability
+          }
         } catch {}
 
-        // ---- 4) Transport: must have adapter to send ----
-        if (!(deps as any)?.adapter) {
+        // ---- 4) Transport: must have sender to send ----
+        if (!(deps as any)?.sender) {
             try { store?.commitStatus?.(String(p.id), "failed"); } catch {}
             try { (deps as any).onAfterSend?.(); } catch {}
             return { id: String(p.id), sent: false };
@@ -172,21 +183,23 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
 
         // ---- 5) Send & commit status; always call onAfterSend ----
         try {
-            const res = await doSend(deps, p);
-            console.log("res", res)
-            if (res?.sent) {
-                try { store?.commitStatus?.(res.id, "sent"); } catch {}
-            } else {
-                try { store?.commitStatus?.(String(p.id), "failed"); } catch {}
-            }
-            try { (deps as any).onAfterSend?.(); } catch {}
-            return res;
+          const res = await doSend(deps, p);
+          const pid = String(p.id);
+          const rid = String(res?.id ?? pid);
+          if (res?.sent) {
+            try { store?.commitStatus?.(rid, 'sent'); } catch {}
+          } else {
+            try { store?.commitStatus?.(pid, 'failed'); } catch {}
+          }
+          try { (deps as any).onAfterSend?.(); } catch {}
+          return res;
         } catch (err) {
-            dbg("sendChatMessage: transport error", err);
-            console.log("send failed")
-            try { store?.commitStatus?.(String(p.id), "failed"); } catch {}
-            try { (deps as any).onAfterSend?.(); } catch {}
-            return { id: String(p.id), sent: false };
+          dbg('sendChatMessage: transport error', err);
+          try { store?.commitStatus?.(String(p.id), 'failed'); } catch {}
+          try { (deps as any).onAfterSend?.(); } catch {}
+          return { id: String(p.id), sent: false };
+        } finally {
+          try { if (msgId) sentSet?.delete?.(msgId); } catch {}
         }
     } catch {}
     return;

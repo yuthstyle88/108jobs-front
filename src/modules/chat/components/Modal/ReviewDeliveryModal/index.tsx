@@ -12,7 +12,7 @@ interface ReviewDeliveryModalProps {
     canSend: boolean;
     setError: (error: string) => void;
     disabledReason: string;
-    sendMessage: (message: { message: string; senderId: number; id: string }) => void;
+    sendMessage: (message: { message: string; senderId: number; secure: boolean; id: string }) => void;
     requestRevisionAction: () => Promise<boolean>;
     roomId: string;
     localUser?: { id: LocalUserId };
@@ -57,6 +57,7 @@ export const ReviewDeliveryModal: React.FC<ReviewDeliveryModalProps> = ({
                             sendMessage({
                                 message: JSON.stringify({ type: 'delivery-accepted' }),
                                 senderId: Number(localUser?.id) || 0,
+                                secure: true,
                                 id: uuidv4(),
                             });
                             try {

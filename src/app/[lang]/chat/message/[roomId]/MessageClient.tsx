@@ -2,7 +2,7 @@
 
 import {useEffect, useState} from "react";
 import {PhoenixChatBridgeProvider} from "@/modules/chat/contexts/PhoenixChatBridgeProvider";
-import ChatSection from "../../../../../modules/chat/components/ChatSection";
+import ChatRoomView from "../../../../../modules/chat/components/ChatRoomView";
 import {HttpService, UserService} from "@/services";
 import LoadingBlur from "@/components/Common/Loading/LoadingBlur";
 import {REQUEST_STATE} from "@/services/HttpService";
@@ -178,7 +178,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
             roomId={roomId}
             peerPublicKeyHex={state.shareKey}
         >
-            <ChatSection
+            <ChatRoomView
                 post={state.post}
                 partnerName={state.partnerName}
                 partnerAvatar=""

@@ -8,14 +8,14 @@ import AvatarBadge from "@/components/AvatarBadge";
 import {usePeerOnline} from "@/modules/chat/store/presenceStore";
 import {dbg} from "@/modules/chat/utils";
 
-interface ChatListItemProps {
+interface ChatRoomListProps {
     room: ChatRoom;
     isActive: boolean;
     currentLang: string;
     localUser?: Pick<LocalUser, "id"> | null;
 }
 
-function ChatListItemComponent({room, isActive, currentLang, localUser}: ChatListItemProps) {
+function ChatRoomListComponent({room, isActive, currentLang, localUser}: ChatRoomListProps) {
     const {markRoomRead} = useChatRoomsContext();
 
     // Derive peer user id (the other participant, not me)
@@ -91,8 +91,8 @@ function ChatListItemComponent({room, isActive, currentLang, localUser}: ChatLis
     );
 }
 
-ChatListItemComponent.displayName = "ChatListItem";
+ChatRoomListComponent.displayName = "ChatListItem";
 
-const ChatListItem = React.memo(ChatListItemComponent);
+const ChatRoomList = React.memo(ChatRoomListComponent);
 
-export default ChatListItem;
+export default ChatRoomList;

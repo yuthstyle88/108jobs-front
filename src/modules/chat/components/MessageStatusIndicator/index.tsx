@@ -44,7 +44,7 @@ const FailedIcon = () => (
     </svg>
 );
 
-const MessageReceipt: React.FC<Props> = ({
+const MessageStatusIndicator: React.FC<Props> = ({
                                              isOwner,
                                              msgStatus,
                                              unread,
@@ -117,4 +117,4 @@ const MessageReceipt: React.FC<Props> = ({
     return null;
 };
 
-export default MessageReceipt;
+export default MessageStatusIndicator;

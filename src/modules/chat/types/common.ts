@@ -5,6 +5,7 @@ export type WsMessageSender = (data: MessagePayload) => void | Promise<void>;
 export interface MessagePayload {
     message: string;
     senderId: LocalUserId;
+    secure: boolean,
     id?: string;
 }
 /**

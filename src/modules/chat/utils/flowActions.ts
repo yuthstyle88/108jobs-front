@@ -69,6 +69,7 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
             await sendChatMessage({roomId} as any, {
                 message: payload,
                 senderId: localUser.id,
+                secure: true,
                 id: messageId
             });
 
@@ -102,6 +103,7 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
             await sendChatMessage({roomId} as any, {
                 message: payload,
                 senderId: localUser.id,
+                secure: true,
                 id: messageId
             });
 
@@ -120,16 +122,16 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
 
             goToStatus('InProgress');
         },
-        onUploadAsset: () => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.onchange = (e) => handleFileUpload(e as any);
-            input.click();
-        },
-        onSendMessage: () => {
-            const input = (scrollContainerRef.current as any)?.querySelector('input');
-            if (input) input.focus();
-        },
+        // onUploadAsset: () => {
+        //     const input = document.createElement('input');
+        //     input.type = 'file';
+        //     input.onchange = (e) => handleFileUpload(e as any);
+        //     input.click();
+        // },
+        // onSendMessage: () => {
+        //     const input = (scrollContainerRef.current as any)?.querySelector('input');
+        //     if (input) input.focus();
+        // },
         onSubmitDelivery: deps.hasSelectedFile && deps.hasSelectedFile()
             ? async () => {
                 if (deps.submitDelivery) {
