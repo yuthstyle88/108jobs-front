@@ -1640,6 +1640,10 @@ export const vi = {
             viewWorkSample: "Xem mẫu công việc",
             enlargedPortfolioImage: "Hình ảnh danh mục được phóng to",
             startChat: "Bắt đầu trò chuyện",
+            noSkills: "Không có kỹ năng nào được liệt kê",
+            noBio: "Không có tiểu sử",
+            noPortfolio: "Không có danh mục đầu tư",
+            bio: "Tiểu sử",
         },
 
         profileApply: {
@@ -2023,7 +2027,9 @@ export const vi = {
             personalHiringInfo: "Tuyển dụng với tư cách cá nhân",
             sectionAccount: "Tài khoản của bạn",
             sectionSetting: "Cài đặt & Quản lý",
-            jobAvailability: "Trạng thái nhận việc"
+            jobAvailability: "Trạng thái nhận việc",
+            portfolio: "Danh mục đầu tư",
+            workSample: "Mẫu công việc",
         },
         profilePoint: {
             award1000BahtCoupon: "Phiếu giảm giá 1000 baht",

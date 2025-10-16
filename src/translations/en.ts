@@ -1629,6 +1629,10 @@ export const en = {
             viewWorkSample: "View Work Sample",
             enlargedPortfolioImage: "Enlarged portfolio image",
             startChat: "Start chat",
+            noSkills: "No skills listed",
+            noBio: "No bio available",
+            noPortfolio: "No portfolio listed",
+            bio: "Bio",
         },
         profileApply: {
             advantagesTitle: `What are the advantages of being a ${getAppName()} freelancer?`,
@@ -2015,7 +2019,9 @@ export const en = {
             personalHiringInfo: "Hiring as an Individual",
             sectionAccount: "Your Account",
             sectionSetting: "Settings & Management",
-            jobAvailability: "Job Availability"
+            jobAvailability: "Job Availability",
+            portfolio: "Portfolio",
+            workSample: "Work Sample",
         },
         profilePoint: {
             award1000BahtCoupon: "1000 baht discount coupon",

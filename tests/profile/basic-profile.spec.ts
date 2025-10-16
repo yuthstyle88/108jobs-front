@@ -4,7 +4,7 @@ test.describe('Chỉnh sửa thông tin cơ bản', () => {
   test.use({ storageState: 'storage/auth.json' });
 
   test('Hiển thị trang và cập nhật thông tin thành công', async ({ page }) => {
-    await page.goto('/account-setting/basic-info');
+    await page.goto('/account-setting/basic-information');
 
     await expect(page.getByText('ข้อมูลบัญชี')).toBeVisible();
 
