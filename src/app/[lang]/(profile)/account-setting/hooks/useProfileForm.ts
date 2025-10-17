@@ -1,7 +1,7 @@
 import useNotification from "@/hooks/useNotification";
 import { HttpService } from "@/services";
 import { REQUEST_STATE } from "@/services/HttpService";
-import { Person, SaveUserSettings } from "lemmy-js-client";
+import {Person, PortfolioPic, SaveUserSettings, WorkSample} from "lemmy-js-client";
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
@@ -12,13 +12,15 @@ interface FormValues {
     bio: string;
     skills: string;
     contacts: string;
+    workSamples: WorkSample[];
+    portfolioPics: any[];
 }
 
 export const useProfileForm = (
     person: Person | undefined,
     setSelectedImage: (imageUrl: string) => void,
-    portfolioItems: any | null,
-    workSamples: any | null,
+    portfolioItems?: PortfolioPic[],
+    workSamples?: WorkSample[],
 ) => {
     const { t } = useTranslation();
 
@@ -40,6 +42,8 @@ export const useProfileForm = (
         bio: person?.bio || "",
         skills: person?.skills || "",
         contacts: person?.contacts || "",
+        workSamples: person?.workSamples ?? [],
+        portfolioPics: person?.portfolioPics ?? [],
     });
 
     const [errors, setErrors] = useState<Partial<Record<keyof FormValues, string>>>({});
@@ -53,6 +57,8 @@ export const useProfileForm = (
                 bio: person.bio || "",
                 skills: person.skills || "",
                 contacts: person.contacts || "",
+                workSamples: person.workSamples ?? [],
+                portfolioPics: person.portfolioPics ?? [],
             });
             setSelectedImage(person.avatar || "");
         }
@@ -118,6 +124,8 @@ export const useProfileForm = (
             bio: person?.bio || "",
             skills: person?.skills || "",
             contacts: person?.contacts || "",
+            workSamples: person?.workSamples ?? [],
+            portfolioPics: person?.portfolioPics ?? [],
         });
         setErrors({});
     };

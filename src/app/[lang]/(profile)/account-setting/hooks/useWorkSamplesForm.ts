@@ -3,26 +3,19 @@
 import useNotification from '@/hooks/useNotification';
 import { HttpService } from '@/services';
 import { LOADING_REQUEST, REQUEST_STATE, RequestState } from '@/services/HttpService';
-import { MyUserInfo, Person, SaveUserSettings } from 'lemmy-js-client';
+import {MyUserInfo, Person, PortfolioPic, SaveUserSettings, WorkSample} from 'lemmy-js-client';
 import React, { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
 
-interface WorkSample {
-    id: number;
-    title: string;
-    sampleUrl: string;
-    description: string;
-}
-
 interface FormValues {
-    workSamples: WorkSample[];
     newSample: { title: string; sampleUrl: string; description: string };
     displayName: string;
     bio: string;
     skills: string;
     contacts: string;
-    portfolioPics: string[];
+    workSamples: WorkSample[];
+    portfolioPics: PortfolioPic[];
 }
 
 export const useWorkSamplesForm = (person: Person | undefined) => {
@@ -58,30 +51,15 @@ export const useWorkSamplesForm = (person: Person | undefined) => {
             }),
     });
 
-    const initialWorkSamples: WorkSample[] = person?.workSamples ?? [
-        {
-            id: 1,
-            title: 'export const PROFILE_INFO_VI = {',
-            sampleUrl: 'https://grok.com/c/cb051685-3ba1-4454-9d4d-0c5de1187172',
-            description:
-                '// Vietnamese Translation\nexport const PROFILE_INFO_VI = {\n  sampleUrlRequired: "Yêu cầu URL mẫu",\n  invalidTitle: "Tiêu đề không hợp lệ. Vui lòng cung cấp tiêu đề hợp lệ.",\n  invalidDescription: "Mô tả không hợp lệ. Vui lòng cung cấp mô tả hợp lệ.",\n};',
-        },
-        {
-            id: 2,
-            title: 'Add links to your previous projects to demonstrate your expertise.',
-            sampleUrl: 'http://localhost:3000/en/account-setting/work-sample',
-            description:
-                'Add links to your previous projects to demonstrate your expertise.Add links to your previous projects to demonstrate your expertise.Add links to your previous projects to demonstrate your expertise.Add links to your previous projects to demonstrate your expertise.Add links to your previous projects to demonstrate your expertise.',
-        },
-    ];
+    const initialWorkSamples: WorkSample[] = person?.workSamples ?? [];
 
     const [form, setForm] = useState<FormValues>({
         workSamples: initialWorkSamples,
         newSample: { title: '', sampleUrl: '', description: '' },
-        displayName: person?.displayName ?? 'dung kheng 123123',
-        bio: person?.bio ?? 'asdasdasdasdasd',
-        skills: person?.skills ?? 'Web development',
-        contacts: person?.contacts ?? 'dasdasd',
+        displayName: person?.displayName ?? '',
+        bio: person?.bio ?? '',
+        skills: person?.skills ?? '',
+        contacts: person?.contacts ?? '',
         portfolioPics: person?.portfolioPics ?? [],
     });
     const [editingSampleId, setEditingSampleId] = useState<number | null>(null);
@@ -145,10 +123,6 @@ export const useWorkSamplesForm = (person: Person | undefined) => {
 
         setForm((prev) => {
             const newWorkSamples = [...prev.workSamples, newSample];
-            console.log('Adding sample to workSamples:', {
-                workSamples: newWorkSamples,
-                newSample: { title: '', sampleUrl: '', description: '' },
-            });
             return {
                 ...prev,
                 workSamples: newWorkSamples,
@@ -278,7 +252,6 @@ export const useWorkSamplesForm = (person: Person | undefined) => {
                 setUpdateProfileState({ state: 'failed', err: new Error('Failed to update settings') });
             }
         } catch (error) {
-            console.error('Update error:', error);
             errorMessage('profile', 'updateAccountSettingFail');
             setUpdateProfileState({ state: 'failed', err: error as Error });
         }
