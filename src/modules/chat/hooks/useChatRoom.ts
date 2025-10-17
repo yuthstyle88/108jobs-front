@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useWebSocketContext} from '@/modules/chat/contexts/WebSocketContext';
 import {createHandleWSMessage} from '@/modules/chat/events/handleWSMessage';
-import {ensureSharedKeyForRoom} from "@/utils";
+import {isBrowser} from "@/utils";
 import {makeEmitReadAcker} from "@/modules/chat/utils";
 import {
     sendChatMessage,
@@ -23,7 +23,7 @@ import { usePartnerTyping } from '@/modules/chat/hooks/usePartnerTyping';
 // Safe DOM CustomEvent dispatcher
 function dispatchDomEvent(name: string, detail: any) {
     try {
-        if(typeof window !== 'undefined') {
+        if(isBrowser()) {
             window.dispatchEvent(new CustomEvent(name, {detail}));
         }
     } catch {
@@ -260,21 +260,6 @@ export function useChatRoom({
         };
     }, [ws, addMessageListener, handleWSMessage]);
 
-    // E2E shared key warmup
-    useEffect(() => {
-        if(isE2EMock) return;
-        if(!roomId || !localUser) return;
-        (async () => {
-            try {
-                if(shareKey) {
-                    await ensureSharedKeyForRoom(roomId, shareKey);
-                } else {
-                    console.warn(`[crypto] skipped key derivation: no peerPublicKey for room ${roomId}`);
-                }
-            } catch {
-            }
-        })();
-    }, [roomId, localUser, shareKey, isE2EMock]);
 
     // Read-ack acker wiring
     useEffect(() => {

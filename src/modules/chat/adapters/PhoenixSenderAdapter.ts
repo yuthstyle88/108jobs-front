@@ -44,41 +44,13 @@ export class PhoenixSenderAdapter implements ChatSenderAdapter {
 
     async sendMessage(event: string, payload: SendDraft): Promise<string | false> {
         try {
-            let delivered = false;
-            let serverId: string | undefined;
-
-            // Prefer Phoenix channel push for a proper server response (id)
-            const maybePush = (this.socket as any)?.push;
-            if (typeof maybePush === 'function') {
-                try {
-                    const res: any = await maybePush.call(this.socket, event, payload);
-                    // Try to extract id from common phoenix/phx_reply shapes
-                    serverId =
-                        res?.response?.id ??
-                        res?.payload?.response?.id ??
-                        res?.payload?.id ??
-                        res?.id ??
-                        undefined;
-                    delivered = true;
-                    if (serverId) return String(serverId);
-                } catch (e) {
-                    dbg('[PhoenixSenderAdapter] push failed, fallback to wsSend', { id: (payload as any)?.id, e });
-                }
-            }
-
+            const clientId = payload.id;
             // Fallback: raw ws send (boolean only)
-            if (!delivered) {
                 const sent = wsSend(this.socket as any, { event, payload });
                 dbg('[PhoenixSenderAdapter] wsSend', { id: (payload as any)?.id, sent });
                 if (!sent) throw new Error('socket send failed');
                 // No server id in this path → return client-side id if present
-                const clientId = (payload as any)?.id ?? (typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : String(Date.now()));
                 return String(clientId);
-            }
-
-            // Delivered via push but no id found → fall back to client id
-            const clientId = (payload as any)?.id ?? (typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : String(Date.now()));
-            return String(clientId);
         } catch (err) {
             dbg('[PhoenixSenderAdapter] send failed', { id: (payload as any)?.id, err });
             return false;

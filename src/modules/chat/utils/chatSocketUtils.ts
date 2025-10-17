@@ -9,7 +9,7 @@ import type {
     ChatStatus,
     LocalUserId
 } from "lemmy-js-client";
-import {decrypt, importAesKey} from "@/utils";
+import {decrypt} from "@/utils";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {dbg} from "@/modules/chat/utils/helpers";
 
@@ -220,7 +220,6 @@ export async function handleIncomingPayload(
     ctx: {
         roomId: ChatRoomId;
         localUserId: LocalUserId;
-        token?: string | null;
         sharedKeyHex?: string;
         receivedSet: Set<string>;
         setPageCursor?: (cursor: { prev: string | null; next: string | null } | null) => void;
@@ -238,13 +237,11 @@ export async function handleIncomingPayload(
             // prefer explicit message node if present
             const flat = raw?.message ? {...raw.message, roomId: raw?.room?.id ?? raw?.message?.roomId} : raw;
             return mapIncomingToChatMessage(flat, {
-                token: ctx.token,
-                sharedKeyHex: ctx.sharedKeyHex,
                 fallbackRoomId: String(ctx.roomId || flat?.roomId || ''),
                 localUserId: ctx.localUserId,
                 receivedSet: ctx.receivedSet,
                 decryptLabel: 'ws frame',
-            },false);
+            }, true);
         };
 
         // HISTORY PAGE PUSHED FROM SERVER
@@ -392,14 +389,12 @@ export type IncomingFlatMessage = {
 export async function mapIncomingToChatMessage(
     m: IncomingFlatMessage,
     opts: {
-        token?: string | null;
-        sharedKeyHex?: string;
         fallbackRoomId: string;
         localUserId: number;
         receivedSet: Set<string>;
         decryptLabel?: string;
     },
-   secure?: boolean,
+    secure: boolean = true,
 ): Promise<ChatMessage | null> {
     try {
         // Skip empty content frames
@@ -417,15 +412,15 @@ export async function mapIncomingToChatMessage(
             return null; // duplicate
         }
 
-        // Optional decrypt (only when looks like base64 and we have key+token)
+        // Optional decrypt (only when looks like base64 and we have key)
         let content = m.content;
 
-        if (secure && opts.token && opts.sharedKeyHex && typeof m.content === 'string' && isBase64Like(m.content)) {
+        const aesKey = UserService.Instance.authInfo?.sharedKey;
+        if (secure && aesKey && typeof m.content === 'string' && isBase64Like(m.content)) {
+            dbg(`mapIncomingToChatMessage: decrypting ${opts.decryptLabel} message`, m);
             try {
-                const aesKey = await importAesKey(opts.sharedKeyHex, 'decrypt');
                 const plain = await decrypt(m.content, aesKey);
                 if (plain && plain.length > 0) content = plain;
-
             } catch {
                 console.warn('mapIncomingToChatMessage: failed to decrypt message', m);
             }
@@ -510,7 +505,7 @@ export function broadcastToListeners(payload: unknown): void {
 }
 
 // Utility to wait for sharedKey with a timeout
-const waitForSharedKey = (timeoutMs: number = 5000): Promise<string | undefined> => {
+const waitForSharedKey = (timeoutMs: number = 5000): Promise<CryptoKey | undefined> => {
     return new Promise((resolve) => {
         const startTime = Date.now();
         const interval = setInterval(() => {
@@ -551,7 +546,6 @@ export async function fetchHistoryPage(
     const resp = res.data as any;
     const items = Array.isArray(resp?.results) ? resp.results : [];
 
-    const realToken = UserService.Instance.auth();
     let sharedKey = UserService.Instance.authInfo?.sharedKey;
     if (!sharedKey) {
         sharedKey = await waitForSharedKey(5000);
@@ -569,8 +563,6 @@ export async function fetchHistoryPage(
             roomId: view.message?.roomId,
         };
         const mapped = await mapIncomingToChatMessage(m, {
-            token: realToken,
-            sharedKeyHex: sharedKey,
             fallbackRoomId: params.roomId,
             localUserId: deps.localUserId,
             receivedSet: deps.receivedSet,

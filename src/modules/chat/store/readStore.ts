@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { ChatRoomId, LocalUserId } from "lemmy-js-client";
+import {toMsNormalized} from "@/modules/chat/utils";
 
 // Helper to normalize room id (string/number)
 function normRoom(roomId: string | number): string {
@@ -18,10 +19,6 @@ interface ReadStoreState {
     setPeerLastReadAt: (roomId: ChatRoomId, userId: LocalUserId | number, at: string | null | undefined) => void;
     getPeerLastReadAt: (roomId: ChatRoomId, userId: LocalUserId | number) => string | undefined;
 
-    // optional: last-read message id API (unified)
-    setLastReadMsgId: (roomId: ChatRoomId, userId: LocalUserId | number, msgId: string | null | undefined, updatedAt?: string | number | null) => void;
-    getLastReadMsgId: (roomId: ChatRoomId, userId: LocalUserId | number) => string | undefined;
-
     // clear helpers
     clearRoom: (roomId: string) => void;
     clearAll: () => void;
@@ -31,11 +28,23 @@ export const useReadLastIdStore = create<ReadStoreState>((set, get) => ({
     byRoomUser: {},
 
     setLastReadAt: (roomId, userId, at) => {
+        if (at == null) return; // ignore clears here to prevent accidental overwrites
         const k = `${normRoom(roomId)}:${String(userId)}`;
-        const val = (at == null ? undefined : String(at));
-        set((s) => ({
-            byRoomUser: { ...s.byRoomUser, [k]: { ...s.byRoomUser[k], lastReadAt: val } },
-        }));
+        const nextVal = String(at);
+        const nextMs = toMsNormalized(nextVal);
+        if (!Number.isFinite(nextMs) || nextMs <= 0) return;
+        set((s) => {
+            const prev = s.byRoomUser[k]?.lastReadAt;
+            const prevMs = toMsNormalized(prev);
+            // update only if strictly newer
+            if (prevMs && nextMs <= prevMs) return s;
+            return {
+                byRoomUser: {
+                    ...s.byRoomUser,
+                    [k]: { ...s.byRoomUser[k], lastReadAt: nextVal },
+                },
+            };
+        });
     },
 
     getLastReadAt: (roomId, userId) => {
@@ -44,30 +53,15 @@ export const useReadLastIdStore = create<ReadStoreState>((set, get) => ({
     },
 
     setPeerLastReadAt: (roomId, userId, at) => {
-        const k = `${normRoom(roomId)}:${String(userId)}`;
-        const val = (at == null ? undefined : String(at));
-        set((s) => ({
-            byRoomUser: { ...s.byRoomUser, [k]: { ...s.byRoomUser[k], lastReadAt: val } },
-        }));
+        // Reuse the exact same guarded update logic
+        // Peer & self share the same storage semantics
+        const api: any = get();
+        return api.setLastReadAt(roomId as any, userId as any, at as any);
     },
 
     getPeerLastReadAt: (roomId, userId) => {
         const k = `${normRoom(roomId)}:${String(userId)}`;
         return get().byRoomUser[k]?.lastReadAt;
-    },
-
-    setLastReadMsgId: (roomId, userId, msgId, updatedAt) => {
-        const k = `${normRoom(roomId)}:${String(userId)}`;
-        const val = (msgId == null ? undefined : String(msgId));
-        const ts = (updatedAt == null ? null : (typeof updatedAt === 'number' ? updatedAt : Number(updatedAt)));
-        set((s) => ({
-            byRoomUser: { ...s.byRoomUser, [k]: { ...s.byRoomUser[k], lastReadMsgId: val, updatedAt: ts ?? s.byRoomUser[k]?.updatedAt ?? null } },
-        }));
-    },
-
-    getLastReadMsgId: (roomId, userId) => {
-        const k = `${normRoom(roomId)}:${String(userId)}`;
-        return get().byRoomUser[k]?.lastReadMsgId;
     },
 
     clearRoom: (roomId) => {

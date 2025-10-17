@@ -9,6 +9,7 @@ import {useParams} from "next/navigation";
 import {formatDateToLong} from "@/utils";
 import {getLocale} from "@/utils/date";
 import {useTranslation} from "react-i18next";
+import {dbg} from "@/modules/chat/utils";
 
 interface ChatRoomMessagesProps {
     messages: ChatMessage[];

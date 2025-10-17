@@ -38,52 +38,65 @@ class PhoenixChannelHub {
     return this.instance;
   }
 
-  private socketByToken = new Map<string, PhoenixSocket>();
+  private socketByKey = new Map<string, PhoenixSocket>();
   private channelsByKey = new Map<string, any>();
 
   getSocket(token: string, roomId?: string, senderId?: number): PhoenixSocket {
-    let sock = this.socketByToken.get(token);
+    const key = "__single__"; // unify socket cache key; do not vary by token
+    let sock = this.socketByKey.get(key);
     if (!sock) {
       const url = buildActixWsUrl();
-      sock = new PhoenixSocket(url, { params: { token } } as any);
-      
-      // Override sendHeartbeat method to include senderId
+      // Pass token only if present; otherwise use no params
+      const opts = token ? ({ params: { token } } as any) : (undefined as any);
+      sock = new PhoenixSocket(url, opts);
+
+      // Custom heartbeat: trigger only after successful room join, and include both senderId and roomId.
       if (senderId != null) {
         const originalSendHeartbeat = (sock as any).sendHeartbeat;
         (sock as any).sendHeartbeat = function() {
-          if ((this as any).pendingHeartbeatRef && !(this as any).isConnected()) { return; }
+          // ensure the socket and joined room are ready before sending heartbeat
+          if (!(this as any).isConnected() || !roomId) return;
+          const joined = (this as any).channels?.find((ch: any) => ch.topic === `room:${roomId}`);
+          if (!joined || joined.state !== 'joined') return;
+
           (this as any).pendingHeartbeatRef = (this as any).makeRef();
           (this as any).push({
             topic: `room:${roomId}`,
-            event: "heartbeat",
-            payload: { senderId },
-            ref: (this as any).pendingHeartbeatRef
+            event: 'heartbeat',
+            payload: { senderId, roomId },
+            ref: (this as any).pendingHeartbeatRef,
           });
-          (this as any).heartbeatTimeoutTimer = setTimeout(
-            () => (this as any).heartbeatTimeout(),
-            (this as any).heartbeatIntervalMs
-          );
+
+          (this as any).heartbeatTimeoutTimer = setTimeout(() => {
+            (this as any).heartbeatTimeout();
+          }, (this as any).heartbeatIntervalMs);
         };
       }
-      
+
       sock.connect();
-      this.socketByToken.set(token, sock);
+      this.socketByKey.set(key, sock);
     }
     return sock;
   }
 
   getOrCreateChannel(token: string, topic: string, roomId?: string, senderId?: number) {
-    const key = `${token}:${topic}`;
+    const key = `${topic}`; // unify channel cache key by topic only
     const existing = this.channelsByKey.get(key);
     if (existing) return existing;
+
     const socket = this.getSocket(token, roomId, senderId);
-    const ch = socket.channel(topic, { token });
+    const params: any = { topic };
+    if (roomId) params.roomId = roomId;
+    if (typeof senderId === 'number') params.senderId = senderId;
+    if (token) params.token = token; // optional, for transitional auth
+
+    const ch = socket.channel(topic, params);
     this.channelsByKey.set(key, ch);
     return ch;
   }
 
   leaveChannel(token: string, topic: string) {
-    const key = `${token}:${topic}`;
+    const key = `${topic}`;
     const ch = this.channelsByKey.get(key);
     if (ch) {
       try { ch.leave(); } catch {}
@@ -181,7 +194,7 @@ export function getChannelAdapter(token: string, topic: string, roomId: string, 
 
     hub.leaveChannel(token, topic);
 
-    channel = hub.getOrCreateChannel(token, topic);
+    channel = hub.getOrCreateChannel(token, topic, roomId, senderId);
 
     // Reset to connecting so that onopen can fire after successful rejoin
     readyState = 0;

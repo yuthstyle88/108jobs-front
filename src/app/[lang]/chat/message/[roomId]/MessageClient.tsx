@@ -13,7 +13,7 @@ import {useStateMachineStore} from "@/modules/chat/store/stateMachineStore";
 import {deriveAesGcmKeyHex, ensureIdentityKeyPair} from "@/utils";
 
 export default function MessageClient({roomId}: { roomId: string }) {
-    const accessToken = UserService.Instance.auth();
+    const isLoggedIn = UserService.Instance.isLoggedIn;
     const {localUser} = useMyUser();
     const [state, setState] = useState<{
         partnerName: string;
@@ -37,7 +37,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
     }, [roomId, reset]);
 
     useEffect(() => {
-        if (!accessToken || !roomId || !localUser?.id) {
+        if (!isLoggedIn || !roomId || !localUser?.id) {
             setState((prev) => ({...prev, loading: false}));
             return;
         }
@@ -137,7 +137,6 @@ export default function MessageClient({roomId}: { roomId: string }) {
                                 profileRes.state === REQUEST_STATE.SUCCESS
                                     ? profileRes.data.profile.name
                                     : prev.partnerName,
-                            partnerPersonId: profileRes.state === REQUEST_STATE.SUCCESS ? profileRes.data.profile.id : undefined,
                             partnerId: Number(other.memberId),
                             partnerAvailable:
                                 profileRes.state === REQUEST_STATE.SUCCESS
@@ -162,10 +161,10 @@ export default function MessageClient({roomId}: { roomId: string }) {
         return () => {
             cancelled = true;
         };
-    }, [accessToken, roomId, localUser?.id]);
+    }, [isLoggedIn, roomId, localUser?.id]);
 
 
-    if (!accessToken || !roomId || !localUser || !state.shareKey || !state.partnerId || state.loading || !state.partnerPersonId) {
+    if (!isLoggedIn || !roomId || !localUser || !state.shareKey || !state.partnerId || state.loading) {
         return <LoadingBlur text=""/>;
     }
 
@@ -176,7 +175,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
     return (
         // NOTE: state.shareKey now holds **shared AES-256 key (hex)** derived via ECDH, not a peer public key.
         <PhoenixChatBridgeProvider
-            token={accessToken}
+            isLoggedIn={isLoggedIn}
             roomId={roomId}
             peerPublicKeyHex={state.shareKey}
         >
@@ -185,7 +184,6 @@ export default function MessageClient({roomId}: { roomId: string }) {
                 partnerName={state.partnerName}
                 partnerAvatar=""
                 partnerId={state.partnerId}
-                partnerPersonId={state.partnerPersonId}
                 partnerAvailable={state.partnerAvailable}
                 roomData={state.currentRoom}
                 localUser={localUser}

@@ -20,9 +20,8 @@ export interface Claims {
 
 interface AuthInfo {
     claims?: Claims;
-    auth: string;
-    sharedKey?: string;
-    readLastByRoom?: Record<string, string | null>; // per-room last-read cache
+    auth?: string;
+    sharedKey?: CryptoKey;
 }
 
 export class UserService {
@@ -53,23 +52,6 @@ export class UserService {
         return Boolean(this.authInfo?.auth);
     }
 
-    /** Get last-read message id for a room (null if unknown) */
-    public getReadLastId(roomId: string, userId: string): string | null {
-        const id = `${userId}:${roomId}`;
-        return this.authInfo?.readLastByRoom?.[id] ?? null;
-    }
-
-    /** Set last-read message id for a room and persist per-user */
-    public setReadLastId(roomId: string, userId: string, id: string | null) {
-        if(!isBrowser()) return;
-        const key = `${roomId}:${userId}`;
-        if(!this.authInfo) this.authInfo = {auth: ""} as AuthInfo;
-        if(!this.authInfo.readLastByRoom) this.authInfo.readLastByRoom = {};
-        this.authInfo.readLastByRoom[key] = id ?? null;
-        this.#persistReadLastMap();
-    }
-
-
     public login({
         res,
         showToast = false,
@@ -77,15 +59,15 @@ export class UserService {
     }: {
         res: LoginResponse | string;
         showToast?: boolean;
-        sharedKey?: string;
+        sharedKey?: CryptoKey;
     }) {
         if(isBrowser() && typeof res !== "string" && res.jwt) {
             if(showToast) {
                 toast("loggedIn");
             }
-            this.#setAuthInfo({sharedKey});
-            this.#hydrateReadLastMap();
             setAuthCookie(res.jwt);
+            this.#setAuthInfo({ sharedKey });
+            this.#hydrateReadLastMap();
 
             if(!VALID_LANGUAGES.includes(this.currentLanguage)) return;
             document.cookie = `${LANGUAGE_COOKIE}=${this.currentLanguage}; path=/`;
@@ -95,7 +77,6 @@ export class UserService {
 
         } else {
             this.#setAuthInfo({rawCookie: res.toString()});
-            this.#hydrateReadLastMap();
         }
     }
 
@@ -139,36 +120,25 @@ export class UserService {
         const uid = this.authInfo?.claims?.sub ?? "anon";
         try {
             const raw = localStorage.getItem(READ_LAST_STORAGE_PREFIX + uid);
-            const parsed = raw ? (JSON.parse(raw) as Record<string, string | null>) : {};
             if(!this.authInfo) this.authInfo = {auth: ""} as AuthInfo;
-            this.authInfo.readLastByRoom = parsed || {};
         } catch {
             if(!this.authInfo) this.authInfo = {auth: ""} as AuthInfo;
-            this.authInfo.readLastByRoom = {};
+
         }
     }
 
-    #persistReadLastMap() {
-        if(!isBrowser()) return;
-        const uid = this.authInfo?.claims?.sub ?? "anon";
-        try {
-            const data = JSON.stringify(this.authInfo?.readLastByRoom || {});
-            localStorage.setItem(READ_LAST_STORAGE_PREFIX + uid, data);
-        } catch {
-        }
-    }
-
-    #setAuthInfo(opts: { rawCookie?: string; sharedKey?: string } = {},
+    #setAuthInfo(
+        opts: { rawCookie?: string; sharedKey?: CryptoKey } = {}
     ) {
-        const {rawCookie = "", sharedKey = ""} = opts;
+        const { rawCookie = "", sharedKey } = opts;
         const auth = isBrowser() ? cookie.parse(document.cookie)[authCookieName] : rawCookie;
-        if(!auth) {
+        if (!auth) {
             this.authInfo = undefined;
             this.currentLanguage = "en";
             return;
         }
         const claims = jwtDecode<Claims>(auth);
-        this.authInfo = {auth, claims, sharedKey};
+        this.authInfo = { auth, claims, sharedKey };
         this.currentLanguage = claims?.lang;
         this.applicationPending = !claims?.accepted_application;
     }

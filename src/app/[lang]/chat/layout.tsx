@@ -11,6 +11,7 @@ import {UserService} from "@/services/UserService";
 import {useParams} from "next/navigation";
 import ChatWrapper from "@/containers/ChatWrapper";
 import {dbg} from "@/modules/chat/utils";
+import {EnsureSharedKeyBootstrap} from "@/modules/chat/components/EnsureSharedKeyBootstrap";
 
 function decodeJwtSub(token?: string | null): number {
     try {
@@ -67,6 +68,7 @@ export default function ProfileLayout({children}: LayoutProps) {
 
     return (
       <ChatLanguageProvider>
+          <EnsureSharedKeyBootstrap /> {/* ✅ run once to generate shared key */}
         {/* Headers remain outside providers so they always render */}
         <div className="hidden sm:block fixed top-0 left-0 right-0 z-50">
           <Header type="primary" />
