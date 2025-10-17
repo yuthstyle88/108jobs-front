@@ -22,7 +22,7 @@ export default function WorkSamples() {
         validateField,
     } = useWorkSamplesForm(person);
     const [currentSampleIndex, setCurrentSampleIndex] = useState(0);
-    const samplesPerPage = 2;
+    const samplesPerPage = 1;
 
     const handleNextSample = () => {
         setCurrentSampleIndex((prev) =>
