@@ -350,11 +350,19 @@ export function useWebSocket(options: Partial<UseWebSocketOptions> = {}): WebSoc
     const a = adapterRef.current; if (!a) return;
     const rid = params?.roomId ?? roomId; if (!rid) return;
     const sid = params?.senderId ?? senderId; if (sid === undefined) return;
-    console.log('[------------useWebSocket] join', { roomId: rid, senderId: sid });
     const t = topicBuilder(rid);
-    if (typeof a.join === 'function') { return await a.join(t); }
-    if (typeof a.emit === 'function') { return await a.emit('phx_join', { topic: t, senderId: sid  }); }
-  }, [roomId, topicBuilder]);
+
+    // Prevent duplicate join attempts for same topic; delegate actual join to PhoenixSocketService
+    if ((a as any).__joinedTopic === t) {
+      if (debug) console.log('[useWebSocket] join skipped (already marked joined):', t);
+      return;
+    }
+    (a as any).__joinedTopic = t;
+    if (debug) console.log('[useWebSocket] join delegated to adapter/service for topic:', t, { roomId: rid, senderId: sid });
+
+    // Intentionally no direct join here to avoid double joins.
+    return;
+  }, [roomId, topicBuilder, senderId, debug]);
 
   const leave = useCallback(async () => {
     const a = adapterRef.current; if (!a) return;

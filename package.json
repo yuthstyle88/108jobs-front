@@ -47,7 +47,7 @@
     "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.476.0",
     "memoize-one": "6.0.0",
-    "next": "15.4.7",
+    "next": "15.5.5",
     "node-fetch": "^3.3.2",
     "node-polyfill-webpack-plugin": "^4.1.0",
     "npm": "^11.1.0",

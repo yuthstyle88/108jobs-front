@@ -86,7 +86,6 @@ interface ChatRoomViewProps {
     partnerName: string;
     partnerAvatar: string;
     partnerId: LocalUserId;
-    partnerPersonId: PersonId;
     partnerAvailable?: boolean;
     roomData: ChatRoomData;
     localUser: LocalUser;
@@ -342,7 +341,7 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
             markRoomRead(roomId);
             markSeen(roomId);
             // announce enter immediately on join
-            if (typeof window !== 'undefined') {
+            if (isBrowser()) {
                 window.dispatchEvent(new CustomEvent('chat:status-change', {detail: {roomId, status: 'room:enter'}}));
             }
         } catch {
@@ -350,7 +349,7 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
         return () => {
             try {
                 // announce leave on unmount / room change
-                if (typeof window !== 'undefined') {
+                if (isBrowser()) {
                     window.dispatchEvent(new CustomEvent('chat:status-change', {
                         detail: {
                             roomId,

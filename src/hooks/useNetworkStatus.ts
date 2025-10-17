@@ -1,5 +1,6 @@
 "use client";
 import {useEffect, useState} from "react";
+import {isBrowser} from "@/utils";
 
 /**
  * Simple network status hook using the browser's navigator.onLine and
@@ -11,7 +12,7 @@ export function useNetworkStatus() {
   const [online, setOnline] = useState<boolean>(true);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (!isBrowser()) return;
     const update = () => setOnline(navigator.onLine);
     update();
     window.addEventListener("online", update);

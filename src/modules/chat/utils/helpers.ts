@@ -234,44 +234,68 @@ export function dbg(label: string, data?: unknown) {
     }
 }
 
-/**
- * Return true if `a` is older than `b` by createdAt.
- * Accepts objects with `createdAt` or raw date strings/Date.
- */
-export function isOlder(
-    lastReadAt: string | Date,
-    createdAt: string | Date,
-): boolean {
-    const normalize = (v: any) => {
-        if (typeof v === "string") {
-            // Normalize to full ISO 8601 format
-            let s = v.trim();
-
-            // Replace space between date and time with 'T'
-            s = s.replace(" ", "T");
-
-            // Handle fractional seconds: trim to 3 digits if too long
-            s = s.replace(/(\.\d{3})\d+/, "$1");
-
-            // Ensure timezone format ends with 'Z' if +00:00
-            s = s.replace(/\s*\+00:00$/, "Z");
-
-            // If timezone missing entirely, assume UTC
-            if (!/[zZ]|[+-]\d{2}:?\d{2}$/.test(s)) s += "Z";
-
-            return s;
+// Normalize various timestamp inputs (ISO string, epoch seconds, epoch ms) to ms
+// SINGLE SOURCE OF TRUTH for time normalization:
+export function toMsNormalized(v: any): number {
+    if (v == null) return 0;
+    if (typeof v === 'number') {
+        return v < 1e12 ? Math.trunc(v * 1000) : Math.trunc(v);
+    }
+    if (v instanceof Date) {
+        return Math.trunc(v.getTime());
+    }
+    if (typeof v === 'string') {
+        const num = Number(v);
+        if (Number.isFinite(num)) {
+            return num < 1e12 ? Math.trunc(num * 1000) : Math.trunc(num);
         }
-        return v;
-    };
+        // Normalize ISO-ish strings to a strict form similar to previous logic
+        let s = v.trim();
+        s = s.replace(' ', 'T');
+        s = s.replace(/(\.\d{3})\d+/, '$1');
+        s = s.replace(/\s*\+00:00$/, 'Z');
+        if (!/[zZ]|[+-]\d{2}:?\d{2}$/.test(s)) s += 'Z';
+        const t = Date.parse(s);
+        return Number.isFinite(t) ? Math.trunc(t) : 0;
+    }
+    const t = Date.parse(String(v));
+    return Number.isFinite(t) ? Math.trunc(t) : 0;
+}
 
-    const toTime = (v: any) => new Date(normalize(v) ?? 0).getTime();
+export function isOlder(
+    lastReadAt: string | number | Date,
+    createdAt: string | number | Date,
+): boolean {
+    const t1 = toMsNormalized(lastReadAt);
+    const t2 = toMsNormalized(createdAt);
+    if (!Number.isFinite(t1) || !Number.isFinite(t2)) return false;
+    return t1 < t2;
+}
 
-    const t1 = toTime(lastReadAt);
-    const t2 = toTime(createdAt);
+/**
+ * Return true if `a` is the same moment (within drift) or after `b`.
+ */
+export function isSameOrAfter(
+    a: string | number | Date,
+    b: string | number | Date,
+    driftMs = 1000,
+): boolean {
+    const tA = toMsNormalized(a);
+    const tB = toMsNormalized(b);
+    if (!Number.isFinite(tA) || !Number.isFinite(tB)) return false;
+    return tA + driftMs >= tB;
+}
 
-    if (Number.isNaN(t1) || Number.isNaN(t2)) return false;
-
-    const result = t1 < t2;
-    // console.debug("[isOlder]", { lastReadAt, createdAt, t1, t2, result });
-    return result;
+/**
+ * Approximate equality within a drift window (default 1s).
+ */
+export function isApproxSame(
+    a: string | number | Date,
+    b: string | number | Date,
+    driftMs = 1000,
+): boolean {
+    const tA = toMsNormalized(a);
+    const tB = toMsNormalized(b);
+    if (!Number.isFinite(tA) || !Number.isFinite(tB)) return false;
+    return Math.abs(tA - tB) <= driftMs;
 }

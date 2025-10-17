@@ -4,7 +4,7 @@ interface Props {
     isOwner: boolean | undefined;
     msgStatus: "pending" | "sent" | "failed";
     unread?: boolean;
-    showReceipt: boolean | undefined;
+    isRead: boolean | undefined;
     readTime: string | null
     t: any;
     onRetry?: () => void; // <- allow parent to wire resend.flushActive(roomId)
@@ -48,7 +48,7 @@ const MessageStatusIndicator: React.FC<Props> = ({
                                              isOwner,
                                              msgStatus,
                                              unread,
-                                             showReceipt,
+                                             isRead,
                                              readTime,
                                              t,
                                              onRetry,
@@ -67,50 +67,51 @@ const MessageStatusIndicator: React.FC<Props> = ({
     }
 
     // Outgoing messages
-    if (msgStatus === "pending") {
-        return (
-            <span className="ml-2 inline-flex items-center gap-1 text-gray-500">
-        <PendingSpinner/>
-        <span className="text-xs">{t("profileChat.sending") || "Sending"}</span>
-      </span>
-        );
-    }
+    // New business rule: if isRead is true, always show "Read" (overrides delivery status)
+    if (isOwner) {
+        if (isRead) {
+            return (
+                <span className="ml-1 inline-flex items-center gap-1 text-green-600 text-xs">
+                    <ReadIcon/>
+                    <span>{t("profileChat.read") || "Read"}</span>
+                    <span className="opacity-70">{readTime}</span>
+                </span>
+            );
+        }
 
-    if (msgStatus === "failed") {
-        return (
-            <span className="ml-2 inline-flex items-center gap-2 text-red-500">
-                <FailedIcon/>
-                <span className="text-xs">{t("profileChat.failed") || "Failed"}</span>
-                {/** optional retry from parent (will call resend.flushActive(roomId)) */}
-                {typeof onRetry === 'function' && (
-                    <button
-                        type="button"
-                        onClick={onRetry}
-                        className="text-xs px-2 py-0.5 rounded border border-red-400 text-red-600 hover:bg-red-50"
-                    >
-                        {t("profileChat.retry") || "Retry"}
-                    </button>
-                )}
-            </span>
-        );
-    }
+        if (msgStatus === "failed") {
+            return (
+                <span className="ml-2 inline-flex items-center gap-2 text-red-500">
+                    <FailedIcon/>
+                    <span className="text-xs">{t("profileChat.failed") || "Failed"}</span>
+                    {typeof onRetry === 'function' && (
+                        <button
+                            type="button"
+                            onClick={onRetry}
+                            className="text-xs px-2 py-0.5 rounded border border-red-400 text-red-600 hover:bg-red-50"
+                        >
+                            {t("profileChat.retry") || "Retry"}
+                        </button>
+                    )}
+                </span>
+            );
+        }
 
-    if (msgStatus === "sent" && !showReceipt) {
+        if (msgStatus === "pending") {
+            return (
+                <span className="ml-2 inline-flex items-center gap-1 text-gray-500">
+                    <PendingSpinner/>
+                    <span className="text-xs">{t("profileChat.sending") || "Sending"}</span>
+                </span>
+            );
+        }
+
+        // Default for delivered but not read yet
         return (
             <span className="ml-1 inline-flex items-center gap-1 text-gray-500">
                 <SentIcon/>
                 <span className="text-xs">{t("profileChat.sent") || "Sent"}</span>
             </span>
-        );
-    }
-
-    if (showReceipt) {
-        return (
-            <span className="ml-1 inline-flex items-center gap-1 text-green-600 text-xs">
-                    <ReadIcon/>
-                    <span>{t("profileChat.read") || "Read"}</span>
-                    <span className="opacity-70">{readTime}</span>
-                </span>
         );
     }
 

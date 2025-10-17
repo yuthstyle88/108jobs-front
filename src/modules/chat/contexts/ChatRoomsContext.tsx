@@ -13,6 +13,8 @@ import {isBrowser} from "@/utils/browser";
 import {useUnreadStore} from "@/modules/chat/store/unreadStore";
 import {useActiveRoomId, useRoomsStore} from "@/modules/chat/store/roomsStore";
 import {disableBackgroundUnread, enableBackgroundUnread} from "@/modules/chat/utils/backgroundUnreadWatcher";
+import {ensureIdentityKeyPair, ensureSharedKeyForLocalUser} from "@/modules/chat/utils/security/crypto";
+
 // Context state for listing chat rooms with pagination and E2EE-aware lastMessage preview
 
 type RoomsState = {
@@ -84,22 +86,6 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         execute
     } = useHttpGet("listChatRooms", {limit: page * pageSize});
     const error = reqState.state === "failed" ? (reqState as any).err : null;
-
-    // Publish identity public key once (idempotent). No global shared key.
-    useEffect(() => {
-        (async () => {
-            if (sharedKeyReadyRef.current) return;
-            try {
-                const token = UserService.Instance.auth();
-                if (!token) return;
-                await exchange();
-            } catch {
-                // best-effort; not fatal for room list
-            } finally {
-                sharedKeyReadyRef.current = true;
-            }
-        })();
-    }, []);
 
 
     const mapToRooms = useCallback(async (input?: ListUserChatRoomsResponse): Promise<RoomsState> => {

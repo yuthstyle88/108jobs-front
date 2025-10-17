@@ -29,7 +29,7 @@ function pickChannel(ws: any, roomId?: string) {
 }
 
 interface WebSocketProviderProps {
-    token: string;
+    isLoggedIn: boolean;
     roomId: string;
     peerPublicKeyHex?: string;
     children: React.ReactNode;

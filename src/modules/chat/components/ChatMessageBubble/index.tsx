@@ -6,10 +6,11 @@ import {MessageImage} from "@/constants/images";
 import {useTranslation} from "react-i18next";
 import {useChatStore} from "@/modules/chat/store/chatStore";
 import {useChatServices} from "@/modules/chat/contexts/PhoenixChatBridgeProvider";
-import React, {useMemo} from "react";
+import React, {useMemo, useEffect} from "react";
 import {toLocalTime} from "@/utils/date";
 import MessageStatusIndicator from "@/modules/chat/components/MessageStatusIndicator";
-import {isOlder} from "@/modules/chat/utils";
+import { dbg } from "@/modules/chat/utils";
+import { isSameOrAfter, isApproxSame } from "@/modules/chat/utils/helpers";
 import {useReadLastIdStore} from "@/modules/chat/store/readStore";
 
 interface ChatMessageItemProps {
@@ -62,25 +63,40 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     });
     const viewMsg = liveMessage || message;
     const roomIdStr = String((viewMsg as any)?.roomId ?? "");
-    const lastReadAt = useReadLastIdStore(
-      (s) => (s as any).getPeerLastReadAt?.(roomIdStr, partnerId) ?? null
+    const selectPeerLastReadAt = useMemo(
+      () => (s: any) => s?.getPeerLastReadAt?.(roomIdStr, partnerId) ?? null,
+      [roomIdStr, partnerId]
     );
+    const lastReadAt = useReadLastIdStore(selectPeerLastReadAt);
+    useEffect(() => {
+      dbg('lastReadAt', lastReadAt);
+    }, [lastReadAt]);
     const isIncoming = !viewMsg.isOwner;
 
     const time = toLocalTime(viewMsg.createdAt as any, i18n?.language || "th-TH");
     const isOwner = !!viewMsg.isOwner;
-    // const isPeerOnline = false; // TODO: Implement with userId-based presence when available
-    const isReadByLastAt =
-      !!lastReadAt &&
-      (isOlder(viewMsg.createdAt as any, lastReadAt) ||
-        String(viewMsg.createdAt) === String(lastReadAt));
-    const readByPeer = isOwner && isReadByLastAt;
-    const readTime = readByPeer
-      ? toLocalTime(lastReadAt, i18n?.language || "th-TH")
-      : null;
-    const isLastRead =
-      isOwner && !!lastReadAt && String(viewMsg.createdAt) === String(lastReadAt);
-    const showReceipt = readByPeer || isLastRead;
+
+    const isRead = useMemo(() => {
+      return (
+        isOwner &&
+        lastReadAt != null &&
+        isSameOrAfter(lastReadAt as any, (viewMsg as any).createdAt as any)
+      );
+    }, [isOwner, lastReadAt, (viewMsg as any).createdAt]);
+
+    const isLastRead = useMemo(() => {
+      return (
+        isOwner &&
+        lastReadAt != null &&
+        isApproxSame(lastReadAt as any, (viewMsg as any).createdAt as any)
+      );
+    }, [isOwner, lastReadAt, (viewMsg as any).createdAt]);
+
+    const readTime = useMemo(() => {
+      return isLastRead && lastReadAt
+        ? toLocalTime(lastReadAt as any, i18n?.language || "th-TH")
+        : null;
+    }, [isLastRead, lastReadAt, i18n?.language]);
 
     const parsed = useMemo<ProposedQuoteMessage | null>(() => {
         const c = viewMsg?.content;
@@ -137,7 +153,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                     isOwner={viewMsg.isOwner}
                     unread={(viewMsg as any).unread}
                     msgStatus={viewMsg.status}
-                    showReceipt={showReceipt}
+                    isRead={isRead}
                     readTime={readTime}
                     t={t}
                     onRetry={
