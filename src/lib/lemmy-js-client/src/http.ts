@@ -3491,7 +3491,7 @@ function createFormData(image: File | Buffer, fieldName: string = "images[]"): F
     if (image instanceof File) {
         formData.append(fieldName, image);
     } else {
-        const isUploadFile = fieldName === "uploadfile";
+        const isUploadFile = fieldName === "uploadFile";
         const blob = new Blob([image], {type: isUploadFile ? "application/octet-stream" : "image/jpeg"});
         const filename = isUploadFile ? "file.bin" : "image.jpg";
         formData.append(fieldName, blob, filename);

@@ -1,10 +1,12 @@
-import useNotification from "@/hooks/useNotification";
-import { HttpService } from "@/services";
-import { REQUEST_STATE } from "@/services/HttpService";
-import {Person, PortfolioPic, SaveUserSettings, WorkSample} from "lemmy-js-client";
-import React, { useEffect, useState } from "react";
-import { z } from "zod";
-import { useTranslation } from "react-i18next";
+'use client';
+
+import useNotification from '@/hooks/useNotification';
+import { useHttpPost } from '@/hooks/useHttpPost';
+import { REQUEST_STATE } from '@/services/HttpService';
+import { Person, PortfolioPic, SaveUserSettings, WorkSample } from 'lemmy-js-client';
+import { useCallback, useEffect, useState } from 'react';
+import { z } from 'zod';
+import { useTranslation } from 'react-i18next';
 
 interface FormValues {
     displayName: string;
@@ -13,7 +15,7 @@ interface FormValues {
     skills: string;
     contacts: string;
     workSamples: WorkSample[];
-    portfolioPics: any[];
+    portfolioPics: PortfolioPic[];
 }
 
 export const useProfileForm = (
@@ -23,6 +25,8 @@ export const useProfileForm = (
     workSamples?: WorkSample[],
 ) => {
     const { t } = useTranslation();
+    const { successMessage, errorMessage } = useNotification();
+    const { execute: saveUserSettings, isMutating: isSubmitting } = useHttpPost('saveUserSettings');
 
     const FormSchema = z.object({
         displayName: z
@@ -37,30 +41,34 @@ export const useProfileForm = (
     });
 
     const [form, setForm] = useState<FormValues>({
-        username: person?.name || "",
-        displayName: person?.displayName || "",
-        bio: person?.bio || "",
-        skills: person?.skills || "",
-        contacts: person?.contacts || "",
+        username: person?.name || '',
+        displayName: person?.displayName || '',
+        bio: person?.bio || '',
+        skills: person?.skills || '',
+        contacts: person?.contacts || '',
         workSamples: person?.workSamples ?? [],
         portfolioPics: person?.portfolioPics ?? [],
     });
-
     const [errors, setErrors] = useState<Partial<Record<keyof FormValues, string>>>({});
-    const { successMessage, errorMessage } = useNotification();
 
     useEffect(() => {
         if (person) {
-            setForm({
-                username: person.name || "",
-                displayName: person.displayName || "",
-                bio: person.bio || "",
-                skills: person.skills || "",
-                contacts: person.contacts || "",
+            const newForm = {
+                username: person.name || '',
+                displayName: person.displayName || '',
+                bio: person.bio || '',
+                skills: person.skills || '',
+                contacts: person.contacts || '',
                 workSamples: person.workSamples ?? [],
                 portfolioPics: person.portfolioPics ?? [],
+            };
+            setForm((prev) => {
+                if (JSON.stringify(newForm) !== JSON.stringify(prev)) {
+                    return newForm;
+                }
+                return prev;
             });
-            setSelectedImage(person.avatar || "");
+            setSelectedImage(person.avatar || '');
         }
     }, [person, setSelectedImage]);
 
@@ -71,7 +79,7 @@ export const useProfileForm = (
             const error = result.error.issues.find((issue) => issue.path[0] === key);
             setErrors((prev) => ({
                 ...prev,
-                [key]: error?.message || "",
+                [key]: error?.message || '',
             }));
         } else {
             setErrors((prev) => {
@@ -82,58 +90,81 @@ export const useProfileForm = (
         }
     };
 
-    const onSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setErrors({});
+    const onSubmit = useCallback(
+        async () => {
+            setErrors({});
+            const previousForm = form;
 
-        const result = await FormSchema.safeParseAsync(form);
-        if (!result.success) {
-            const newErrors: Partial<Record<keyof FormValues, string>> = {};
-            result.error.issues.forEach((issue) => {
-                newErrors[issue.path[0] as keyof FormValues] = issue.message;
-            });
-            setErrors(newErrors);
-            return;
-        }
-
-        try {
-            const updateData: SaveUserSettings = {
-                portfolioPics: portfolioItems,
-                skills: form.skills,
-                workSamples: workSamples,
-                displayName: form.displayName,
-                contacts: form.contacts,
-                bio: form.bio,
-            };
-            const userSettingsResult = await HttpService.client.saveUserSettings(updateData);
-            if (userSettingsResult.state === REQUEST_STATE.SUCCESS) {
-                successMessage("profile", "update");
-            } else {
-                errorMessage("profile", "updateAccountSettingFail");
+            const result = await FormSchema.safeParseAsync(form);
+            if (!result.success) {
+                const newErrors: Partial<Record<keyof FormValues, string>> = {};
+                result.error.issues.forEach((issue) => {
+                    newErrors[issue.path[0] as keyof FormValues] = issue.message;
+                });
+                setErrors(newErrors);
+                return false;
             }
-        } catch (error) {
-            console.error("Update error:", error);
-            errorMessage("profile", "updateAccountSettingFail");
-        }
-    };
+
+            try {
+                const payload: SaveUserSettings = {
+                    portfolioPics: portfolioItems ?? form.portfolioPics,
+                    workSamples: workSamples ?? form.workSamples,
+                    displayName: form.displayName,
+                    bio: form.bio,
+                    skills: form.skills,
+                    contacts: form.contacts,
+                };
+
+                const response = await saveUserSettings(payload);
+
+                if (response.state === REQUEST_STATE.FAILED) {
+                    const key = `profile.update.${response.err.name}`;
+                    const messageError = t(key) ?? t('global.serverError');
+                    errorMessage(null, null, messageError);
+                    setForm(previousForm); // Revert on failure
+                    return false;
+                }
+
+                successMessage(null, null, t('profile.update') ?? 'Profile updated successfully!');
+                return true;
+            } catch (error) {
+                errorMessage(null, null, t('global.submissionFailed') ?? 'Submission failed!');
+                setForm(previousForm); // Revert on failure
+                return false;
+            }
+        },
+        [
+            form,
+            portfolioItems,
+            workSamples,
+            saveUserSettings,
+            successMessage,
+            errorMessage,
+            t,
+        ],
+    );
 
     const resetForm = () => {
-        setForm({
-            username: person?.name || "",
-            displayName: person?.displayName || "",
-            bio: person?.bio || "",
-            skills: person?.skills || "",
-            contacts: person?.contacts || "",
-            workSamples: person?.workSamples ?? [],
-            portfolioPics: person?.portfolioPics ?? [],
-        });
-        setErrors({});
+        if (window.confirm(t('profileInfo.confirmReset'))) {
+            setForm({
+                username: person?.name || '',
+                displayName: person?.displayName || '',
+                bio: person?.bio || '',
+                skills: person?.skills || '',
+                contacts: person?.contacts || '',
+                workSamples: person?.workSamples ?? [],
+                portfolioPics: person?.portfolioPics ?? [],
+            });
+            setErrors({});
+            setSelectedImage(person?.avatar || '');
+        }
     };
 
     return {
         form,
         setForm,
         errors,
+        isSubmitting,
         onSubmit,
         validateField,
         resetForm,

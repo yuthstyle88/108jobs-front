@@ -3,6 +3,7 @@ import type {DbUrl} from "./DbUrl";
 import type {InstanceId} from "./InstanceId";
 import type {PersonId} from "./PersonId";
 import {WorkSample} from "./WorkSample";
+import {PortfolioPic} from "./PortfolioPic";
 
 /**
  * A person.
@@ -60,8 +61,8 @@ export type Person = {
     walletId: string;
     contacts?: string;
     skills?: string;
-    portfolioPics?: any;
-    workSamples?: WorkSample[];
+    portfolioPics?: Array<PortfolioPic>;
+    workSamples?: Array<WorkSample>
     /**
      * Whether you are currently available for new jobs
      */

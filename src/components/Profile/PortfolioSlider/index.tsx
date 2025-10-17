@@ -1,19 +1,16 @@
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
 import Image from "next/image";
-import Slider from "react-slick";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import {faEdit} from "@fortawesome/free-solid-svg-icons";
 import React from "react";
-
-interface PortfolioItem {
-    id: number;
-    imageUrl: string;
-    title: string;
-}
+import {PortfolioPic} from "@/lib/lemmy-js-client/src";
+import dynamic from "next/dynamic";
+import {NextArrow, PrevArrow} from "@/components/Common/Button/SliderArrows";
+const SlickSlider = dynamic(() => import('react-slick'), { ssr: false });
 
 interface PortfolioSliderProps {
-    portfolioItems: PortfolioItem[];
+    portfolioItems: PortfolioPic[];
     isOwnProfile: boolean;
     onImageClick: (imageUrl: string) => void;
 }
@@ -26,12 +23,20 @@ const PortfolioSlider: React.FC<PortfolioSliderProps> = ({ portfolioItems, isOwn
         dots: true,
         infinite: portfolioItems.length > imagesPerPage,
         speed: 500,
-        slidesToShow: Math.min(imagesPerPage, portfolioItems.length),
-        slidesToScroll: imagesPerPage,
+        slidesToShow: 2,
+        slidesToScroll: 2,
         swipeToSlide: true,
+        arrows: true,
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />,
         responsive: [
-            { breakpoint: 1024, settings: { slidesToShow: 2 } },
-            { breakpoint: 640, settings: { slidesToShow: 1 } },
+            {
+                breakpoint: 640,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                },
+            },
         ],
     };
 
@@ -52,7 +57,7 @@ const PortfolioSlider: React.FC<PortfolioSliderProps> = ({ portfolioItems, isOwn
             </div>
             {portfolioItems.length > 0 ? (
                 <div className="relative bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-                    <Slider {...portfolioSettings}>
+                    <SlickSlider {...portfolioSettings}>
                         {portfolioItems.map((item) => (
                             <div key={item.id} className="p-2">
                                 <div
@@ -65,7 +70,7 @@ const PortfolioSlider: React.FC<PortfolioSliderProps> = ({ portfolioItems, isOwn
                                 >
                                     <Image
                                         src={item.imageUrl}
-                                        alt={item.title}
+                                        alt={item.title ?? ""}
                                         width={300}
                                         height={200}
                                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -76,7 +81,7 @@ const PortfolioSlider: React.FC<PortfolioSliderProps> = ({ portfolioItems, isOwn
                                 </div>
                             </div>
                         ))}
-                    </Slider>
+                    </SlickSlider>
                 </div>
             ) : (
                 <p className="text-gray-600 text-sm">{t("profile.noPortfolio")}</p>

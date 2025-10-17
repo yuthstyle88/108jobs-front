@@ -1,5 +1,5 @@
 export type WorkSample = {
-    id: number;
+    id: string;
     title: string;
     sampleUrl: string;
     description: string;

@@ -428,3 +428,4 @@ export type {
     ScbQrCodeBody, ScbQrCodeRequest, ScbQrCodeStatus, ScbQrCodeData, ScbQrCodeResponse
 } from "./types/ScbQrCode";
 export type {WorkSample} from "./types/WorkSample";
+export type {PortfolioPic} from "./types/PortfolioPic";

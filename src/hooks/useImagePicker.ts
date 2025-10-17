@@ -1,5 +1,5 @@
 // hooks/useImagePicker.ts
-import {useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 
 export const useImagePicker = (initialImage?: string | null) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(

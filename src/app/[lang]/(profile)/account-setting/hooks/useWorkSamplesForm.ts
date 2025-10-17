@@ -1,12 +1,13 @@
 'use client';
 
 import useNotification from '@/hooks/useNotification';
-import { HttpService } from '@/services';
-import { LOADING_REQUEST, REQUEST_STATE, RequestState } from '@/services/HttpService';
-import {MyUserInfo, Person, PortfolioPic, SaveUserSettings, WorkSample} from 'lemmy-js-client';
-import React, { useEffect, useState } from 'react';
+import { useHttpPost } from '@/hooks/useHttpPost';
+import { REQUEST_STATE } from '@/services/HttpService';
+import { Person, PortfolioPic, SaveUserSettings, WorkSample } from 'lemmy-js-client';
+import { useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
+import { v4 as uuidv4 } from 'uuid';
 
 interface FormValues {
     newSample: { title: string; sampleUrl: string; description: string };
@@ -21,33 +22,37 @@ interface FormValues {
 export const useWorkSamplesForm = (person: Person | undefined) => {
     const { t } = useTranslation();
     const { successMessage, errorMessage } = useNotification();
+    const { execute: saveUserSettings, isMutating: isSubmitting } = useHttpPost('saveUserSettings');
 
     const FormSchema = z.object({
         title: z
             .string()
-            .min(1, t('profileInfo.sampleTitleRequired') || 'Title is required')
+            .min(1, t('profileInfo.sampleTitleRequired'))
             .refine((value) => value.trim().length > 0, {
-                message: t('profileInfo.invalidTitle') || 'Title cannot be empty',
+                message: t('profileInfo.invalidTitle'),
             }),
         sampleUrl: z
             .string()
-            .min(1, t('profileInfo.sampleUrlRequired') || 'URL is required')
+            .min(1, t('profileInfo.sampleUrlRequired'))
             .refine(
                 (value) => {
                     try {
                         new URL(value);
                         return true;
                     } catch {
-                        return value.startsWith('http://localhost') || value.startsWith('https://localhost');
+                        return (
+                            process.env.NODE_ENV === 'development' &&
+                            (value.startsWith('http://localhost') || value.startsWith('https://localhost'))
+                        );
                     }
                 },
-                { message: t('profileInfo.invalidUrl') || 'Invalid URL' },
+                { message: t('profileInfo.invalidUrl') },
             ),
         description: z
             .string()
-            .min(1, t('profileInfo.sampleDescriptionRequired') || 'Description is required')
+            .min(1, t('profileInfo.sampleDescriptionRequired'))
             .refine((value) => value.trim().length > 0, {
-                message: t('profileInfo.invalidDescription') || 'Description cannot be empty',
+                message: t('profileInfo.invalidDescription'),
             }),
     });
 
@@ -62,23 +67,26 @@ export const useWorkSamplesForm = (person: Person | undefined) => {
         contacts: person?.contacts ?? '',
         portfolioPics: person?.portfolioPics ?? [],
     });
-    const [editingSampleId, setEditingSampleId] = useState<number | null>(null);
+    const [editingSampleId, setEditingSampleId] = useState<string | null>(null);
     const [errors, setErrors] = useState<Partial<Record<keyof FormValues['newSample'], string>>>({});
-    const [updateProfileState, setUpdateProfileState] =
-        useState<RequestState<MyUserInfo>>(LOADING_REQUEST);
-    const isSubmitting = updateProfileState.state === 'loading';
 
     useEffect(() => {
         if (person) {
-            setForm((prev) => ({
-                ...prev,
-                workSamples: person.workSamples ?? initialWorkSamples,
-                displayName: person.displayName ?? prev.displayName,
-                bio: person.bio ?? prev.bio,
-                skills: person.skills ?? prev.skills,
-                contacts: person.contacts ?? prev.contacts,
-                portfolioPics: person.portfolioPics ?? prev.portfolioPics,
-            }));
+            setForm((prev) => {
+                const newForm = {
+                    ...prev,
+                    workSamples: person.workSamples ?? initialWorkSamples,
+                    displayName: person.displayName ?? prev.displayName,
+                    bio: person.bio ?? prev.bio,
+                    skills: person.skills ?? prev.skills,
+                    contacts: person.contacts ?? prev.contacts,
+                    portfolioPics: person.portfolioPics ?? prev.portfolioPics,
+                };
+                if (JSON.stringify(newForm) !== JSON.stringify(prev)) {
+                    return newForm;
+                }
+                return prev;
+            });
         }
     }, [person]);
 
@@ -103,6 +111,41 @@ export const useWorkSamplesForm = (person: Person | undefined) => {
         }
     };
 
+    const onSubmit = useCallback(
+        async (
+            action: 'addSample' | 'editSample' | 'deleteSample' | 'update',
+            workSamples: WorkSample[],
+            sampleId?: string,
+        ) => {
+            try {
+                const payload: SaveUserSettings = {
+                    workSamples,
+                    displayName: form.displayName,
+                    bio: form.bio,
+                    skills: form.skills,
+                    contacts: form.contacts,
+                    portfolioPics: form.portfolioPics,
+                };
+
+                const response = await saveUserSettings(payload);
+
+                if (response.state === REQUEST_STATE.FAILED) {
+                    const key = `profile.${action}.${response.err.name}`;
+                    const messageError = t(key) ?? t('global.serverError');
+                    errorMessage(null, null, messageError);
+                    return false;
+                }
+
+                successMessage(null, null, t(`profile.${action}`) ?? 'Success!');
+                return true;
+            } catch (error) {
+                errorMessage(null, null, t('global.submissionFailed') ?? 'Submission failed!');
+                return false;
+            }
+        },
+        [saveUserSettings, successMessage, errorMessage, form, t],
+    );
+
     const addSample = async () => {
         const result = await FormSchema.safeParseAsync(form.newSample);
         if (!result.success) {
@@ -115,50 +158,24 @@ export const useWorkSamplesForm = (person: Person | undefined) => {
         }
 
         const newSample = {
-            id: form.workSamples.length ? Math.max(...form.workSamples.map((s) => s.id)) + 1 : 1,
+            id: uuidv4(),
             title: form.newSample.title,
             sampleUrl: form.newSample.sampleUrl,
             description: form.newSample.description,
         };
 
-        setForm((prev) => {
-            const newWorkSamples = [...prev.workSamples, newSample];
-            return {
-                ...prev,
-                workSamples: newWorkSamples,
-                newSample: { title: '', sampleUrl: '', description: '' },
-            };
-        });
+        const newWorkSamples = [...form.workSamples, newSample];
+        setForm((prev) => ({
+            ...prev,
+            workSamples: newWorkSamples,
+            newSample: { title: '', sampleUrl: '', description: '' },
+        }));
         setErrors({});
 
-        // Trigger server save
-        try {
-            setUpdateProfileState(LOADING_REQUEST);
-            const updateData: SaveUserSettings = {
-                workSamples: [...form.workSamples, newSample],
-                displayName: form.displayName,
-                bio: form.bio,
-                skills: form.skills,
-                contacts: form.contacts,
-                portfolioPics: form.portfolioPics,
-            };
-            const userSettingsResult = await HttpService.client.saveUserSettings(updateData);
-            if (userSettingsResult.state === REQUEST_STATE.SUCCESS) {
-                successMessage('profile', 'update');
-            } else {
-                errorMessage('profile', 'updateAccountSettingFail');
-                setUpdateProfileState({ state: 'failed', err: new Error('Failed to update settings') });
-            }
-        } catch (error) {
-            console.error('Update error:', error);
-            errorMessage('profile', 'updateAccountSettingFail');
-            setUpdateProfileState({ state: 'failed', err: error as Error });
-        }
-
-        return true;
+        return await onSubmit('addSample', newWorkSamples);
     };
 
-    const editSample = async (id: number) => {
+    const editSample = async (id: string) => {
         const result = await FormSchema.safeParseAsync(form.newSample);
         if (!result.success) {
             const newErrors: Partial<Record<keyof FormValues['newSample'], string>> = {};
@@ -169,49 +186,45 @@ export const useWorkSamplesForm = (person: Person | undefined) => {
             return false;
         }
 
-        setForm((prev) => {
-            const newWorkSamples = prev.workSamples.map((sample) =>
-                sample.id === id
-                    ? {
-                        ...sample,
-                        title: prev.newSample.title,
-                        sampleUrl: prev.newSample.sampleUrl,
-                        description: prev.newSample.description,
-                    }
-                    : sample,
-            );
-            console.log('Editing sample in workSamples:', {
-                workSamples: newWorkSamples,
-                newSample: { title: '', sampleUrl: '', description: '' },
-            });
-            return {
-                ...prev,
-                workSamples: newWorkSamples,
-                newSample: { title: '', sampleUrl: '', description: '' },
-            };
-        });
+        const newWorkSamples = form.workSamples.map((sample) =>
+            sample.id === id
+                ? {
+                    ...sample,
+                    title: form.newSample.title,
+                    sampleUrl: form.newSample.sampleUrl,
+                    description: form.newSample.description,
+                }
+                : sample,
+        );
+
+        setForm((prev) => ({
+            ...prev,
+            workSamples: newWorkSamples,
+            newSample: { title: '', sampleUrl: '', description: '' },
+        }));
         setEditingSampleId(null);
         setErrors({});
 
-        // Trigger server save
-        await onSubmit(new Event('submit') as any);
-        return true;
+        return await onSubmit('editSample', newWorkSamples, id);
     };
 
-    const deleteSample = (id: number) => {
-        setForm((prev) => {
-            const newWorkSamples = prev.workSamples.filter((sample) => sample.id !== id);
-            console.log('Deleting sample from workSamples:', {
-                workSamples: newWorkSamples,
-                newSample: prev.newSample,
-            });
-            return {
+    const deleteSample = async (id: string) => {
+        const previousWorkSamples = form.workSamples;
+        const newWorkSamples = form.workSamples.filter((sample) => sample.id !== id);
+
+        setForm((prev) => ({
+            ...prev,
+            workSamples: newWorkSamples,
+        }));
+
+        const success = await onSubmit('deleteSample', newWorkSamples, id);
+        if (!success) {
+            setForm((prev) => ({
                 ...prev,
-                workSamples: newWorkSamples,
-            };
-        });
-        // Trigger server save
-        onSubmit(new Event('submit') as any);
+                workSamples: previousWorkSamples,
+            }));
+        }
+        return success;
     };
 
     const startEditing = (sample: WorkSample) => {
@@ -232,43 +245,20 @@ export const useWorkSamplesForm = (person: Person | undefined) => {
         setErrors({});
     };
 
-    const onSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            setUpdateProfileState(LOADING_REQUEST);
-            const updateData: SaveUserSettings = {
-                workSamples: form.workSamples,
-                displayName: form.displayName,
-                bio: form.bio,
-                skills: form.skills,
-                contacts: form.contacts,
-                portfolioPics: form.portfolioPics,
-            };
-            const userSettingsResult = await HttpService.client.saveUserSettings(updateData);
-            if (userSettingsResult.state === REQUEST_STATE.SUCCESS) {
-                successMessage('profile', 'update');
-            } else {
-                errorMessage('profile', 'updateAccountSettingFail');
-                setUpdateProfileState({ state: 'failed', err: new Error('Failed to update settings') });
-            }
-        } catch (error) {
-            errorMessage('profile', 'updateAccountSettingFail');
-            setUpdateProfileState({ state: 'failed', err: error as Error });
-        }
-    };
-
     const resetForm = () => {
-        setForm({
-            workSamples: person?.workSamples ?? initialWorkSamples,
-            newSample: { title: '', sampleUrl: '', description: '' },
-            displayName: person?.displayName ?? 'dung kheng 123123',
-            bio: person?.bio ?? 'asdasdasdasdasd',
-            skills: person?.skills ?? 'Web development',
-            contacts: person?.contacts ?? 'dasdasd',
-            portfolioPics: person?.portfolioPics ?? [],
-        });
-        setEditingSampleId(null);
-        setErrors({});
+        if (window.confirm(t('profileInfo.confirmReset'))) {
+            setForm({
+                workSamples: person?.workSamples ?? initialWorkSamples,
+                newSample: { title: '', sampleUrl: '', description: '' },
+                displayName: person?.displayName ?? '',
+                bio: person?.bio ?? '',
+                skills: person?.skills ?? '',
+                contacts: person?.contacts ?? '',
+                portfolioPics: person?.portfolioPics ?? [],
+            });
+            setEditingSampleId(null);
+            setErrors({});
+        }
     };
 
     return {
@@ -283,7 +273,7 @@ export const useWorkSamplesForm = (person: Person | undefined) => {
         startEditing,
         cancelEditing,
         validateField,
-        onSubmit,
+        onSubmit: () => onSubmit('update', form.workSamples),
         resetForm,
     };
 };

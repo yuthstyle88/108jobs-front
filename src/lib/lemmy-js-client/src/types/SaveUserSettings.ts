@@ -6,6 +6,8 @@ import type {PostListingMode} from "./PostListingMode";
 import type {PostSortType} from "./PostSortType";
 import type {SensitiveString} from "./SensitiveString";
 import type {VoteShow} from "./VoteShow";
+import {PortfolioPic} from "./PortfolioPic";
+import {WorkSample} from "./WorkSample";
 
 /**
  * Saves settings for your profile.
@@ -145,11 +147,11 @@ export type SaveUserSettings = {
     /**
      * Your portfolio pictures to prove your quality
      */
-    portfolioPics?: Array<any>,
+    portfolioPics?: Array<PortfolioPic>,
     /**
      * Your work samples to prove your quality
      */
-    workSamples?: Array<any>,
+    workSamples?: Array<WorkSample>,
     /**
      * Whether you are currently available for new jobs
      */
