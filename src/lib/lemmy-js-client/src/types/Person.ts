@@ -2,6 +2,7 @@
 import type {DbUrl} from "./DbUrl";
 import type {InstanceId} from "./InstanceId";
 import type {PersonId} from "./PersonId";
+import {WorkSample} from "./WorkSample";
 
 /**
  * A person.
@@ -60,7 +61,7 @@ export type Person = {
     contacts?: string;
     skills?: string;
     portfolioPics?: any;
-    workSamples?: any;
+    workSamples?: WorkSample[];
     /**
      * Whether you are currently available for new jobs
      */

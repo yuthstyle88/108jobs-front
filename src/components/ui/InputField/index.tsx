@@ -18,6 +18,7 @@ type InputProps = {
     value?: string | number;
     onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     rows?: number; // For textarea
+    prefix?: string; // For username prefix
 };
 
 export const CustomInput = ({
@@ -35,6 +36,7 @@ export const CustomInput = ({
                                 value,
                                 onChange,
                                 rows,
+                                prefix
                             }: InputProps) => (
     <div className="mb-4">
         {label && (
@@ -42,7 +44,12 @@ export const CustomInput = ({
                 {label} {required && <span className="text-red-500">*</span>}
             </label>
         )}
-        <div className="relative">
+        <div className="relative flex items-center">
+            {prefix && (
+                <span className="text-gray-700 mr-2 flex-shrink-0 text-xs sm:text-sm leading-8" aria-hidden="true">
+                    {prefix}
+                </span>
+            )}
             {tag === "input" ? (
                 <input
                     id={name}

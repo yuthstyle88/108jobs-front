@@ -7,7 +7,7 @@ import {HttpService, UserService} from "@/services";
 import LoadingBlur from "@/components/Common/Loading/LoadingBlur";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import {Post} from "@/lib/lemmy-js-client";
+import {LocalUserId, PersonId, Post} from "@/lib/lemmy-js-client";
 import {RoomNotFound} from "@/components/RoomNotFound";
 import {useStateMachineStore} from "@/modules/chat/store/stateMachineStore";
 import {deriveAesGcmKeyHex, ensureIdentityKeyPair} from "@/utils";
@@ -17,7 +17,8 @@ export default function MessageClient({roomId}: { roomId: string }) {
     const {localUser} = useMyUser();
     const [state, setState] = useState<{
         partnerName: string;
-        partnerId?: number;
+        partnerId?: LocalUserId;
+        partnerPersonId?: PersonId
         currentRoom?: any;
         shareKey?: string;
         post?: Post;
@@ -48,7 +49,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
                 // 1. Ensure local user's key pair and send public key to server
                 let publicKeyHex: string | undefined;
                 try {
-                    const { publicKeyHex: localPubKeyHex, privateKey: clientPrivateKey } = await ensureIdentityKeyPair();
+                    const {publicKeyHex: localPubKeyHex, privateKey: clientPrivateKey} = await ensureIdentityKeyPair();
                     publicKeyHex = localPubKeyHex;
                     // Send public key to server
                     const exchangeRes = await HttpService.client.exchangePublicKey({
@@ -70,11 +71,11 @@ export default function MessageClient({roomId}: { roomId: string }) {
                         }));
                     } else {
                         console.warn("Failed to exchange public key:", exchangeRes);
-                        setState((prev) => ({ ...prev, loading: false }));
+                        setState((prev) => ({...prev, loading: false}));
                     }
                 } catch (error) {
                     console.warn("Error during public key exchange:", error);
-                    setState((prev) => ({ ...prev, loading: false }));
+                    setState((prev) => ({...prev, loading: false}));
                 }
 
                 // 2. Fetch chat room data
@@ -136,6 +137,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
                                 profileRes.state === REQUEST_STATE.SUCCESS
                                     ? profileRes.data.profile.name
                                     : prev.partnerName,
+                            partnerPersonId: profileRes.state === REQUEST_STATE.SUCCESS ? profileRes.data.profile.id : undefined,
                             partnerId: Number(other.memberId),
                             partnerAvailable:
                                 profileRes.state === REQUEST_STATE.SUCCESS
@@ -163,7 +165,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
     }, [accessToken, roomId, localUser?.id]);
 
 
-    if (!accessToken || !roomId || !localUser || !state.shareKey || !state.partnerId || state.loading) {
+    if (!accessToken || !roomId || !localUser || !state.shareKey || !state.partnerId || state.loading || !state.partnerPersonId) {
         return <LoadingBlur text=""/>;
     }
 
@@ -183,6 +185,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
                 partnerName={state.partnerName}
                 partnerAvatar=""
                 partnerId={state.partnerId}
+                partnerPersonId={state.partnerPersonId}
                 partnerAvailable={state.partnerAvailable}
                 roomData={state.currentRoom}
                 localUser={localUser}

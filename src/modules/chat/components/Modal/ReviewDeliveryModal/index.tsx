@@ -6,8 +6,8 @@ import React from "react";
 import {emitChatNewMessage} from "@/modules/chat/events";
 
 interface ReviewDeliveryModalProps {
-    showReviewModal: boolean;
-    setShowReviewModal: (show: boolean) => void;
+    showReviewDeliveryModal: boolean;
+    setShowReviewDeliveryModal: (show: boolean) => void;
     goToStatus: (status: StatusKey) => void;
     canSend: boolean;
     setError: (error: string) => void;
@@ -19,8 +19,8 @@ interface ReviewDeliveryModalProps {
 }
 
 export const ReviewDeliveryModal: React.FC<ReviewDeliveryModalProps> = ({
-                                                                            showReviewModal,
-                                                                            setShowReviewModal,
+                                                                            showReviewDeliveryModal,
+                                                                            setShowReviewDeliveryModal,
                                                                             goToStatus,
                                                                             canSend,
                                                                             setError,
@@ -32,7 +32,7 @@ export const ReviewDeliveryModal: React.FC<ReviewDeliveryModalProps> = ({
                                                                         }) => {
     const { t } = useTranslation();
 
-    if (!showReviewModal) return null;
+    if (!showReviewDeliveryModal) return null;
 
     return (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
@@ -48,7 +48,7 @@ export const ReviewDeliveryModal: React.FC<ReviewDeliveryModalProps> = ({
                     <button
                         className="rounded-md bg-green-600 hover:bg-green-700 text-white px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm transition-all duration-200"
                         onClick={() => {
-                            setShowReviewModal(false);
+                            setShowReviewDeliveryModal(false);
                             goToStatus("Completed");
                             if (!canSend) {
                                 setError(disabledReason);
@@ -82,7 +82,7 @@ export const ReviewDeliveryModal: React.FC<ReviewDeliveryModalProps> = ({
                     <button
                         className="rounded-md bg-red-600 hover:bg-red-700 text-white px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm transition-all duration-200"
                         onClick={async () => {
-                            setShowReviewModal(false);
+                            setShowReviewDeliveryModal(false);
                             await requestRevisionAction();
                         }}
                     >

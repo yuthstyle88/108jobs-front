@@ -13,7 +13,7 @@ import {
     Tags,
     UploadedFile,
 } from "@tsoa/runtime";
-import type {
+import {
     AdminListUsersI,
     ChatHistoryQueryI,
     CommunityIdQueryI,
@@ -49,7 +49,7 @@ import type {
     ListRegistrationApplicationsI,
     ListReportsI,
     ListTaglinesI,
-    ListUserChatRoomsQueryI, PeerStatusQueryI,
+    ListUserChatRoomsQueryI, ListUserReviewsQueryI, PeerStatusQueryI,
     ResolveObjectI,
     SearchI,
     UploadImage,
@@ -271,6 +271,10 @@ import type {LastReadResponse} from "./types/LastReadResponse";
 import type {PeerReadQuery} from "./types/PeerReadQuery";
 import type {PeerReadResponse} from "./types/PeerReadResponse";
 import {PeerStatusQuery} from "./types/PeerStatusQuery";
+import {SubmitUserReviewForm} from "./types/SubmitUserReviewForm";
+import {SubmitUserReviewResponse} from "./types/SubmitUserReviewResponse";
+import {ListUserReviewsResponse} from "./types/ListUserReviewsResponse";
+import {ListUserReviewsQuery} from "./types/ListUserReviewsQuery";
 
 enum HttpType {
     Get = "GET",
@@ -2103,6 +2107,41 @@ export class LemmyHttp extends Controller {
         return this.#wrapper<ResendVerificationEmail, SuccessResponse>(
             HttpType.Post,
             "/account/auth/resend-verification-email",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary submit user review.
+     */
+    @Post("/reviews")
+    @Tags("Reviews")
+    async submitUserReview(
+        @Body() form: SubmitUserReviewForm,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<SubmitUserReviewForm, SubmitUserReviewResponse>(
+            HttpType.Post,
+            "/reviews",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary List user reviews
+     */
+    @Security("bearerAuth")
+    @Get("/reviews")
+    @Tags("Reviews")
+    async listUserReviews(
+        @Queries() form: ListUserReviewsQueryI,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<ListUserReviewsQuery, ListUserReviewsResponse>(
+            HttpType.Get,
+            "/reviews",
             form,
             options,
         );

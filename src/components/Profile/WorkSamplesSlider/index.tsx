@@ -3,6 +3,7 @@ import Link from "next/link";
 import Slider from "react-slick";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
 
 interface WorkSample {
     id: number;
@@ -32,6 +33,7 @@ const WorkSamplesSlider: React.FC<WorkSamplesSliderProps> = ({ workSamples, isOw
             { breakpoint: 640, settings: { slidesToShow: 1 } },
         ],
     };
+    console.log("workSamples", workSamples)
 
     return (
         <div className="mb-8">

@@ -8,7 +8,7 @@ export type CreateFlowActionsDeps = {
     t: (k: string) => string | undefined;
     goToStatus: (key: StatusKey) => void;
     setShowQuotationModal: (v: boolean) => void;
-    setShowReviewModal: (v: boolean) => void;
+    setShowReviewDeliveryModal: (v: boolean) => void;
     handleFileUpload: (e: Event) => void;
     scrollContainerRef: React.RefObject<any>;
     currentRoom: ChatRoomData;
@@ -32,7 +32,7 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
         t,
         goToStatus,
         setShowQuotationModal,
-        setShowReviewModal,
+        setShowReviewDeliveryModal,
         handleFileUpload,
         scrollContainerRef,
         currentRoom,

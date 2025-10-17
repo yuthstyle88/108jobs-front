@@ -27,7 +27,15 @@ import {useTranslation} from "react-i18next";
 import {v4 as uuidv4} from "uuid";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {ProfileImage} from "@/constants/images";
-import type {ChatMessage, ChatRoomData, LocalUser, LocalUserId, Post} from "lemmy-js-client";
+import type {
+    ChatMessage,
+    ChatRoomData,
+    LocalUser,
+    LocalUserId,
+    PersonId,
+    Post,
+    SubmitUserReviewForm
+} from "lemmy-js-client";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatRoomMessages from "../ChatRoomMessages";
@@ -54,6 +62,8 @@ import {useShallow} from 'zustand/react/shallow';
 import {selectRoomMessages} from '@/modules/chat/utils/selectors';
 import {useLoadLastRead} from "@/modules/chat/hooks/useLoadLastRead";
 import {useRoomPresence} from "@/modules/chat/hooks/useRoomPresence";
+import {SubmitReviewModal} from "@/modules/chat/components/Modal/SubmitReviewModal";
+import {REQUEST_STATE} from "@/services/HttpService";
 
 
 /** Shape of the form submitted by ChatInput. */
@@ -76,41 +86,43 @@ interface ChatRoomViewProps {
     partnerName: string;
     partnerAvatar: string;
     partnerId: LocalUserId;
+    partnerPersonId: PersonId;
     partnerAvailable?: boolean;
     roomData: ChatRoomData;
     localUser: LocalUser;
     shareKey: string;
 }
 
-function ResponsiveFlowPanel({ isOpen, children }: { isOpen: boolean; children: React.ReactNode }) {
-  const desktop = "hidden md:flex md:static md:order-last h-full md:w-64 lg:w-80 xl:w-96 max-w-[360px] border-l bg-gray-50 shadow-none flex-col";
-  const mobile = `md:hidden fixed top-16 sm:top-20 right-0 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] w-[80vw] sm:w-[70vw] max-w-[360px] bg-white border-l shadow-xl z-40 flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`;
-  return (
-    <>
-      {/* Desktop: right column, static */}
-      <aside className={desktop} role="complementary" aria-label="Job Flow Sidebar">
-        {children}
-      </aside>
-      {/* Mobile: overlay from right */}
-      {isOpen && (
-        <aside className={mobile} role="dialog" aria-modal="true" aria-label="Job Flow Sidebar">
-          {children}
-        </aside>
-      )}
-    </>
-  );
+function ResponsiveFlowPanel({isOpen, children}: { isOpen: boolean; children: React.ReactNode }) {
+    const desktop = "hidden md:flex md:static md:order-last h-full md:w-64 lg:w-80 xl:w-96 max-w-[360px] border-l bg-gray-50 shadow-none flex-col";
+    const mobile = `md:hidden fixed top-16 sm:top-20 right-0 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] w-[80vw] sm:w-[70vw] max-w-[360px] bg-white border-l shadow-xl z-40 flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`;
+    return (
+        <>
+            {/* Desktop: right column, static */}
+            <aside className={desktop} role="complementary" aria-label="Job Flow Sidebar">
+                {children}
+            </aside>
+            {/* Mobile: overlay from right */}
+            {isOpen && (
+                <aside className={mobile} role="dialog" aria-modal="true" aria-label="Job Flow Sidebar">
+                    {children}
+                </aside>
+            )}
+        </>
+    );
 }
 
 const ChatRoomView: React.FC<ChatRoomViewProps> = ({
-                                                     post,
-                                                     partnerName,
-                                                     partnerAvatar,
-                                                     partnerId,
-                                                     partnerAvailable,
-                                                     roomData,
-                                                     localUser,
-                                                     shareKey
-                                                 }) => {
+                                                       post,
+                                                       partnerName,
+                                                       partnerAvatar,
+                                                       partnerId,
+                                                       partnerPersonId,
+                                                       partnerAvailable,
+                                                       roomData,
+                                                       localUser,
+                                                       shareKey
+                                                   }) => {
     const {t} = useTranslation();
     const {person, wallet} = useMyUser();
     // --- Availability & basic send gating ---
@@ -126,7 +138,8 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
     const roomId = String(roomData?.room?.room?.id ?? "");
     // Hydrate UI from the local store (messages + pending) so leftover local data shows immediately
     const {send, canGo, ORDER} = useWorkflowStepper();
-    const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
+    const [showReviewDeliveryModal, setShowReviewDeliveryModal] = useState<boolean>(false);
+    const [showSubmitReviewModal, setShowSubmitReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
     const [showJobDetailModal, setShowJobDetailModal] = useState<boolean>(false);
     const [hasStarted, setHasStarted] = useState<boolean>(false);
@@ -173,6 +186,8 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
     const {execute: approveQuotationApi} = useHttpPost("approveQuotation");
     const {execute: submitStartWorkApi} = useHttpPost("submitStartWork");
     const {execute: approveWorkApi} = useHttpPost("approveWork");
+    const {execute: submitReviewApi} = useHttpPost("submitUserReview");
+
     const inputContainerRef = useRef<HTMLDivElement>(null);
     useCallback((el: HTMLDivElement | null) => {
         scrollContainerRef.current = el;
@@ -274,7 +289,8 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
                 if (typeof document !== 'undefined' && document.visibilityState === 'visible' && document.hasFocus()) {
                     try {
                         sendLatestRead();
-                    } catch {}
+                    } catch {
+                    }
                 }
             }, 120);
         };
@@ -469,6 +485,57 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
         return await approveQuotationFromHook();
     }, [insufficientForApprove, approveQuotationFromHook, setError, t]);
 
+    // Wrap approveWork to trigger the review modal after approval
+    const approveWorkWrapped = React.useCallback(async (): Promise<boolean> => {
+        const success = await approveWork();
+        if (success && isEmployer) {
+            setShowSubmitReviewModal(true); // Show review modal after approving work
+        }
+        return success;
+    }, [approveWork, isEmployer]);
+
+    const submitReview = useCallback(async (form: SubmitUserReviewForm) => {
+        if (!canSend) {
+            setError(disabledReason);
+            return false;
+        }
+        try {
+            const response = await submitReviewApi({
+                revieweeId: form.revieweeId,
+                workflowId: form.workflowId,
+                rating: form.rating,
+                comment: form.comment,
+            });
+            if (response.state === REQUEST_STATE.SUCCESS) {
+                const tsIso = new Date().toISOString();
+                const messageId = uuidv4();
+                const content = t('profileChat.reviewSubmitted') || 'Review submitted successfully.';
+                const detail = {
+                    roomId,
+                    id: messageId,
+                    senderId: Number(localUser.id),
+                    content,
+                    createdAt: tsIso,
+                    status: 'sent' as const,
+                };
+                emitChatNewMessage(detail);
+                sendMessage({
+                    message: JSON.stringify({type: 'review-submitted', rating: form.rating, comment: form.comment}),
+                    senderId: Number(localUser.id),
+                    secure: true,
+                    id: messageId,
+                });
+                return true;
+            } else {
+                setError(t('profileChat.submitReviewError') || 'Failed to submit review. Please try again.');
+                return false;
+            }
+        } catch (error) {
+            setError(t('profileChat.submitReviewError') || 'Failed to submit review. Please try again.');
+            return false;
+        }
+    }, [canSend, disabledReason, submitReviewApi, roomId, localUser.id, sendMessage, setError, t, emitChatNewMessage]);
+
     /**
      * Handle message submit from ChatInput.
      * Steps:
@@ -522,7 +589,7 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
             } catch {
             }
 
-            sendMessage({message: contentToSend, senderId: Number(localUser.id),secure: true, id: messageId});
+            sendMessage({message: contentToSend, senderId: Number(localUser.id), secure: true, id: messageId});
 
             setSelectedFile(null);
             isSubmittingRef.current = false;
@@ -533,7 +600,7 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
         t,
         goToStatus,
         setShowQuotationModal,
-        setShowReviewModal,
+        setShowReviewDeliveryModal,
         handleFileUpload: (ev: any) => handleFileUpload(ev as any),
         scrollContainerRef,
         currentRoom,
@@ -546,7 +613,7 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
         submitDelivery: async () => await submitDelivery(),
         hasSelectedFile: () => !!selectedFile,
         requestRevision: async () => await requestRevision(),
-        approveWork: async () => await approveWork(),
+        approveWork: async () => await approveWorkWrapped(),
     });
 
     // Load older history when user scrolls above halfway from the bottom.
@@ -689,14 +756,14 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
                         </div>
                     </div>
                 </div>
-          <ResponsiveFlowPanel isOpen={isFlowOpen}>
-            <JobFlowContent
-              setIsFlowOpen={setIsFlowOpen}
-              renderFlowContent={renderFlowContent}
-              setShowJobDetailModal={setShowJobDetailModal}
-              currentRoom={currentRoom?.room ?? ""}
-            />
-          </ResponsiveFlowPanel>
+                <ResponsiveFlowPanel isOpen={isFlowOpen}>
+                    <JobFlowContent
+                        setIsFlowOpen={setIsFlowOpen}
+                        renderFlowContent={renderFlowContent}
+                        setShowJobDetailModal={setShowJobDetailModal}
+                        currentRoom={currentRoom?.room ?? ""}
+                    />
+                </ResponsiveFlowPanel>
                 {isFlowOpen && (
                     <div
                         className="md:hidden fixed inset-0 bg-black/50 z-30"
@@ -706,10 +773,10 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
                 )}
             </div>
             {/* Delivery review modal (employer review of delivered work) */}
-            {showReviewModal && (
+            {showReviewDeliveryModal && (
                 <ReviewDeliveryModal
-                    showReviewModal={showReviewModal}
-                    setShowReviewModal={setShowReviewModal}
+                    showReviewDeliveryModal={showReviewDeliveryModal}
+                    setShowReviewDeliveryModal={setShowReviewDeliveryModal}
                     goToStatus={goToStatus}
                     canSend={canSend}
                     setError={setError}
@@ -718,6 +785,16 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
                     requestRevisionAction={requestRevision}
                     roomId={roomId}
                     localUser={localUser}
+                />
+            )}
+            {/* Submit review modal (employer submits review after approving work) */}
+            {showSubmitReviewModal && (
+                <SubmitReviewModal
+                    showReviewModal={showSubmitReviewModal}
+                    setShowReviewModal={setShowSubmitReviewModal}
+                    revieweeId={partnerPersonId}
+                    workflowId={currentRoom.workflow?.id}
+                    submitReview={submitReview}
                 />
             )}
             {/* Job detail modal (post/room metadata) */}

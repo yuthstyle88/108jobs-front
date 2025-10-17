@@ -38,6 +38,7 @@ import {GetBillingByRoomQuery} from "./types/GetBillingByRoomQuery";
 import {LastReadQuery} from "./types/LastReadQuery";
 import {PeerReadQuery} from "./types/PeerReadQuery";
 import {PeerStatusQuery} from "./types/PeerStatusQuery";
+import {ListUserReviewsQuery} from "./types/ListUserReviewsQuery";
 
 export const VERSION = "v4";
 
@@ -116,6 +117,8 @@ export interface AdminListUsersI extends AdminListUsers {}
 export interface CommunityIdQueryI extends CommunityIdQuery {}
 
 export interface ListUserChatRoomsQueryI extends ListUserChatRoomsQuery {}
+
+export interface ListUserReviewsQueryI extends ListUserReviewsQuery {}
 
 export interface ChatHistoryQueryI extends ChatHistoryQuery {}
 export interface LastReadQueryI extends LastReadQuery {}

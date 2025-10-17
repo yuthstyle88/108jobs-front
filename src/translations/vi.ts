@@ -164,7 +164,16 @@ export const vi = {
             sent: "Đã gửi",
             retry: "Thử lại",
             startHiringHint: "Bắt đầu thuê bằng cách thảo luận chi tiết dự án với freelancer.",
-            startWorkHint: "Bắt đầu công việc để tiếp tục với công việc này."
+            startWorkHint: "Bắt đầu công việc để tiếp tục với công việc này.",
+            submitReviewTitle: "Gửi đánh giá của bạn",
+            submitReviewDesc: "Đánh giá và cung cấp phản hồi cho freelancer.",
+            ratingLabel: "Đánh giá",
+            commentLabel: "Nhận xét (Không bắt buộc)",
+            commentPlaceholder: "Viết phản hồi của bạn tại đây...",
+            submitReview: "Gửi đánh giá",
+            ratingRequired: "Vui lòng chọn đánh giá (1-5).",
+            submitReviewError: "Không thể gửi đánh giá. Vui lòng thử lại.",
+            reviewSubmitted: "Đánh giá đã được gửi thành công.",
         },
         allCategories: {
             allJobCategories: "Tất cả danh mục công việc",
@@ -1024,6 +1033,8 @@ export const vi = {
             cancel: "Hủy",
             open: "Mở",
             closed: "Đóng",
+            yes: "Có",
+            no: "Không",
         },
         guarantee: {
             fastworkGuaranteeTitle: `Đảm bảo của ${getAppName()}`,
@@ -1599,6 +1610,7 @@ export const vi = {
                 "Vui lòng kiểm tra hộp thư đến của bạn (Nếu bạn không thấy, hãy kiểm tra thư mục Spam và Junk) để tiếp tục.",
             passwordResetLinkSent:
                 "Liên kết đặt lại mật khẩu đã được gửi đến email của bạn",
+            updateAccountSettingFail: "Không thể cập nhật cài đặt tài khoản. Vui lòng thử lại.",
         },
         notifications: {
             changePassword: "Đổi mật khẩu thành công",
@@ -1643,7 +1655,22 @@ export const vi = {
             noSkills: "Không có kỹ năng nào được liệt kê",
             noBio: "Không có tiểu sử",
             noPortfolio: "Không có danh mục đầu tư",
+            noWorkSamples: "Không có mẫu công việc",
             bio: "Tiểu sử",
+            noReviews: "Chưa có đánh giá nào",
+            noClients: "Chưa có dự án khách hàng nào",
+            errorFetchingReviews: "Không thể tải đánh giá",
+            workflowDetails: "Chi tiết quy trình làm việc",
+            workflowStatus: "Trạng thái quy trình làm việc",
+            revisionRequired: "Yêu cầu chỉnh sửa",
+            revisionCount: "Số lần chỉnh sửa",
+            deliverableVersion: "Phiên bản sản phẩm",
+            deliverableSubmittedAt: "Ngày gửi sản phẩm",
+            deliverableAccepted: "Sản phẩm được chấp nhận",
+            acceptedAt: "Ngày chấp nhận",
+            reviewee: "Người được đánh giá",
+            reviewPostedOn: "Đăng vào",
+            updatedOn: "Cập nhật vào",
         },
 
         profileApply: {
@@ -1958,6 +1985,10 @@ export const vi = {
             submitButton: "Cập nhật mật khẩu",
             changePasswordSuccess: "Cập nhật mật khẩu thành công",
             incorrectOldPassword: "Mật khẩu hiện tại không đúng",
+            sampleUrlRequired: "Yêu cầu URL mẫu",
+            invalidTitle: "Tiêu đề không hợp lệ. Vui lòng cung cấp tiêu đề hợp lệ.",
+            invalidDescription: "Mô tả không hợp lệ. Vui lòng cung cấp mô tả hợp lệ.",
+            invalidUrl: "URL không hợp lệ. Vui lòng cung cấp URL hợp lệ.",
         },
         profileJob: {
             noJob: "Không tìm thấy bài đăng công việc nào",

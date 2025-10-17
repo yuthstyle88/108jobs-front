@@ -1,19 +1,21 @@
-"use client";
-import ImageUploadModal from "@/components/Common/Modal/AvatarUploadModal";
-import PasswordChangeModal from "@/components/ChangePasswordModal";
-import { ProfileImage } from "@/constants/images";
-import { useMyUser } from "@/hooks/profile-api/useMyUser";
-import { useHttpPost } from "@/hooks/useHttpPost";
-import { useImagePicker } from "@/hooks/useImagePicker";
-import Image from "next/image";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import {useProfileForm} from "@/app/[lang]/(profile)/account-setting/hooks/useProfileForm";
+'use client';
+
+import ImageUploadModal from '@/components/Common/Modal/AvatarUploadModal';
+import PasswordChangeModal from '@/components/ChangePasswordModal';
+import { ProfileImage } from '@/constants/images';
+import { useMyUser } from '@/hooks/profile-api/useMyUser';
+import { useHttpPost } from '@/hooks/useHttpPost';
+import { useImagePicker } from '@/hooks/useImagePicker';
+import Image from 'next/image';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useProfileForm } from '@/app/[lang]/(profile)/account-setting/hooks/useProfileForm';
+import { CustomInput } from '@/components/ui/InputField';
 
 export default function BasicInformation() {
     const { t } = useTranslation();
-    const { execute: uploadUserAvatar } = useHttpPost("uploadUserAvatar");
-    const { profileState, person, card } = useMyUser();
+    const { execute: uploadUserAvatar } = useHttpPost('uploadUserAvatar');
+    const { profileState, person } = useMyUser();
 
     // Avatar image picker
     const {
@@ -25,36 +27,41 @@ export default function BasicInformation() {
         handleSelectFile: handleSelectAvatarFile,
         handleImageUpload: handleAvatarImageUpload,
         closeImageModal: closeAvatarImageModal,
-    } = useImagePicker(profileState === "success" ? person?.avatar : undefined);
+    } = useImagePicker(profileState === 'success' ? person?.avatar : undefined);
 
     const {
-        register,
-        handleSubmit,
+        form,
+        setForm,
         errors,
-        isSubmitting,
         onSubmit,
-    } = useProfileForm(person, card, selectedAvatar, uploadUserAvatar, setSelectedAvatar, [], []);
+        validateField,
+    } = useProfileForm(person, setSelectedAvatar, null, null);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
+    const updateField = <K extends keyof typeof form>(key: K, value: typeof form[K]) => {
+        setForm((prev) => ({ ...prev, [key]: value }));
+        validateField(key, value);
+    };
+
     return (
         <>
             <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="border border-border-primary rounded-lg bg-white py-6 mb-8"
+                onSubmit={onSubmit}
+                className="border border-border-primary rounded-lg bg-white py-4 sm:py-6 mb-8"
             >
                 <div className="border-b border-border-primary px-6">
-                    <h2 className="text-[16px] font-medium mb-2 text-text-primary">
-                        {t("profileInfo.sectionAccountInfo")}
+                    <h2 className="text-sm sm:text-lg font-semibold text-gray-700 mb-2">
+                        {t('profileInfo.sectionAccountInfo')}
                     </h2>
-                    <p className="text-gray-600 mb-6 text-[14px] font-sans">
-                        {t("profileInfo.subtitleAccountInfo")}
+                    <p className="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
+                        {t('profileInfo.subtitleAccountInfo')}
                     </p>
                 </div>
 
-                <div className="flex justify-center my-8 px-6">
+                <div className="flex justify-center my-6 sm:my-8 px-6">
                     <div className="relative">
                         <div
                             onClick={handleSelectAvatarFile}
@@ -95,126 +102,115 @@ export default function BasicInformation() {
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-6 px-6 font-sans">
-                    <div>
-                        <label className="block text-sm text-text-primary font-semibold mb-2">
-                            {t("profileInfo.labelUsername")}
-                        </label>
-                        <div className="flex items-center">
-                            <span className="text-gray-500 mr-2">108jobs.com/user/</span>
-                            <input
-                                {...register("username")}
-                                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-text-primary font-sans outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm text-text-primary font-semibold text-gray-600 mb-2">
-                            {t("profileInfo.labelDisplayName")}
-                        </label>
-                        <p className="text-[12px] text-gray-500 mb-2">
-                            {t("profileInfo.nameTrustNote")}
-                        </p>
-                        <input
-                            {...register("displayName", {
-                                required: t("profileInfo.accountInfo"),
-                                validate: (value) =>
-                                    value.trim().length > 0 || t("profileInfo.invalidDisplayName"),
-                            })}
-                            className="text-text-primary w-full px-4 py-2 border border-border-primary rounded-lg outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                <div className="space-y-4 sm:space-y-5 px-6">
+                    <div className="w-full">
+                        <CustomInput
+                            tag="input"
+                            type="text"
+                            name="username"
+                            value={form.username}
+                            readonly={true}
+                            label={t('profileInfo.labelUsername')}
+                            placeholder={t('profileInfo.labelUsername') || 'Enter username'}
+                            error={errors.username}
+                            prefix="108jobs.com/profile/"
+                            aria-describedby={errors.username ? 'username-error' : undefined}
                         />
-                        {errors.displayName && (
-                            <p className="text-red-500 text-sm mt-1">
-                                {errors.displayName.message}
-                            </p>
-                        )}
                     </div>
 
-                    <div className="col-span-2">
-                        <div className="mt-6">
-                            <label className="block text-sm font-medium text-text-primary mb-2">
-                                {t("profileInfo.bio")}
-                            </label>
-                            <textarea
-                                {...register("bio")}
-                                placeholder={t("profileInfo.bioPlaceholder")}
-                                rows={5}
-                                className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            ></textarea>
-                        </div>
-
-                        <div className="mt-6">
-                            <label className="block text-sm font-medium text-text-primary mb-2">
-                                {t("profileInfo.sectionCoreSkills")}
-                            </label>
-                            <p className="text-[12px] text-gray-500 mb-2">
-                                {t("profileInfo.subtitleCoreSkills")}
-                            </p>
-                            <div className="flex items-center gap-4">
-                                <input
-                                    {...register("skills")}
-                                    type="text"
-                                    placeholder={t("profileInfo.coreSkillPlaceholder")}
-                                    className="text-text-primary flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="mt-6 text-text-primary">
-                            <label className="block text-sm font-medium text-text-primary mb-2">
-                                {t("profileInfo.sectionContactInfo")}
-                            </label>
-                            <p className="text-[12px] text-gray-500 mb-2">
-                                {t("profileInfo.subtitleContactInfo")}
-                            </p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                  <textarea
-                      {...register("contacts")}
-                      placeholder={t("profileInfo.customContactPlaceholder")}
-                      className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-y"
-                      rows={3}
-                  />
-                                    {errors.contacts && (
-                                        <p className="text-red-500 text-sm mt-1">
-                                            {errors.contacts.message}
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
+                    <div>
+                        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
+                            {t('profileInfo.labelDisplayName')}
+                            <span className="text-red-500">*</span>
+                        </label>
+                        <p className="text-xs text-gray-600 mb-2">{t('profileInfo.nameTrustNote')}</p>
+                        <CustomInput
+                            tag="input"
+                            type="text"
+                            name="displayName"
+                            placeholder={t('profileInfo.labelDisplayName') || 'Enter display name'}
+                            value={form.displayName}
+                            onChange={(e) => updateField('displayName', e.target.value)}
+                            error={errors.displayName}
+                            required
+                            aria-describedby={errors.displayName ? 'displayName-error' : undefined}
+                        />
                     </div>
 
-                    <div className="self-end w-fit">
+                    <div>
+                        <CustomInput
+                            tag="textarea"
+                            type="textarea"
+                            name="bio"
+                            label={t('profileInfo.bio')}
+                            placeholder={t('profileInfo.bioPlaceholder') || 'Tell us about yourself'}
+                            value={form.bio}
+                            onChange={(e) => updateField('bio', e.target.value)}
+                            error={errors.bio}
+                            rows={5}
+                            aria-describedby={errors.bio ? 'bio-error' : undefined}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
+                            {t('profileInfo.sectionCoreSkills')}
+                        </label>
+                        <p className="text-xs text-gray-600 mb-2">{t('profileInfo.subtitleCoreSkills')}</p>
+                        <CustomInput
+                            tag="input"
+                            type="text"
+                            name="skills"
+                            placeholder={t('profileInfo.coreSkillPlaceholder') || 'Enter your skills'}
+                            value={form.skills}
+                            onChange={(e) => updateField('skills', e.target.value)}
+                            error={errors.skills}
+                            aria-describedby={errors.skills ? 'skills-error' : undefined}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
+                            {t('profileInfo.sectionContactInfo')}
+                        </label>
+                        <p className="text-xs text-gray-600 mb-2">{t('profileInfo.subtitleContactInfo')}</p>
+                        <CustomInput
+                            tag="textarea"
+                            type="textarea"
+                            name="contacts"
+                            placeholder={t('profileInfo.customContactPlaceholder') || 'Enter contact information'}
+                            value={form.contacts}
+                            onChange={(e) => updateField('contacts', e.target.value)}
+                            error={errors.contacts}
+                            rows={3}
+                            aria-describedby={errors.contacts ? 'contacts-error' : undefined}
+                        />
+                    </div>
+
+                    <div className="flex justify-end gap-2 sm:gap-3">
                         <button
                             type="submit"
-                            disabled={isSubmitting}
-                            className="submit-button px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#063a68] transition-colors duration-200"
+                            className="rounded-md bg-primary px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm text-white hover:bg-[#063a68]"
                         >
-                            {isSubmitting ? (
-                                <span>{t("profileInfo.saving")}...</span>
-                            ) : (
-                                t("profileInfo.save")
-                            )}
+                            {t('profileInfo.save')}
                         </button>
                     </div>
                 </div>
             </form>
 
             <div className="border border-border-primary rounded-lg bg-white p-6 flex flex-col gap-4 sm:gap-0 sm:flex-row justify-between">
-                <div className="text-[16px] text-text-primary font-medium">
-                    {t("profileInfo.sectionPassword")}
-                    <p className="text-[14px] text-text-secondary font-normal">
-                        {t("profileInfo.passwordDescription")}
+                <div className="text-sm sm:text-lg font-semibold text-gray-700">
+                    {t('profileInfo.sectionPassword')}
+                    <p className="text-xs sm:text-sm text-gray-600 font-normal">
+                        {t('profileInfo.passwordDescription')}
                     </p>
                 </div>
                 <div className="self-end w-full sm:w-fit">
                     <button
                         onClick={openModal}
-                        className="w-full bg-primary text-white font-medium py-2.5 px-4 rounded-lg hover:bg-[#063a68] transition-colors"
+                        className="w-full rounded-md bg-primary px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm text-white hover:bg-[#063a68]"
                     >
-                        {t("profileInfo.buttonSetPassword")}
+                        {t('profileInfo.buttonSetPassword')}
                     </button>
                 </div>
             </div>

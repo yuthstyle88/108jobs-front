@@ -416,7 +416,15 @@ export type {ApproveWorkForm} from "./types/ApproveWorkForm";
 export type {ChatStatus} from "./types/ChatStatus";
 export type {IdentityCard} from "./types/IdentityCard";
 export type {PeerRead} from "./types/PeerRead";
+export type {UserReview} from "./types/UserReview";
+export type {UserReviewView} from "./types/UserReviewView";
+export type {UserReviewId} from "./types/UserReviewId";
+export type {ListUserReviewsQuery} from "./types/ListUserReviewsQuery";
+export type {ListUserReviewsResponse} from "./types/ListUserReviewsResponse";
+export type {SubmitUserReviewForm} from "./types/SubmitUserReviewForm";
+export type {SubmitUserReviewResponse} from "./types/SubmitUserReviewResponse";
 export type {ScbStatus, ScbTokenData, ScbTokenResponse} from "./types/ScbTokenResponse";
 export type {
     ScbQrCodeBody, ScbQrCodeRequest, ScbQrCodeStatus, ScbQrCodeData, ScbQrCodeResponse
 } from "./types/ScbQrCode";
+export type {WorkSample} from "./types/WorkSample";

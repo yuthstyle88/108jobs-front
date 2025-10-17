@@ -181,19 +181,6 @@ const QuotationModal: React.FC<QuotationModalProps> = ({
         }
     };
 
-    const validateForm = async () => {
-        const result = await ProposedQuoteSchema.safeParseAsync(form);
-        if (!result.success) {
-            const newErrors: Record<string, string> = {};
-            result.error.issues.forEach((issue) => {
-                newErrors[issue.path.join('.')] = issue.message;
-            });
-            setErrors(newErrors);
-        } else {
-            setErrors({});
-        }
-    };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErrors({});
