@@ -220,7 +220,6 @@ export async function handleIncomingPayload(
     ctx: {
         roomId: ChatRoomId;
         localUserId: LocalUserId;
-        sharedKeyHex?: string;
         receivedSet: Set<string>;
         setPageCursor?: (cursor: { prev: string | null; next: string | null } | null) => void;
         setHasMoreMessages?: (v: boolean) => void;

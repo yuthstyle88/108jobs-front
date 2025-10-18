@@ -64,6 +64,7 @@ import {useLoadLastRead} from "@/modules/chat/hooks/useLoadLastRead";
 import {useRoomPresence} from "@/modules/chat/hooks/useRoomPresence";
 import {SubmitReviewModal} from "@/modules/chat/components/Modal/SubmitReviewModal";
 import {REQUEST_STATE} from "@/services/HttpService";
+import {isBrowser} from "@/utils";
 
 
 /** Shape of the form submitted by ChatInput. */
@@ -116,7 +117,6 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
                                                        partnerName,
                                                        partnerAvatar,
                                                        partnerId,
-                                                       partnerPersonId,
                                                        partnerAvailable,
                                                        roomData,
                                                        localUser,
@@ -791,7 +791,7 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
                 <SubmitReviewModal
                     showReviewModal={showSubmitReviewModal}
                     setShowReviewModal={setShowSubmitReviewModal}
-                    revieweeId={partnerPersonId}
+                    revieweeId={partnerId}
                     workflowId={currentRoom.workflow?.id}
                     submitReview={submitReview}
                 />

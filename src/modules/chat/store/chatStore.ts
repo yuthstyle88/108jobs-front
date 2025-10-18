@@ -99,16 +99,13 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
     }),
 
     upsertMessage: (msg) => set((s) => {
-        if(isBrowser() && msg.roomId && msg.senderId && msg.createdAt) {
-            readLastIdUtils.setLastReadAt(msg.roomId, msg.senderId, msg.createdAt);
+        // Persist peer's read-last-at for any valid message
+        if (isBrowser() && msg.roomId && msg.senderId && msg.createdAt) {
+            try { readLastIdUtils.setLastReadAt(msg.roomId, msg.senderId, msg.createdAt); } catch {}
         }
-        const keep = (msg as any).status === 'pending' || (msg as any).status === 'failed';
-        if(!keep) {
-            // remove if previously existed
-            const k = String(msg.id);
-            return {listMessages: s.listMessages.filter(m => String(m.id) !== k)};
-        }
-        return {listMessages: mergeIntoMessages(s.listMessages, msg)};
+        // Always merge incoming messages regardless of status to ensure real-time display
+        // Pending/failed messages will still be updated/cleaned up via commitStatus
+        return { listMessages: mergeIntoMessages(s.listMessages, msg) };
     }),
 
     addPending: (msg) => set((s) => {

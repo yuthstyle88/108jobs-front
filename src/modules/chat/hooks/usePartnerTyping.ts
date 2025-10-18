@@ -3,6 +3,7 @@
 // Single-partner typing indicator with auto-decay, filtered by room and self user id.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChatRoomId, LocalUserId } from 'lemmy-js-client';
+import { CHAT_EVENT } from '@/modules/chat/events';
 
 export type TypingEvent = { roomId: ChatRoomId; senderId: LocalUserId; typing: boolean };
 
@@ -35,6 +36,7 @@ export function usePartnerTyping(opts: Options) {
     }, decayMs);
   }, [clearDecay, decayMs, dispatchDomEvent, roomId]);
 
+  // Primary: listen to adapter/channel if available
   useEffect(() => {
     if (!channel || typeof channel.on !== 'function') return;
 
@@ -67,6 +69,47 @@ export function usePartnerTyping(opts: Options) {
     channel.on?.('chat:typing', handle);
     return () => channel.off?.('chat:typing', handle);
   }, [channel, roomId, localUserId, armDecay, clearDecay, onRemoteTyping, dispatchDomEvent]);
+
+  // Fallback: listen to unified DOM typing event emitted by handleWSMessage
+  useEffect(() => {
+    const me = Number(localUserId) || 0;
+    const onDomTyping = (e: Event) => {
+      const anyEvt = e as CustomEvent<any>;
+      const d = anyEvt?.detail ?? {};
+      const evt: TypingEvent = {
+        roomId: d?.roomId as ChatRoomId,
+        senderId: Number(d?.senderId) as LocalUserId,
+        typing: Boolean(d?.typing),
+      };
+      if (!evt.roomId || !evt.senderId) return;
+      if (String(evt.roomId) !== String(roomId)) return;
+      if (Number(evt.senderId) === me) return; // ignore self
+
+      if (!evt.typing) {
+        setIsPartnerTyping(false);
+        clearDecay();
+        dispatchDomEvent?.('chat:partner-typing', { roomId, senderId: Number(evt.senderId) || 0, typing: false });
+        onRemoteTyping?.(evt);
+        return;
+      }
+
+      setIsPartnerTyping(true);
+      dispatchDomEvent?.('chat:partner-typing', { roomId, senderId: Number(evt.senderId) || 0, typing: true });
+      armDecay(Number(evt.senderId) || 0);
+      onRemoteTyping?.(evt);
+    };
+
+    try {
+      window.addEventListener(CHAT_EVENT.TYPING as any, onDomTyping as any);
+      document?.addEventListener?.(CHAT_EVENT.TYPING as any, onDomTyping as any);
+    } catch {}
+    return () => {
+      try {
+        window.removeEventListener(CHAT_EVENT.TYPING as any, onDomTyping as any);
+        document?.removeEventListener?.(CHAT_EVENT.TYPING as any, onDomTyping as any);
+      } catch {}
+    };
+  }, [roomId, localUserId, armDecay, clearDecay, onRemoteTyping, dispatchDomEvent]);
 
   // Cleanup on unmount
   useEffect(() => () => { clearDecay(); }, [clearDecay]);

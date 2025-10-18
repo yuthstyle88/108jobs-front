@@ -129,7 +129,6 @@ export function createHandleWSMessage(deps: HandlerDeps) {
             const msgs = await handleIncomingPayload(payload.data, {
                 roomId: roomIdStr,
                 localUserId: meId,
-                sharedKeyHex: UserService.Instance.authInfo?.sharedKey,
                 receivedSet: processedMsgRef.current,
                 setPageCursor,
                 setHasMoreMessages,
