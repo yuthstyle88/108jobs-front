@@ -18,6 +18,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
     const [state, setState] = useState<{
         partnerName: string;
         partnerId?: LocalUserId;
+        partnerAvatar?: string;
         partnerPersonId?: PersonId
         currentRoom?: any;
         shareKey?: string;
@@ -138,6 +139,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
                                     ? profileRes.data.profile.name
                                     : prev.partnerName,
                             partnerId: Number(other.memberId),
+                            partnerAvatar: profileRes.state === REQUEST_STATE.SUCCESS ? profileRes.data.profile.avatar : undefined,
                             partnerAvailable:
                                 profileRes.state === REQUEST_STATE.SUCCESS
                                     ? profileRes.data.profile.available
@@ -182,7 +184,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
             <ChatRoomView
                 post={state.post}
                 partnerName={state.partnerName}
-                partnerAvatar=""
+                partnerAvatar={state?.partnerAvatar}
                 partnerId={state.partnerId}
                 partnerAvailable={state.partnerAvailable}
                 roomData={state.currentRoom}

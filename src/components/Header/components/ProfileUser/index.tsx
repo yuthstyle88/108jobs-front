@@ -31,7 +31,7 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
                     <div className="flex items-center space-x-3">
                         <div className="bg-gray-200 flex items-center justify-center rounded-full">
                             <Image
-                                src={ProfileImage.avatar}
+                                src={profile.avatar || ProfileImage.avatar}
                                 alt="avatar"
                                 className="rounded-full w-12 h-12 object-cover border-1 border-border-primary"
                                 width={500}

@@ -56,7 +56,18 @@ const nextConfig = {
     env: {
         COMMIT_HASH: process.env.COMMIT_HASH || "default", // ใช้ค่า Default หาก COMMIT_HASH เป็น undefined
     },
+    async rewrites() {
+        const apiHost = process.env.NEXT_PUBLIC_USE_HTTPS === "true"
+            ? `https://${process.env.NEXT_PUBLIC_API_HOST_NAME}`
+            : `http://${process.env.NEXT_PUBLIC_API_HOST_NAME}`;
 
+        return [
+            {
+                source: "/api/:path*",
+                destination: `${apiHost}/api/:path*`,
+            },
+        ];
+    },
 };
 
 export default nextConfig;

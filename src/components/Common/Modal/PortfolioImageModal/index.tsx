@@ -117,7 +117,6 @@ export default function PortfolioImageModal({
                     )}
                 </div>
 
-                {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
                 <input
                     type="text"
                     value={imageTitle}
@@ -126,13 +125,18 @@ export default function PortfolioImageModal({
                     className="w-full mt-4 border p-2 rounded text-primary"
                 />
 
-                {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
+                {error && <p className="text-red-600 text-sm mt-4">{error}</p>}
 
                 <div className="flex justify-end gap-4 mt-4">
                     <button onClick={handleClose} className="px-4 py-2 text-gray-600 border rounded-lg">
                         {t('profileInfo.cancel')}
                     </button>
-                    <button onClick={onConfirm} className="px-4 py-2 bg-primary text-white rounded-lg">
+                    <button
+                        onClick={onConfirm}
+                        disabled={!!error}
+                        className={`px-4 py-2 rounded-lg text-white
+                        ${error ? 'bg-gray-400 cursor-not-allowed' : 'bg-primary'}`}
+                    >
                         {t('profileInfo.addImage')}
                     </button>
                 </div>

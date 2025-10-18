@@ -109,10 +109,12 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
             );
 
             let profileName = "Unknown";
+            let partnerAvatar = "";
             if (other?.memberId != null) {
                 try {
                     const res = await HttpService.client.visitProfile(String(other.memberId));
                     profileName = res.state === REQUEST_STATE.SUCCESS ? (res as any)?.data?.profile?.name ?? "Unknown" : "Unknown";
+                    partnerAvatar = res.state === REQUEST_STATE.SUCCESS ? (res as any)?.data?.profile?.avatar ?? null : null;
                 } catch {
                 }
             }
@@ -127,6 +129,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
             mapped.push({
                 id: String(rawId),
                 name: roomName,
+                partnerAvatar: partnerAvatar,
                 participants: participantsArr.map((p: any) => String(p.memberId)) as any,
                 unreadCount: 0,
                 postId: roomView?.room?.postId ?? roomView?.post?.id ?? (it as any)?.postId,

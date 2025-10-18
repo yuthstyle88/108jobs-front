@@ -71,7 +71,7 @@ const UserProfileSection = () => {
                     <div className="w-8 h-8 rounded-full overflow-hidden bg-white shrink-0">
                         {person && (
                             <Image
-                                src={ProfileImage.avatar}
+                                src={person.avatar || ProfileImage.avatar}
                                 alt="avatar"
                                 className="w-full h-full object-cover object-center"
                                 width={32}

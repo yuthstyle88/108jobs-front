@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -50,8 +50,7 @@ export const usePortfolioImagesForm = (
         id: z.string(),
         imageUrl: z
             .string()
-            .url(t('portfolioImages.validation.invalidUrl') || 'Invalid image URL')
-            .min(1, t('portfolioImages.validation.imageRequired') || 'Image is required'),
+            .min(1, t('profileInfo.imageRequired') || 'Image is required'),
         title: z.string().optional(),
     });
 
@@ -65,8 +64,8 @@ export const usePortfolioImagesForm = (
         register,
         handleSubmit,
         formState: { errors, isSubmitting: isFormSubmitting },
-        reset,
         getValues,
+        setValue,
     } = useForm<PortfolioImagesFormData>({
         resolver: zodResolver(PortfolioImagesSchema),
         defaultValues: {
@@ -84,15 +83,6 @@ export const usePortfolioImagesForm = (
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [newImage, setNewImage] = useState({ title: '' });
     const [editingImage, setEditingImage] = useState<PortfolioPic | null>(null);
-
-    // Update form only if initialPortfolioImages changes meaningfully
-    useEffect(() => {
-        const currentImages = getValues('portfolioImages').map(({ id, imageUrl, title }) => ({ id, imageUrl, title }));
-        const newImages = initialPortfolioImages.map(({ id, imageUrl, title }) => ({ id, imageUrl, title }));
-        if (JSON.stringify(currentImages) !== JSON.stringify(newImages)) {
-            reset({ portfolioImages: initialPortfolioImages });
-        }
-    }, [initialPortfolioImages, reset, getValues]);
 
     // Open file picker
     const handleSelectPortfolioFile = useCallback(() => {
@@ -123,13 +113,14 @@ export const usePortfolioImagesForm = (
             setSelectedFile({ fileUrl: previewUrl, fileType: file.type, fileName: file.name });
             setIsPortfolioImageModalOpen(true);
 
-            await handleFileUpload(e as unknown as Event);
+            const uploaded = await handleFileUpload(e as unknown as Event);
             if (uploadError) {
                 setSelectedFile(null);
                 setIsPortfolioImageModalOpen(false);
                 setUploadError(t('portfolioImages.uploadFailed') || 'File upload failed');
                 return;
             }
+            setSelectedFile(uploaded);
         },
         [handleFileUpload, setSelectedFile, uploadError, t],
     );
@@ -145,31 +136,34 @@ export const usePortfolioImagesForm = (
                 const response = await saveUserSettings(payload);
 
                 if (response.state === REQUEST_STATE.FAILED) {
-                    const key = `portfolioImages.${action}.${response.err.name}`;
-                    const messageError = t(key) ?? t('global.serverError');
+                    const messageError = t('error.title');
                     errorMessage(null, null, messageError);
                     return false;
                 }
 
-                successMessage(null, null, t(`portfolioImages.${action}`) ?? 'Success!');
+                // Since response is { success: true }, rely on local portfolioImages
+                setValue('portfolioImages', portfolioImages, { shouldValidate: true });
+
+                successMessage(null, null, t(`profileInfo.${action}`) ?? 'Success!');
                 return true;
             } catch (error) {
-                errorMessage(null, null, t('global.submissionFailed') ?? 'Submission failed!');
+                console.error('Save portfolio images error:', error); // Debug
+                errorMessage(null, null, t('error.title') ?? 'Submission failed!');
                 return false;
             }
         },
-        [saveUserSettings, successMessage, errorMessage, t],
+        [saveUserSettings, successMessage, errorMessage, t, setValue],
     );
 
     // Confirm adding a new image
     const confirmAddImage = useCallback(async (): Promise<void> => {
         if (!selectedFile?.fileUrl || !newImage.title) {
-            setUploadError(t('portfolioImages.validation.imageRequired') || 'Image and title are required');
+            setUploadError(t('profileInfo.imageRequired') || 'Image and title are required');
             return;
         }
 
         if (!z.string().url().safeParse(selectedFile.fileUrl).success) {
-            setUploadError(t('portfolioImages.validation.invalidUrl') || 'Invalid image URL');
+            setUploadError(t('profileInfo.errorUploadImage') || 'Invalid image URL');
             return;
         }
 
@@ -181,35 +175,32 @@ export const usePortfolioImagesForm = (
             };
             const newPortfolioImages = [...getValues('portfolioImages'), newPortfolioImage];
 
-            console.log('Appending new image:', { newPortfolioImage, newPortfolioImages }); // Debug
-
             append(newPortfolioImage);
             setNewImage({ title: '' });
             setSelectedFile(null);
             closePortfolioImageModal();
 
-            // Ensure state updates before server call
-            await new Promise((resolve) => setTimeout(resolve, 0));
-
             const success = await savePortfolioImages(newPortfolioImages, 'addImage');
             if (!success) {
-                remove(fields.length); // Revert on failure
-                setUploadError(t('portfolioImages.addImage.Failed') || 'Failed to add image');
+                const index = fields.length;
+                remove(index); // Revert on failure
+                setUploadError(t('profileInfo.errorUploadImage') || 'Failed to add image');
             }
         } catch (error) {
-            setUploadError(t('portfolioImages.addImage.Failed') || 'Failed to add image');
+            console.error('Add image error:', error); // Debug
+            setUploadError(t('profileInfo.errorUploadImage') || 'Failed to add image');
         }
     }, [newImage, selectedFile, fields, append, savePortfolioImages, setSelectedFile, closePortfolioImageModal, t, getValues]);
 
     // Confirm updating an existing image
     const confirmUpdateImage = useCallback(async (): Promise<void> => {
         if (!editingImage || !newImage.title || !selectedFile?.fileUrl) {
-            setUploadError(t('portfolioImages.validation.imageRequired') || 'Image and title are required');
+            setUploadError(t('profileInfo.imageRequired') || 'Image and title are required');
             return;
         }
 
         if (!z.string().url().safeParse(selectedFile.fileUrl).success) {
-            setUploadError(t('portfolioImages.validation.invalidUrl') || 'Invalid image URL');
+            setUploadError(t('profileInfo.errorUploadImage') || 'Invalid image URL');
             return;
         }
 
@@ -233,16 +224,14 @@ export const usePortfolioImagesForm = (
             setSelectedFile(null);
             closePortfolioImageModal();
 
-            // Ensure state updates before server call
-            await new Promise((resolve) => setTimeout(resolve, 0));
-
             const success = await savePortfolioImages(newPortfolioImages, 'updateImage');
             if (!success) {
                 update(index, editingImage); // Revert on failure
-                setUploadError(t('portfolioImages.updateImage.Failed') || 'Failed to update image');
+                setUploadError(t('profileInfo.errorUploadImage') || 'Failed to update image');
             }
         } catch (error) {
-            setUploadError(t('portfolioImages.updateImage.Failed') || 'Failed to update image');
+            console.error('Update image error:', error); // Debug
+            setUploadError(t('profileInfo.errorUploadImage') || 'Failed to update image');
         }
     }, [editingImage, newImage, selectedFile, fields, update, savePortfolioImages, setSelectedFile, closePortfolioImageModal, t, getValues]);
 
@@ -256,26 +245,24 @@ export const usePortfolioImagesForm = (
             const image = fields[index];
             const newPortfolioImages = fields.filter((field) => field.id !== id);
 
-            console.log('Deleting image:', { id, newPortfolioImages }); // Debug
-
             remove(index);
 
             if (image.imageUrl) {
                 await handleRemoveSelectedFile();
                 if (uploadError) {
                     update(index, image); // Revert on upload error
-                    setUploadError(t('portfolioImages.deleteImage.Failed') || 'Failed to delete image');
+                    setUploadError(t('profileInfo.errorDeleteImage') || 'Failed to delete image');
                     return;
                 }
             }
 
             const success = await savePortfolioImages(newPortfolioImages, 'deleteImage');
             if (!success) {
-                reset({ portfolioImages: previousPortfolioImages }); // Revert on failure
-                setUploadError(t('portfolioImages.deleteImage.Failed') || 'Failed to delete image');
+                setValue('portfolioImages', previousPortfolioImages, { shouldValidate: true }); // Revert on failure
+                setUploadError(t('profileInfo.errorDeleteImage') || 'Failed to delete image');
             }
         },
-        [fields, remove, reset, handleRemoveSelectedFile, uploadError, savePortfolioImages, t, getValues],
+        [fields, remove, setValue, handleRemoveSelectedFile, uploadError, savePortfolioImages, t, getValues],
     );
 
     // Handle editing an existing image
@@ -304,7 +291,6 @@ export const usePortfolioImagesForm = (
     const onSubmit = useCallback(
         async (data: PortfolioImagesFormData) => {
             const cleanedImages = data.portfolioImages.filter((item) => item.imageUrl && z.string().url().safeParse(item.imageUrl).success);
-            console.log('Submitting form:', { cleanedImages }); // Debug
             return await savePortfolioImages(cleanedImages, 'updateImage');
         },
         [savePortfolioImages],

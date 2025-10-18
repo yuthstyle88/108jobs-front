@@ -85,7 +85,7 @@ type MessageForm = { message: string };
 interface ChatRoomViewProps {
     post?: Post;
     partnerName: string;
-    partnerAvatar: string;
+    partnerAvatar?: string;
     partnerId: LocalUserId;
     partnerAvailable?: boolean;
     roomData: ChatRoomData;
@@ -683,7 +683,7 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
                     />
                     <ChatRoomMessages
                         messages={messages}
-                        partnerAvatar={ProfileImage.avatar}
+                        partnerAvatar={partnerAvatar || ProfileImage.avatar}
                         customScrollParent={scrollParentEl}
                         onTopReached={handleOnTopReached}
                         hasMore={hasMore}

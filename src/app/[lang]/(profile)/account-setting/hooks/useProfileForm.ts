@@ -118,18 +118,17 @@ export const useProfileForm = (
                 const response = await saveUserSettings(payload);
 
                 if (response.state === REQUEST_STATE.FAILED) {
-                    const key = `profile.update.${response.err.name}`;
-                    const messageError = t(key) ?? t('global.serverError');
+                    const messageError = t('error.title');
                     errorMessage(null, null, messageError);
-                    setForm(previousForm); // Revert on failure
+                    setForm(previousForm);
                     return false;
                 }
 
                 successMessage(null, null, t('profile.update') ?? 'Profile updated successfully!');
                 return true;
             } catch (error) {
-                errorMessage(null, null, t('global.submissionFailed') ?? 'Submission failed!');
-                setForm(previousForm); // Revert on failure
+                errorMessage(null, null, t('error.title') ?? 'Submission failed!');
+                setForm(previousForm);
                 return false;
             }
         },

@@ -36,6 +36,8 @@ function ChatRoomListComponent({room, isActive, currentLang, localUser}: ChatRoo
         }
     };
 
+    console.log("room.name: ", room)
+
     // Parse room name to extract partner name and job ID
     const [partnerName = "Unknown", jobId = ""] = (room.name || "?").split(":Job ");
 
@@ -51,9 +53,10 @@ function ChatRoomListComponent({room, isActive, currentLang, localUser}: ChatRoo
             <div
                 className={`flex items-center gap-3 p-3 rounded-lg border-b border-blue-950 ${
                     isActive ? "bg-blue-50 border-l-4 border-blue-500" : "bg-white hover:bg-gray-50"
-                }`} // Added border-b for horizontal line between rooms
+                }`}
             >
                 <AvatarBadge
+                    avatarUrl={room.partnerAvatar}
                     name={partnerName}
                     online={online}
                     isActive

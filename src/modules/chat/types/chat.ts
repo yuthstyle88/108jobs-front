@@ -1,9 +1,8 @@
-import type {LocalUserId} from "@/lib/lemmy-js-client/src";
-
 export interface ChatRoom {
     id: string;
     name: string;
-    participants: { id: number; name: string }[];
+    partnerAvatar?: string
+    participants: { id: number; name: string; }[];
     unreadCount: number;
     postId?: number | string;
 }

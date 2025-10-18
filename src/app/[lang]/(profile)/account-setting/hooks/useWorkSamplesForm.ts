@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
 import { v4 as uuidv4 } from 'uuid';
+import {isEqual} from "lodash";
 
 interface FormValues {
     newSample: { title: string; sampleUrl: string; description: string };
@@ -82,9 +83,7 @@ export const useWorkSamplesForm = (person: Person | undefined) => {
                     contacts: person.contacts ?? prev.contacts,
                     portfolioPics: person.portfolioPics ?? prev.portfolioPics,
                 };
-                if (JSON.stringify(newForm) !== JSON.stringify(prev)) {
-                    return newForm;
-                }
+                if (!isEqual(newForm, prev)) return newForm;
                 return prev;
             });
         }
@@ -130,16 +129,15 @@ export const useWorkSamplesForm = (person: Person | undefined) => {
                 const response = await saveUserSettings(payload);
 
                 if (response.state === REQUEST_STATE.FAILED) {
-                    const key = `profile.${action}.${response.err.name}`;
-                    const messageError = t(key) ?? t('global.serverError');
+                    const messageError = t('error.title');
                     errorMessage(null, null, messageError);
                     return false;
                 }
 
-                successMessage(null, null, t(`profile.${action}`) ?? 'Success!');
+                successMessage(null, null, t(`profileInfo.${action}`) ?? 'Success!');
                 return true;
             } catch (error) {
-                errorMessage(null, null, t('global.submissionFailed') ?? 'Submission failed!');
+                errorMessage(null, null, t('error.title') ?? 'Submission failed!');
                 return false;
             }
         },

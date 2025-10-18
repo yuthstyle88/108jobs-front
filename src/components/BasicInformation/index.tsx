@@ -219,7 +219,10 @@ export default function BasicInformation() {
             <ImageUploadModal
                 isOpen={isAvatarModalOpen}
                 onClose={closeAvatarImageModal}
-                onImageUpload={handleAvatarImageUpload}
+                onImageUpload={(imageUrl: string) => {
+                    handleAvatarImageUpload(imageUrl);
+                    window.location.reload();
+                }}
                 uploadImage={uploadUserAvatar}
             />
         </>

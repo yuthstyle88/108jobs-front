@@ -7,6 +7,8 @@ import { ChevronLeft, ChevronRight, Edit, Trash } from 'lucide-react';
 import { PortfolioPic } from 'lemmy-js-client';
 import PortfolioImageModal from '@/components/Common/Modal/PortfolioImageModal';
 import { usePortfolioImagesForm } from '@/app/[lang]/(profile)/account-setting/hooks/usePortfolioImagesForm';
+import { useState } from 'react';
+import FullScreenImageModal from "@/components/Common/Modal/FullScreenImageModal";
 
 export default function PortfolioImages() {
     const { t } = useTranslation();
@@ -38,6 +40,16 @@ export default function PortfolioImages() {
         confirmUpdateImage,
         isSubmitting,
     } = usePortfolioImagesForm(defaultPortfolio, 3);
+
+    // State for full-screen image modal
+    const [isFullScreenModalOpen, setIsFullScreenModalOpen] = useState(false);
+    const [fullScreenImageUrl, setFullScreenImageUrl] = useState<string | null>(null);
+
+    // Handler for clicking an image to show full-screen
+    const onImageClick = (imageUrl: string) => {
+        setFullScreenImageUrl(imageUrl);
+        setIsFullScreenModalOpen(true);
+    };
 
     return (
         <div className="border border-border-primary rounded-lg bg-white py-6 mb-8">
@@ -113,7 +125,12 @@ export default function PortfolioImages() {
                         {fields.slice(currentImageIndex, currentImageIndex + imagesPerPage).map((item) => (
                             <div
                                 key={item.id}
-                                className="h-56 rounded-lg flex flex-col items-center justify-center transition-transform duration-300 hover:scale-105"
+                                className="h-48 rounded-lg flex flex-col items-center justify-center transition-transform duration-300 hover:scale-105"
+                                onClick={() => onImageClick(item.imageUrl)}
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(e) => e.key === 'Enter' && onImageClick(item.imageUrl)}
+                                aria-label={`View ${item.title} in full screen`}
                             >
                                 {item.imageUrl ? (
                                     <Image
@@ -121,6 +138,8 @@ export default function PortfolioImages() {
                                         alt={item.title ?? ''}
                                         width={300}
                                         height={200}
+                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                        loading="lazy"
                                         className="w-full h-36 object-cover rounded-t-lg"
                                     />
                                 ) : (
@@ -135,7 +154,10 @@ export default function PortfolioImages() {
                                     <div className="flex justify-center gap-2 mt-2">
                                         <button
                                             type="button"
-                                            onClick={() => edit(item)}
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // Prevent triggering full-screen modal
+                                                edit(item);
+                                            }}
                                             className="p-1 text-primary hover:text-blue-800"
                                             disabled={isSubmitting}
                                         >
@@ -143,7 +165,10 @@ export default function PortfolioImages() {
                                         </button>
                                         <button
                                             type="button"
-                                            onClick={() => remove(item.id)}
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // Prevent triggering full-screen modal
+                                                remove(item.id);
+                                            }}
                                             className="p-1 text-red-600 hover:text-red-800"
                                             disabled={isSubmitting}
                                         >
@@ -194,6 +219,14 @@ export default function PortfolioImages() {
                 error={uploadError}
                 imageTitle={newImage.title}
                 onTitleChange={(val) => setNewImage({ title: val })}
+            />
+            <FullScreenImageModal
+                isOpen={isFullScreenModalOpen}
+                imageUrl={fullScreenImageUrl}
+                onClose={() => {
+                    setIsFullScreenModalOpen(false);
+                    setFullScreenImageUrl(null);
+                }}
             />
         </div>
     );
