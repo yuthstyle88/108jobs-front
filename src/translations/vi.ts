@@ -2206,6 +2206,10 @@ export const vi = {
             buttonAddBank: "Thêm ngân hàng",
             noBankFound: "Không tìm thấy ngân hàng nào.",
             buttonEditBank: "Chỉnh sửa ngân hàng",
+            errorBankRequired: "Vui lòng chọn ngân hàng",
+            errorAccountNumberMin: "Số tài khoản phải có ít nhất 6 ký tự",
+            errorAccountNameRequired: "Vui lòng nhập tên chủ tài khoản",
+            errorInvalidAccountNumber: "Số tài khoản không hợp lệ cho ngân hàng đã chọn"
         },
         sellerCommitmentLetter: {
             incomeTaxDescription: `Để nhận thanh toán thông qua hệ thống ${getAppName()} , freelancer phải xác nhận và đồng ý tự cung cấp thông tin thu nhập của mình để cơ quan thuế xem xét tuân thủ các yêu cầu pháp lý.`,

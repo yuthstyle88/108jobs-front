@@ -2151,6 +2151,10 @@ export const th = {
             buttonAddBank: "เพิ่มธนาคาร",
             noBankFound: "ไม่พบธนาคารใด ๆ",
             buttonEditBank: "แก้ไขธนาคาร",
+            errorBankRequired: "กรุณาเลือกธนาคาร",
+            errorAccountNumberMin: "หมายเลขบัญชีต้องมีอย่างน้อย 6 ตัวอักษร",
+            errorAccountNameRequired: "กรุณากรอกชื่อเจ้าของบัญชี",
+            errorInvalidAccountNumber: "หมายเลขบัญชีไม่ถูกต้องสำหรับธนาคารที่เลือก"
         },
         sellerCommitmentLetter: {
             incomeTaxDescription: `เพื่อรับชำระเงินผ่านระบบของ ${getAppName()} ฟรีแลนซ์จะต้องยืนยันและยอมรับในการให้ข้อมูลรายได้ของตนเองเพื่อให้หน่วยงานภาษีตรวจสอบการปฏิบัติตามข้อกำหนดทางกฎหมาย`,
