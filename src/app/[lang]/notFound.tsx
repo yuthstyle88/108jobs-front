@@ -1,134 +1,52 @@
 "use client";
-import {AssetIcon} from "@/constants/icons";
-import {CategoriesImage, LandingImage} from "@/constants/images";
 import {Home} from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import {useTranslation} from "react-i18next";
-import {getAppName} from "@/utils/appConfig";
-
-const categoryImages = [
-  {
-    image: CategoriesImage.seoImage,
-    title: "ทำ SEO",
-  },
-  {
-    image: CategoriesImage.seoImage,
-    title: "ทำ SEO",
-  },
-  {
-    image: CategoriesImage.seoImage,
-    title: "ทำ SEO",
-  },
-  {
-    image: CategoriesImage.seoImage,
-    title: "ทำ SEO",
-  },
-  {
-    image: CategoriesImage.seoImage,
-    title: "ทำ SEO",
-  },
-  {
-    image: CategoriesImage.seoImage,
-    title: "ทำ SEO",
-  },
-  {
-    image: CategoriesImage.seoImage,
-    title: "ทำ SEO",
-  },
-  {
-    image: CategoriesImage.seoImage,
-    title: "ทำ SEO",
-  },
-];
+import {DotLottieReact} from "@lottiefiles/dotlottie-react";
 
 export default function NotFound() {
-  const { t } = useTranslation();
-  return (
-    <div className="min-h-screen flex flex-col ">
-      {/* Header */}
-      <header className="px-[1rem] flex h-[70px] items-center justify-start bg-primary">
-        <div className=" px-4">
-          <Link prefetch={false} href="/public">
-            <Image
-              src={AssetIcon.logo}
-              alt="logo"
-              className="w-full h-full"
-              width={500}
-              height={500}
-            />
-          </Link>
-        </div>
-      </header>
-
-      {/* Hero section */}
-      <main className="flex-grow">
-        <section className="not-found-gradient py-16 px-4">
-          <div className="container mx-auto max-w-6xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div className="fade-in">
-                <h1 className="text-[32px] md:text-4xl font-medium text-gray-800 mb-4">
-                  {t("notFound.errorTitle")}
-                </h1>
-                <p className="text-[#728197] text-[20px] font-sans mb-8">
-                  {t("notFound.errorDescription")}
-                </p>
-                <Link prefetch={false}
-                      href="/"
-                      className="inline-flex items-center gap-2 bg-third text-white px-6 py-3 rounded-md font-medium transition-all hover:bg-fastwork-dark-blue"
-                >
-                  <Home className="w-5 h-5"/>
-                  {t("notFound.backButton")}
-                </Link>
-              </div>
-              <div className="fade-in stagger-1">
-                <Image
-                  src={LandingImage.construction}
-                  alt="construction"
-                  className="w-full h-full"
-                  width={500}
-                  height={500}
-                  priority
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Popular Categories */}
-        <section className="py-12 px-4 bg-white">
-          <div className="container mx-auto max-w-6xl">
-            <h2 className="text-2xl font-bold text-gray-800 mb-8">
-              {t("notFound.recommendedSectionTitle")}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {categoryImages.map((category, index) => (
-                <Link prefetch={false} key={index} href="/seo" className="group">
-                  <div
-                    style={{
-                      backgroundImage: `url("/categories-image/web-development-02032022.jpg")`,
-                    }}
-                    className="relative rounded-md overflow-hidden bg-cover bg-center transition-all ease-[120ms] cursor-pointer"
-                  >
-                    <div className="relative flex items-end h-20 px-4 py-3 text-white bg-[rgba(0,0,0,.5)] font-semibold">
-                      <span className="group-hover:translate-y-[-4px] duration-150">
-                        {category.title}
-                      </span>
+    const { t } = useTranslation();
+    return (
+        <div className="min-h-screen flex flex-col bg-[#042b4a] text-white">
+            {/* Main Section */}
+            <main className="flex-grow flex items-center justify-center py-12 px-4 bg-[#ffffff]">
+                <div className="text-center max-w-2xl">
+                    <div className="relative mb-8">
+                        <div className="flex gap-2 items-center">
+                            <DotLottieReact
+                                src="/lottie/404error.lottie"
+                                loop
+                                autoplay
+                            />
+                        </div>
+                        <div className="absolute inset-0 bg-purple-600 opacity-20 rounded-full blur-3xl"></div>
                     </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-gray-100 py-8">
-        <div className="container mx-auto px-4 text-center text-gray-600 text-sm">
-          <p>© {new Date().getFullYear()} {getAppName()}. All rights reserved.</p>
+                    <h1 className="text-5xl font-bold mb-4 tracking-tight font-['Inter',sans-serif]">
+                        {t("notFound.errorTitle", "Lost in the Cosmos?")}
+                    </h1>
+                    <p className="text-lg text-gray-800 mb-8 font-['Inter',sans-serif]">
+                        {t("notFound.errorDescription", "The page you're looking for has drifted into the void. Let's get you back to orbit!")}
+                    </p>
+                    <Link
+                        prefetch={false}
+                        href="/"
+                        className="inline-flex items-center gap-2 bg-purple-600 text-white px-8 py-3 rounded-full font-medium transition-all hover:bg-purple-500 hover:shadow-[0_0_15px_rgba(147,51,234,0.5)]"
+                    >
+                        <Home className="w-5 h-5" />
+                        {t("notFound.backButton", "Return to Home")}
+                    </Link>
+                </div>
+            </main>
+            {/* Inline styles for animation */}
+            <style jsx>{`
+                @keyframes float {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-10px); }
+                }
+                .animate-float {
+                    animation: float 3s ease-in-out infinite;
+                }
+            `}</style>
         </div>
-      </footer>
-    </div>
-  );
+    );
 }

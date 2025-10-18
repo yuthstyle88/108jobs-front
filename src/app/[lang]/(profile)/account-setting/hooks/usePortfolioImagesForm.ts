@@ -142,8 +142,6 @@ export const usePortfolioImagesForm = (
                     portfolioPics: portfolioImages.filter((item) => item.imageUrl && z.string().url().safeParse(item.imageUrl).success),
                 };
 
-                console.log('Saving portfolio images:', { action, payload }); // Debug
-
                 const response = await saveUserSettings(payload);
 
                 if (response.state === REQUEST_STATE.FAILED) {
