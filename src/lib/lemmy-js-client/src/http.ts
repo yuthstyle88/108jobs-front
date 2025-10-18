@@ -13,7 +13,7 @@ import {
     Tags,
     UploadedFile,
 } from "@tsoa/runtime";
-import {
+import type {
     AdminListUsersI,
     ChatHistoryQueryI,
     CommunityIdQueryI,
@@ -69,7 +69,7 @@ import type {ApproveRegistrationApplication} from "./types/ApproveRegistrationAp
 import type {AuthenticateWithOauth} from "./types/AuthenticateWithOauth";
 import type {BanFromCommunity} from "./types/BanFromCommunity";
 import type {BanFromCommunityResponse} from "./types/BanFromCommunityResponse";
-import {BanksResponse} from "./types/BankList";
+import type {BanksResponse} from "./types/BankList";
 import type {BanPerson} from "./types/BanPerson";
 import type {BanPersonResponse} from "./types/BanPersonResponse";
 import type {BlockCommunity} from "./types/BlockCommunity";
@@ -83,7 +83,7 @@ import type {CommunityIdQuery} from "./types/CommunityIdQuery";
 import type {CommunityReportResponse} from "./types/CommunityReportResponse";
 import type {CommunityResponse} from "./types/CommunityResponse";
 import type {ContactForm} from "./types/ContactForm";
-import {ContactResponse} from "./types/ContactResponse";
+import type {ContactResponse} from "./types/ContactResponse";
 import type {CountriesResponse} from "./types/CountriesResponse";
 import type {BankAccountForm} from "./types/BankAccountForm";
 import type {CreateComment} from "./types/CreateComment";
@@ -123,7 +123,7 @@ import type {ExchangeKeyResponse} from "./types/ExchangeKeyResponse";
 import type {FeaturePost} from "./types/FeaturePost";
 import type {FollowCommunity} from "./types/FollowCommunity";
 import type {GenerateTotpSecretResponse} from "./types/GenerateTotpSecretResponse";
-import {BankAccountsResponse} from "./types/GetBankAccountResponse";
+import type {BankAccountsResponse} from "./types/GetBankAccountResponse";
 import type {GetCaptchaResponse} from "./types/GetCaptchaResponse";
 import type {GetComment} from "./types/GetComment";
 import type {GetComments} from "./types/GetComments";
@@ -156,7 +156,7 @@ import type {
 import type {HideCommunity} from "./types/HideCommunity";
 import type {HidePost} from "./types/HidePost";
 import type {IdentityCardForm} from "./types/IdentityCardForm";
-import {IdentityCardResponse} from "./types/IdentityCardResponse";
+import type {IdentityCardResponse} from "./types/IdentityCardResponse";
 import type {ListCommentLikes} from "./types/ListCommentLikes";
 import type {ListCommentLikesResponse} from "./types/ListCommentLikesResponse";
 import type {ListCommunities} from "./types/ListCommunities";
@@ -242,9 +242,9 @@ import type {FileUploadResponse} from "./types/FileUploadResponse";
 import type {UpsertCard} from "./types/UpsertCard";
 import type {UserBlockInstanceParams} from "./types/UserBlockInstanceParams";
 import type {VerifyEmail} from "./types/VerifyEmail";
-import {VisitProfileResponse} from "./types/VisitProfileResponse";
+import type {VisitProfileResponse} from "./types/VisitProfileResponse";
 import type {ListUserChatRoomsQuery} from "./types/ListUserChatRoomsQuery";
-import {ListUserChatRoomsResponse} from "./types/ListUserChatRoomsResponse";
+import type {ListUserChatRoomsResponse} from "./types/ListUserChatRoomsResponse";
 import type {ChatRoomId} from "./types/ChatRoomId";
 import type {ChatRoomResponse} from "./types/ChatRoomResponse";
 import type {CreateChatRoomRequest} from "./types/CreateChatRoomRequest";
@@ -268,13 +268,12 @@ import type {ScbQrInquiryRequest, ScbQrInquiryResponse} from "./types/ScbQrInqui
 import type {BillingId} from "./types/BillingId";
 import type {LastReadQuery} from "./types/LastReadQuery";
 import type {LastReadResponse} from "./types/LastReadResponse";
-import type {PeerReadQuery} from "./types/PeerReadQuery";
 import type {PeerReadResponse} from "./types/PeerReadResponse";
-import {PeerStatusQuery} from "./types/PeerStatusQuery";
-import {SubmitUserReviewForm} from "./types/SubmitUserReviewForm";
-import {SubmitUserReviewResponse} from "./types/SubmitUserReviewResponse";
-import {ListUserReviewsResponse} from "./types/ListUserReviewsResponse";
-import {ListUserReviewsQuery} from "./types/ListUserReviewsQuery";
+import type {PeerStatusQuery} from "./types/PeerStatusQuery";
+import type {SubmitUserReviewForm} from "./types/SubmitUserReviewForm";
+import type {SubmitUserReviewResponse} from "./types/SubmitUserReviewResponse";
+import type {ListUserReviewsResponse} from "./types/ListUserReviewsResponse";
+import type {ListUserReviewsQuery} from "./types/ListUserReviewsQuery";
 
 enum HttpType {
     Get = "GET",

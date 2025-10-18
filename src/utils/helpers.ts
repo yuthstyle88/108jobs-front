@@ -476,14 +476,6 @@ async function toBlob(src: string | File | Blob): Promise<Blob> {
     return src;
 }
 
-/**
- * Uploads an image and returns the URL of the uploaded image
- *
- * @param selectedImage The image to upload (File or string URL/base64)
- * @param uploadImage Function to handle the actual upload
- * @returns A Promise resolving to the URL of the uploaded image
- * @throws Error if the upload fails
- */
 export async function uploadSelectedImage(
     selectedImage: File | string,
     uploadImage: (payload: { image: File }) => Promise<RequestState<import("lemmy-js-client").UploadImageResponse>>
@@ -499,7 +491,7 @@ export async function uploadSelectedImage(
         });
     }
 
-    const result = await uploadImage({image: file});
+    const result = await uploadImage({ image: file });
 
     if (isSuccess(result)) {
         const imageUrl = result.data?.images?.[0]?.imageUrl;
@@ -507,6 +499,7 @@ export async function uploadSelectedImage(
     }
 
     console.log("Upload failed response:", result);
+    return "";
 }
 
 export function stripEmpty<T extends object>(obj: T): Partial<T> {
