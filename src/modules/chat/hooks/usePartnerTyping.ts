@@ -20,6 +20,8 @@ export function usePartnerTyping(opts: Options) {
   const { channel, roomId, localUserId, decayMs = 2000, onRemoteTyping, dispatchDomEvent } = opts;
   const [isPartnerTyping, setIsPartnerTyping] = useState(false);
   const decayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastStateRef = useRef<{ typing: boolean; ts: number } | null>(null);
+  const EVENT = CHAT_EVENT.TYPING as string;
 
   const clearDecay = useCallback(() => {
     if (decayRef.current) {
@@ -36,80 +38,71 @@ export function usePartnerTyping(opts: Options) {
     }, decayMs);
   }, [clearDecay, decayMs, dispatchDomEvent, roomId]);
 
+  const me = Number(localUserId) || 0;
+  const roomKey = String(roomId);
+
+  // Unified handler used by both Channel and DOM
+  const handleTyping = useCallback((p: any) => {
+    const evt: TypingEvent = {
+      roomId: p?.roomId as ChatRoomId,
+      senderId: Number(p?.senderId) as LocalUserId,
+      typing: Boolean(p?.typing),
+    };
+    if (!evt.roomId || !evt.senderId) return;
+    if (String(evt.roomId) !== roomKey) return;
+    if (Number(evt.senderId) === me) return; // ignore self
+
+    // De-duplicate very frequent identical state
+    const now = Date.now();
+    if (lastStateRef.current && lastStateRef.current.typing === evt.typing && (now - lastStateRef.current.ts) < 120) {
+      return;
+    }
+    lastStateRef.current = { typing: evt.typing, ts: now };
+
+    if (!evt.typing) {
+      setIsPartnerTyping(false);
+      clearDecay();
+      dispatchDomEvent?.('chat:partner-typing', { roomId, senderId: Number(evt.senderId) || 0, typing: false });
+      onRemoteTyping?.(evt);
+      return;
+    }
+
+    setIsPartnerTyping(true);
+    dispatchDomEvent?.('chat:partner-typing', { roomId, senderId: Number(evt.senderId) || 0, typing: true });
+    armDecay(Number(evt.senderId) || 0);
+    onRemoteTyping?.(evt);
+  }, [roomKey, me, clearDecay, dispatchDomEvent, onRemoteTyping, armDecay]);
+
   // Primary: listen to adapter/channel if available
   useEffect(() => {
     if (!channel || typeof channel.on !== 'function') return;
 
-    const me = Number(localUserId) || 0;
-    const handle = (p: any) => {
-      const evt: TypingEvent = {
-        roomId: p?.roomId as ChatRoomId,
-        senderId: Number(p?.senderId) as LocalUserId,
-        typing: Boolean(p?.typing),
-      };
-      if (!evt.roomId || !evt.senderId) return;
-      if (String(evt.roomId) !== String(roomId)) return;
-      if (Number(evt.senderId) === me) return; // ignore self
-
-      if (!evt.typing) {
-        setIsPartnerTyping(false);
-        clearDecay();
-        dispatchDomEvent?.('chat:partner-typing', { roomId, senderId: Number(evt.senderId) || 0, typing: false });
-        onRemoteTyping?.(evt);
-        return;
-      }
-
-      // typing = true
-      setIsPartnerTyping(true);
-      dispatchDomEvent?.('chat:partner-typing', { roomId, senderId: Number(evt.senderId) || 0, typing: true });
-      armDecay(Number(evt.senderId) || 0);
-      onRemoteTyping?.(evt);
-    };
-
-    channel.on?.('chat:typing', handle);
-    return () => channel.off?.('chat:typing', handle);
-  }, [channel, roomId, localUserId, armDecay, clearDecay, onRemoteTyping, dispatchDomEvent]);
+    channel.on?.(EVENT, handleTyping);
+    return () => channel.off?.(EVENT, handleTyping);
+  }, [channel, EVENT, handleTyping]);
 
   // Fallback: listen to unified DOM typing event emitted by handleWSMessage
   useEffect(() => {
-    const me = Number(localUserId) || 0;
+    // Skip DOM fallback when a channel is present
+    if (channel && typeof channel.on === 'function') return;
+    if (typeof window === 'undefined') return; // SSR guard
+
     const onDomTyping = (e: Event) => {
       const anyEvt = e as CustomEvent<any>;
-      const d = anyEvt?.detail ?? {};
-      const evt: TypingEvent = {
-        roomId: d?.roomId as ChatRoomId,
-        senderId: Number(d?.senderId) as LocalUserId,
-        typing: Boolean(d?.typing),
-      };
-      if (!evt.roomId || !evt.senderId) return;
-      if (String(evt.roomId) !== String(roomId)) return;
-      if (Number(evt.senderId) === me) return; // ignore self
-
-      if (!evt.typing) {
-        setIsPartnerTyping(false);
-        clearDecay();
-        dispatchDomEvent?.('chat:partner-typing', { roomId, senderId: Number(evt.senderId) || 0, typing: false });
-        onRemoteTyping?.(evt);
-        return;
-      }
-
-      setIsPartnerTyping(true);
-      dispatchDomEvent?.('chat:partner-typing', { roomId, senderId: Number(evt.senderId) || 0, typing: true });
-      armDecay(Number(evt.senderId) || 0);
-      onRemoteTyping?.(evt);
+      handleTyping(anyEvt?.detail ?? {});
     };
 
     try {
-      window.addEventListener(CHAT_EVENT.TYPING as any, onDomTyping as any);
-      document?.addEventListener?.(CHAT_EVENT.TYPING as any, onDomTyping as any);
+      window.addEventListener(EVENT as any, onDomTyping as any);
+      document?.addEventListener?.(EVENT as any, onDomTyping as any);
     } catch {}
     return () => {
       try {
-        window.removeEventListener(CHAT_EVENT.TYPING as any, onDomTyping as any);
-        document?.removeEventListener?.(CHAT_EVENT.TYPING as any, onDomTyping as any);
+        window.removeEventListener(EVENT as any, onDomTyping as any);
+        document?.removeEventListener?.(EVENT as any, onDomTyping as any);
       } catch {}
     };
-  }, [roomId, localUserId, armDecay, clearDecay, onRemoteTyping, dispatchDomEvent]);
+  }, [channel, EVENT, handleTyping]);
 
   // Cleanup on unmount
   useEffect(() => () => { clearDecay(); }, [clearDecay]);
