@@ -3,6 +3,11 @@ FROM node:20-slim AS base
 
 WORKDIR /app
 
+# Install system dependencies for sharp
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libvips-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy package.json and package-lock.json for dependency installation
 COPY package.json package-lock.json ./
 
@@ -24,8 +29,8 @@ COPY . .
 # Install all dependencies (including dev) for build
 RUN npm install --quiet
 
-# Install sharp with optional dependencies for Next.js image optimization
-RUN npm install --include=optional sharp
+# Install sharp explicitly to ensure compatibility
+RUN npm install sharp --quiet
 
 # Build lemmy-js-client with pnpm in a clean directory
 ENV CI=true
@@ -44,6 +49,11 @@ FROM node:20-slim
 
 WORKDIR /app
 
+# Install minimal system dependencies for sharp in final stage
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libvips42 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy only necessary files from builder
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
@@ -57,6 +67,9 @@ USER node
 
 # Expose port
 EXPOSE 3000
+
+# Add healthcheck
+HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost:3000 || exit 1
 
 # Start the app
 CMD ["npm", "start"]
