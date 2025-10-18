@@ -1992,6 +1992,9 @@ export const en = {
             deleteImage: "Delete Image",
             errorUploadImage: "Failed to upload image. Please try again.",
             errorDeleteImage: "Failed to delete image. Please try again.",
+            preview: "Image preview",
+            fullScreenImage: "Full screen image",
+            uploadFailed: "File upload failed",
         },
         upload: {
             noFile: "No file selected",

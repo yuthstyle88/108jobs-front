@@ -2003,6 +2003,9 @@ export const vi = {
             deleteSample_error: "Không thể xóa mẫu công việc. Vui lòng thử lại.",
             update: "Cập nhật hồ sơ thành công",
             deleteImage: "Xóa hình ảnh",
+            preview: "Xem trước hình ảnh",
+            fullScreenImage: "Hình ảnh toàn màn hình",
+            uploadFailed: "Không thể tải lên tệp",
         },
         upload: {
             noFile: "Không có tệp nào được chọn",

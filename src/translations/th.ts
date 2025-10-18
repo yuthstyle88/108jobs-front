@@ -1950,6 +1950,9 @@ export const th = {
             deleteSample_error: "ไม่สามารถลบตัวอย่างผลงานได้ กรุณาลองใหม่",
             update: "อัปเดตโปรไฟล์สำเร็จ",
             deleteImage: "ลบรูปภาพ",
+            preview: "ตัวอย่างรูปภาพ",
+            fullScreenImage: "รูปภาพเต็มหน้าจอ",
+            uploadFailed: "ไม่สามารถอัปโหลดไฟล์ได้",
         },
         upload: {
             noFile: "No file selected",

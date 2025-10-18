@@ -1,16 +1,16 @@
 'use client';
 
-import React, { useState, useCallback, useRef } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useTranslation } from 'react-i18next';
-import { PortfolioPic, SaveUserSettings } from 'lemmy-js-client';
-import { useFileUpload } from '@/modules/chat/hooks/useFileUpload';
-import { useHttpPost } from '@/hooks/useHttpPost';
-import { REQUEST_STATE } from '@/services/HttpService';
+import React, {useState, useCallback, useRef} from 'react';
+import {useForm, useFieldArray} from 'react-hook-form';
+import {z} from 'zod';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {useTranslation} from 'react-i18next';
+import {PortfolioPic, SaveUserSettings} from 'lemmy-js-client';
+import {useFileUpload} from '@/modules/chat/hooks/useFileUpload';
+import {useHttpPost} from '@/hooks/useHttpPost';
+import {REQUEST_STATE} from '@/services/HttpService';
 import useNotification from '@/hooks/useNotification';
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
 type PortfolioImagesFormData = {
     portfolioImages: PortfolioPic[];
@@ -22,9 +22,9 @@ export const usePortfolioImagesForm = (
     initialPortfolioImages: PortfolioPic[] = [],
     imagesPerPage: number = 3,
 ) => {
-    const { t } = useTranslation();
-    const { successMessage, errorMessage } = useNotification();
-    const { execute: saveUserSettings, isMutating: isSubmitting } = useHttpPost('saveUserSettings');
+    const {t} = useTranslation();
+    const {successMessage, errorMessage} = useNotification();
+    const {execute: saveUserSettings, isMutating: isSubmitting} = useHttpPost('saveUserSettings');
 
     // Error state for file upload
     const [uploadError, setUploadError] = useState<string | null>(null);
@@ -63,7 +63,7 @@ export const usePortfolioImagesForm = (
         control,
         register,
         handleSubmit,
-        formState: { errors, isSubmitting: isFormSubmitting },
+        formState: {errors, isSubmitting: isFormSubmitting},
         getValues,
         setValue,
     } = useForm<PortfolioImagesFormData>({
@@ -74,14 +74,14 @@ export const usePortfolioImagesForm = (
     });
 
     // Manage dynamic array of portfolio images
-    const { fields, append, remove, update } = useFieldArray({
+    const {fields, append, remove, update} = useFieldArray({
         control,
         name: 'portfolioImages',
     });
 
     // State for image picker modal and editing
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [newImage, setNewImage] = useState({ title: '' });
+    const [newImage, setNewImage] = useState({title: ''});
     const [editingImage, setEditingImage] = useState<PortfolioPic | null>(null);
 
     // Open file picker
@@ -95,7 +95,7 @@ export const usePortfolioImagesForm = (
     const closePortfolioImageModal = useCallback(() => {
         setIsPortfolioImageModalOpen(false);
         setSelectedFile(null);
-        setNewImage({ title: '' });
+        setNewImage({title: ''});
         setEditingImage(null);
         setUploadError(null);
     }, [setSelectedFile]);
@@ -110,14 +110,14 @@ export const usePortfolioImagesForm = (
             if (!file) return;
 
             const previewUrl = URL.createObjectURL(file);
-            setSelectedFile({ fileUrl: previewUrl, fileType: file.type, fileName: file.name });
+            setSelectedFile({fileUrl: previewUrl, fileType: file.type, fileName: file.name});
             setIsPortfolioImageModalOpen(true);
 
             const uploaded = await handleFileUpload(e as unknown as Event);
             if (uploadError) {
                 setSelectedFile(null);
                 setIsPortfolioImageModalOpen(false);
-                setUploadError(t('portfolioImages.uploadFailed') || 'File upload failed');
+                setUploadError(t('profileInfo.uploadFailed') || 'File upload failed');
                 return;
             }
             setSelectedFile(uploaded);
@@ -142,7 +142,7 @@ export const usePortfolioImagesForm = (
                 }
 
                 // Since response is { success: true }, rely on local portfolioImages
-                setValue('portfolioImages', portfolioImages, { shouldValidate: true });
+                setValue('portfolioImages', portfolioImages, {shouldValidate: true});
 
                 successMessage(null, null, t(`profileInfo.${action}`) ?? 'Success!');
                 return true;
@@ -176,7 +176,7 @@ export const usePortfolioImagesForm = (
             const newPortfolioImages = [...getValues('portfolioImages'), newPortfolioImage];
 
             append(newPortfolioImage);
-            setNewImage({ title: '' });
+            setNewImage({title: ''});
             setSelectedFile(null);
             closePortfolioImageModal();
 
@@ -216,11 +216,11 @@ export const usePortfolioImagesForm = (
             const newPortfolioImages = [...getValues('portfolioImages')];
             newPortfolioImages[index] = updatedImage;
 
-            console.log('Updating image:', { updatedImage, newPortfolioImages }); // Debug
+            console.log('Updating image:', {updatedImage, newPortfolioImages}); // Debug
 
             update(index, updatedImage);
             setEditingImage(null);
-            setNewImage({ title: '' });
+            setNewImage({title: ''});
             setSelectedFile(null);
             closePortfolioImageModal();
 
@@ -258,7 +258,7 @@ export const usePortfolioImagesForm = (
 
             const success = await savePortfolioImages(newPortfolioImages, 'deleteImage');
             if (!success) {
-                setValue('portfolioImages', previousPortfolioImages, { shouldValidate: true }); // Revert on failure
+                setValue('portfolioImages', previousPortfolioImages, {shouldValidate: true}); // Revert on failure
                 setUploadError(t('profileInfo.errorDeleteImage') || 'Failed to delete image');
             }
         },
@@ -269,8 +269,8 @@ export const usePortfolioImagesForm = (
     const handleEditImage = useCallback(
         (item: PortfolioPic) => {
             setEditingImage(item);
-            setNewImage({ title: item.title ?? '' });
-            setSelectedFile({ fileUrl: item.imageUrl, fileType: '', fileName: item.title ?? '' });
+            setNewImage({title: item.title ?? ''});
+            setSelectedFile({fileUrl: item.imageUrl, fileType: '', fileName: item.title ?? ''});
             setIsPortfolioImageModalOpen(true);
         },
         [setSelectedFile],
@@ -313,7 +313,7 @@ export const usePortfolioImagesForm = (
         setEditingImage,
         selectedPortfolioImage: selectedFile?.fileUrl || null,
         setSelectedPortfolioImage: (url: string | null) =>
-            setSelectedFile(url ? { fileUrl: url, fileType: '', fileName: '' } : null),
+            setSelectedFile(url ? {fileUrl: url, fileType: '', fileName: ''} : null),
         isPortfolioImageModalOpen,
         handleSelectPortfolioFile,
         handlePortfolioFileChange,
