@@ -54,7 +54,8 @@ const JobApplication = () => {
                 const response = await createComment(payload);
 
                 if (response.state === REQUEST_STATE.FAILED) {
-                    if (response.err.name === 'alreadyCommented') {
+                    const errName = response.err?.error ?? "unknownError";
+                    if (errName === 'alreadyCommented') {
                         const messageError = t("errors.alreadyCommented", { defaultValue: t("global.submissionFailed") || "You have already submitted proposal on this job." });
                         errorMessage(null, null, messageError);
                         return;

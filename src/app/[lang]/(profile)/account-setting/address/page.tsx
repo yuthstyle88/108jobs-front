@@ -132,7 +132,7 @@ export default function Address() {
                         break;
                     }
                     case REQUEST_STATE.FAILED: {
-                        setApiError(t(`address.${addressRes.err.name}`) || t("address.updateFailed"));
+                        setApiError(t(`address.${addressRes.err.error}`) || t("address.updateFailed"));
                         break;
                     }
                 }

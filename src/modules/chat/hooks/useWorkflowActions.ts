@@ -222,7 +222,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             } as any;
             const res = await approveQuotationApi(form as any);
             if (res?.state === REQUEST_STATE.FAILED) {
-                if ((res as any)?.err?.name === 'insufficientBalanceForTransfer') {
+                if ((res as any)?.err?.error === 'insufficientBalanceForTransfer') {
                     setError((res as any)?.err?.message);
                 }
             }
