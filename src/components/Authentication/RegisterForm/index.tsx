@@ -74,8 +74,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             });
             switch (registerRes.state) {
                 case REQUEST_STATE.FAILED: {
-                    const errName = registerRes.err?.error ?? "unknownError";
-
+                    const errName = registerRes.err?.name ?? "unknownError";
                     if (errName === "requireVerification" && switchToVerifyOTP) {
                         switchToVerifyOTP({ email: data.email });
                     } else if (errName === "emailAlreadyExists") {

@@ -1,72 +1,62 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        unoptimized: process.env.NODE_ENV === 'development',
+        unoptimized: true,
         remotePatterns: [
-            { protocol: 'https', hostname: 'staging.108jobs.com', pathname: '/api/v4/image/**' },
-            { protocol: 'http', hostname: 'localhost', pathname: '/api/v4/image/**' },
-            { protocol: 'http', hostname: 'localhost', pathname: '/api/v4/files/**' },
-            { protocol: 'https', hostname: 'fastwork.ibrowe.com', pathname: '/api/v4/image/**' },
-            { protocol: 'https', hostname: 'api-fastwork-stg.ibrowe.com', pathname: '/api/v4/image/**' },
-            { protocol: 'https', hostname: 'images.unsplash.com' },
-            { protocol: 'https', hostname: '*.unsplash.com' },
-            { protocol: 'https', hostname: 'storage.googleapis.com' },
-            { protocol: 'https', hostname: '*.googleusercontent.com' },
-            { protocol: 'https', hostname: 'fastlance.vn' },
+            { protocol: 'http', hostname: 'images.example.com', pathname: '/**' },
+            {
+                protocol: "https",
+                hostname: "fastwork.ibrowe.com",
+                port: "",
+                pathname: "/api/v4/image/**",
+            },
+            {
+                protocol: "https",
+                hostname: "example.com",
+                port: "",
+                pathname: "/**",
+            },
+            {
+                protocol: 'https',
+                hostname: 'api-fastwork-stg.ibrowe.com',
+                pathname: '/api/v4/image/**',
+            },
         ],
-        formats: ['image/webp', 'image/avif'],
-        minimumCacheTTL: 31536000,
+        formats: ['image/avif', 'image/webp'],
+        minimumCacheTTL: 60,
         deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-        dangerouslyAllowSVG: true,
-        contentSecurityPolicy:
-            "default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data:; img-src 'self' data: https://staging.108jobs.com https://api-fastwork-stg.ibrowe.com https://fastwork.ibrowe.com https://images.unsplash.com https://*.unsplash.com https://storage.googleapis.com https://*.googleusercontent.com https://fastlance.vn; connect-src 'self' https://api-fastwork-stg.ibrowe.com wss://api-fastwork-stg.ibrowe.com;",
     },
     reactStrictMode: false,
-    output: 'standalone',
+    output: "standalone",
     poweredByHeader: false,
     compress: true,
-    eslint: { ignoreDuringBuilds: true },
-    typescript: { ignoreBuildErrors: false },
+    eslint: {
+        // Allow production builds to succeed even if there are ESLint errors
+        ignoreDuringBuilds: true,
+    },
     compiler: {
-        removeConsole:
-            process.env.NODE_ENV === 'production' && process.env.DEBUG !== 'true'
-                ? { exclude: ['error', 'warn'] }
-                : false,
+        removeConsole: process.env.NODE_ENV === 'production' && process.env.DEBUG !== 'true' ? {
+            exclude: ['error', 'warn'],
+        } : false,
     },
     experimental: {
         optimizeCss: true,
-        optimizePackageImports: ['@fortawesome/fontawesome-svg-core', '@fortawesome/free-solid-svg-icons'],
-        serverActions: { bodySizeLimit: '2mb' },
-        scrollRestoration: true,
-        optimizeServerReact: true,
-    },
-    headers: async () => [
-        {
-            source: '/_next/image(.*)',
-            headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+        optimizePackageImports: ['@fortawesome/fontawesome-svg-modules', '@fortawesome/free-solid-svg-icons'],
+        serverActions: {
+            bodySizeLimit: '2mb',
         },
-        {
-            source: '/_next/static/(.*)',
-            headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
-        },
-    ],
-    allowedDevOrigins: ['192.168.1.35', '192.168.1.*', 'my-proxy.local'],
-    env: { COMMIT_HASH: process.env.COMMIT_HASH || 'default' },
-    async rewrites() {
-        const apiHost =
-            process.env.NEXT_PUBLIC_USE_HTTPS === 'true'
-                ? `https://${process.env.NEXT_PUBLIC_API_HOST_NAME}`
-                : `http://${process.env.NEXT_PUBLIC_API_HOST_NAME}`;
-        console.log(`Rewrites: API host set to ${apiHost}`);
-        return [{ source: '/api/:path*', destination: `${apiHost}/api/:path*` }];
-    },
-    webpack: (config) => {
-        config.externals.push({ sharp: 'commonjs sharp' });
-        return config;
-    },
-};
 
-console.log('next.config.mjs loaded with images.remotePatterns:', JSON.stringify(nextConfig.images.remotePatterns, null, 2));
+    },
+    allowedDevOrigins: [
+        '192.168.1.35',          // ไอพีเครื่องที่เปิดหน้าเว็บ
+        '192.168.1.*',           // เผื่อวง LAN ย่อย
+        'my-proxy.local',        // โดเมน dev reverse-proxy
+    ],
+    env: {
+        COMMIT_HASH: process.env.COMMIT_HASH || "default", // ใช้ค่า Default หาก COMMIT_HASH เป็น undefined
+    },
+
+};
 
 export default nextConfig;

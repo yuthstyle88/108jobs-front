@@ -164,7 +164,7 @@ export const PostForm: React.FC<PostFormProps> = ({
                     : await createPost(payload);
 
                 if (response.state === REQUEST_STATE.FAILED) {
-                    const key = postId ? `editJob.${response.err.error}` : `createJob.${response.err.error}`;
+                    const key = postId ? `editJob.${response.err.name}` : `createJob.${response.err.name}`;
                     const messageError = t(key) ?? t("global.serverError");
                     errorMessage(null, null, messageError);
                     return;

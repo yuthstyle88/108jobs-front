@@ -85,7 +85,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
 
         if (res.state === REQUEST_STATE.FAILED) {
             const msg =
-                res.err?.error === "incorrectLogin"
+                res.err?.name === "incorrectLogin"
                     ? t("profileInfo.incorrectOldPassword")
                     : t("profileInfo.changePasswordError");
             setApiError(msg);

@@ -59,7 +59,7 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
             });
             switch (verifyRes.state) {
                 case REQUEST_STATE.FAILED: {
-                    handleApiError(verifyRes.err.error ?? "Error: VerifyOTPForm error");
+                    handleApiError(verifyRes.err.name ?? "Error: VerifyOTPForm error");
                     setApiErrorState(
                         verifyRes.err.name ?? "unknownError"
                     )
@@ -111,7 +111,7 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
                             email: emailString,
                         });
                         if (resendRes.state === REQUEST_STATE.FAILED) {
-                            handleApiError(resendRes.err.error ?? "Error: resendOTPForm error");
+                            handleApiError(resendRes.err.name ?? "Error: resendOTPForm error");
                             setApiErrorState(
                                 resendRes.err.name ?? "unknownError"
                             )

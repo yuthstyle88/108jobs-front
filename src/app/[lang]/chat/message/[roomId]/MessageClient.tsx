@@ -90,7 +90,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
                 }
 
                 if (chatRoomRes.state === REQUEST_STATE.FAILED) {
-                    const errMsg = String(chatRoomRes.err?.error || "").toLowerCase();
+                    const errMsg = String(chatRoomRes.err?.name || "").toLowerCase();
                     if (errMsg.includes("notfound") || errMsg.includes("404")) {
                         setState((prev) => ({...prev, notFound: true, loading: false}));
                     }
