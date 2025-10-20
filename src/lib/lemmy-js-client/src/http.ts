@@ -13,7 +13,7 @@ import {
     Tags,
     UploadedFile,
 } from "@tsoa/runtime";
-import {
+import type {
     AdminListUsersI,
     ChatHistoryQueryI,
     CommunityIdQueryI,
@@ -271,7 +271,7 @@ import type {LastReadResponse} from "./types/LastReadResponse";
 import type {PeerReadQuery} from "./types/PeerReadQuery";
 import type {PeerReadResponse} from "./types/PeerReadResponse";
 import {PeerStatusQuery} from "./types/PeerStatusQuery";
-import {SubmitUserReviewForm} from "./types/SubmitUserReviewForm";
+import type {SubmitUserReviewForm} from "./types/SubmitUserReviewForm";
 import {SubmitUserReviewResponse} from "./types/SubmitUserReviewResponse";
 import {ListUserReviewsResponse} from "./types/ListUserReviewsResponse";
 import {ListUserReviewsQuery} from "./types/ListUserReviewsQuery";

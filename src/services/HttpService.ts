@@ -23,10 +23,19 @@ export const REQUEST_STATE = {
 export type RequestStateKey =
   (typeof REQUEST_STATE)[keyof typeof REQUEST_STATE];
 
+export type ApiError = {
+    /** Server-side key (FastJob/Actix): e.g. "requireVerification", "emailAlreadyExists" */
+    error?: string;
+    /** Client/other services may use "name" instead */
+    name?: string;
+    /** Optional human-readable message */
+    message?: string;
+};
+
 /* ---------- concrete states --------------------------------- */
 export type FailedRequestState = {
   state: typeof REQUEST_STATE.FAILED;        // Using constant
-  err: Error;
+  err: ApiError;
 };
 
 export type SuccessRequestState<T> = {

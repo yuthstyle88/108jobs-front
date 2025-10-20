@@ -74,12 +74,14 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             });
             switch (registerRes.state) {
                 case REQUEST_STATE.FAILED: {
-                    if (registerRes.err.name === "requireVerification" && switchToVerifyOTP) {
-                        switchToVerifyOTP(data.email);
-                    } else if (registerRes.err.name === "emailAlreadyExists") {
-                        window.location.href = `/login?email-already-exists?redirect=${encodeURIComponent(redirectUrl)}&email=${encodeURIComponent(data.email)}`;
+                    const errName = registerRes.err?.error ?? "unknownError";
+
+                    if (errName === "requireVerification" && switchToVerifyOTP) {
+                        switchToVerifyOTP({ email: data.email });
+                    } else if (errName === "emailAlreadyExists") {
+                        window.location.href = `/login?email-already-exists&redirect=${encodeURIComponent(redirectUrl)}&email=${encodeURIComponent(data.email)}`;
                     } else {
-                        handleApiError(t(`authen.${registerRes.err.name}`));
+                        handleApiError(t(`authen.${errName}`));
                     }
                     break;
                 }

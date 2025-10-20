@@ -507,6 +507,7 @@ export async function uploadSelectedImage(
     }
 
     console.log("Upload failed response:", result);
+    throw new Error("Image upload failed");
 }
 
 export function stripEmpty<T extends object>(obj: T): Partial<T> {

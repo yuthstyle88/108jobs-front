@@ -95,7 +95,7 @@ export const AcceptForm = ({ title }
       setIsRedirecting(true); // แสดงโหลดดิ่งระหว่างรอเปลี่ยนหน้า
       window.location.href = "/";
     } else if (res.state === "failed") {
-      setApiError(res.err.message);
+      setApiError(res.err.message ?? "Error: Accept form failed. Please try again later.");
     }
   };
 
