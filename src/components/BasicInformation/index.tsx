@@ -49,7 +49,13 @@ export default function BasicInformation() {
     return (
         <>
             <form
-                onSubmit={onSubmit}
+                onSubmit={async (e) => {
+                    e.preventDefault();
+                    const success = await onSubmit();
+                    if (success) {
+                        window.location.reload();
+                    }
+                }}
                 className="border border-border-primary rounded-lg bg-white py-4 sm:py-6 mb-8"
             >
                 <div className="border-b border-border-primary px-6">

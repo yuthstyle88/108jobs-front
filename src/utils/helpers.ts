@@ -499,7 +499,7 @@ export async function uploadSelectedImage(
         });
     }
 
-    const result = await uploadImage({image: file});
+    const result = await uploadImage({ image: file });
 
     if (isSuccess(result)) {
         const imageUrl = result.data?.images?.[0]?.imageUrl;

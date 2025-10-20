@@ -6,3 +6,6 @@ tests
 Dockerfile
 docker-compose.yaml
 node_modules
+src/lib/lemmy-js-client/node_modules
+.next
+.gitignore

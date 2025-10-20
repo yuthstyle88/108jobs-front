@@ -105,7 +105,7 @@ export default function PortfolioImageModal({
                     {previewImage ? (
                         <Image
                             src={previewImage}
-                            alt={t('portfolioImages.preview') || 'Image preview'}
+                            alt={t('profileInfo.preview') || 'Image preview'}
                             width={192}
                             height={192}
                             className="w-full h-full object-cover rounded-lg"

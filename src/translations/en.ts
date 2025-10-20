@@ -1992,6 +1992,9 @@ export const en = {
             deleteImage: "Delete Image",
             errorUploadImage: "Failed to upload image. Please try again.",
             errorDeleteImage: "Failed to delete image. Please try again.",
+            preview: "Image preview",
+            fullScreenImage: "Full screen image",
+            uploadFailed: "File upload failed",
         },
         upload: {
             noFile: "No file selected",
@@ -2192,6 +2195,10 @@ export const en = {
             buttonAddBank: "Add Bank",
             noBankFound: "No banks found.",
             buttonEditBank: "Edit Bank",
+            errorBankRequired: "Please select a bank",
+            errorAccountNumberMin: "Account number must be at least 6 characters",
+            errorAccountNameRequired: "Account name is required",
+            errorInvalidAccountNumber: "Invalid account number for the selected bank"
         },
         sellerCommitmentLetter: {
             incomeTaxDescription: `To receive payments via the ${getAppName()} system, freelancers must verify and agree to provide their income information for tax authorities to review compliance with legal requirements.`,

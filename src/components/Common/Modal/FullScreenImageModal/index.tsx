@@ -38,7 +38,7 @@ export default function FullScreenImageModal({ isOpen, imageUrl, onClose }: Full
             className="fixed inset-0 z-[1000] flex items-center justify-center bg-black bg-opacity-75"
             role="dialog"
             aria-modal="true"
-            aria-label={t('portfolioImages.fullScreenModal') || 'Full screen image'}
+            aria-label={t('profileInfo.fullScreenModal') || 'Full screen image'}
             onKeyDown={handleKeyDown}
             tabIndex={-1}
         >
@@ -48,7 +48,7 @@ export default function FullScreenImageModal({ isOpen, imageUrl, onClose }: Full
             >
                 <Image
                     src={imageUrl}
-                    alt={t('portfolioImages.fullScreenImage') || 'Full screen image'}
+                    alt={t('profileInfo.fullScreenImage') || 'Full screen image'}
                     width={1200}
                     height={800}
                     sizes="90vw"
