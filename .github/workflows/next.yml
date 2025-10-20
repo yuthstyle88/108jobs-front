@@ -1,0 +1,95 @@
+name: Build & Deploy (Next.js via Docker to Staging)
+
+on:
+  push:
+    branches: [ staging ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: nextjs-staging
+  cancel-in-progress: true
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/fast-work-clone   # เปลี่ยนชื่อถ้าต้องการ
+  CONTAINER_NAME: fast-work-clone-app
+  APP_PORT: 3000
+  HOST_PORT: 2999
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # ถ้ามี env ฝั่ง public ที่ต้องฝังตอน build ให้ใช้ build-args ได้
+      - name: Build image
+        run: |
+          docker build \
+            -t $IMAGE_NAME:staging-${{ github.sha }} \
+            -t $IMAGE_NAME:staging-latest \
+            .
+            # --build-arg NEXT_PUBLIC_API_BASE=${{ vars.NEXT_PUBLIC_API_BASE_STG }}
+
+      - name: Push image
+        run: |
+          docker push $IMAGE_NAME:staging-${{ github.sha }}
+          docker push $IMAGE_NAME:staging-latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH to server and deploy container
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}     # private key ของ user deploy (สร้าง key ใหม่)
+          script_stop: true
+          script: |
+            set -euxo pipefail
+
+            # Login GHCR (อ่านอย่างเดียวพอ) — ใช้ token สำหรับ pull
+            echo "${{ secrets.GHCR_READ_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            IMAGE="${{ env.IMAGE_NAME }}:staging-latest"
+            CONTAINER="${{ env.CONTAINER_NAME }}"
+            HOST_PORT="${{ env.HOST_PORT }}"
+            APP_PORT="${{ env.APP_PORT }}"
+
+            # Pull เวอร์ชันล่าสุด
+            docker pull "$IMAGE"
+
+            # สร้างเครือข่ายถ้ายังไม่มี (สะดวกเวลาเชื่อมหลาย service)
+            docker network inspect webnet >/dev/null 2>&1 || docker network create webnet
+
+            # หยุด/ลบคอนเทนเนอร์เก่า (ถ้ามี)
+            docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER}$" && docker stop "$CONTAINER" || true
+            docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER}$" && docker rm "$CONTAINER" || true
+
+            # รันใหม่
+            docker run -d \
+              --name "$CONTAINER" \
+              --restart unless-stopped \
+              --network webnet \
+              -p ${HOST_PORT}:${APP_PORT} \
+              -e NODE_ENV=production \
+              -e NEXT_TELEMETRY_DISABLED=1 \
+              # -e NEXT_PUBLIC_API_BASE=${NEXT_PUBLIC_API_BASE:-https://api-staging.108jobs.com} \
+              "$IMAGE"
+
+            # ล้าง image เก่า ๆ (optional)
+            docker image prune -f || true

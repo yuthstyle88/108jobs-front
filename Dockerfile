@@ -1,75 +1,46 @@
-# --- Base Stage ---
-FROM node:20-slim AS base
-
+# ---------- Build stage ----------
+FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Install system dependencies for sharp
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libvips-dev \
-    && rm -rf /var/lib/apt/lists/*
+# ป้องกัน npm ci ช้า: copy package files แยกเลเยอร์
+COPY package.json package-lock.json* ./
+RUN npm ci
 
-# Copy package.json and package-lock.json for dependency installation
-COPY package.json package-lock.json ./
-
-# Install production dependencies only
-RUN npm install --production --quiet
-
-# --- Builder Stage ---
-FROM base AS builder
-
-# Enable pnpm via corepack for lemmy-js-client
-RUN corepack enable && corepack prepare pnpm@10.18.3 --activate
-
-# Verify pnpm installation
-RUN pnpm --version
-
-# Copy remaining project files, relying on .dockerignore to exclude node_modules
+# copy ซอร์สทั้งหมดแล้ว build
 COPY . .
+# ถ้ามี env ฝั่ง public ให้ตั้งผ่าน ARG/ENV ตอน build ได้
+# ARG NEXT_PUBLIC_API_BASE
+# ENV NEXT_PUBLIC_API_BASE=${NEXT_PUBLIC_API_BASE}
 
-# Install all dependencies (including dev) for build
-RUN npm install --quiet
-
-# Install sharp explicitly to ensure compatibility
-RUN npm install sharp --quiet
-
-# Build lemmy-js-client with pnpm in a clean directory
-ENV CI=true
-ENV PNPM_YES=true
-ENV PNPM_COLORS=false
-RUN rm -rf src/lib/lemmy-js-client/node_modules && \
-    cd src/lib/lemmy-js-client && \
-    pnpm install --force --no-frozen-lockfile --silent && \
-    pnpm run build
-
-# Build Next.js app
 RUN npm run build
 
-# --- Final Stage ---
-FROM node:20-slim
-
+# ---------- Runtime stage ----------
+FROM node:20-alpine AS runner
 WORKDIR /app
 
-# Install minimal system dependencies for sharp in final stage
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libvips42 \
-    && rm -rf /var/lib/apt/lists/*
+ENV NODE_ENV=production \
+    PORT=3000 \
+    HOSTNAME=0.0.0.0
 
-# Copy only necessary files from builder
-COPY --from=builder /app/.next ./.next
+# ใช้ Next.js output แบบ .next/standalone (เร็ว เบา)
+# ถ้าโปรเจกต์คุณไม่ได้ตั้ง output=standalone ให้ใช้วิธี copy node_modules + .next แทน
+# — เลือก "อย่างใดอย่างหนึ่ง" ระหว่าง A หรือ B —
+
+# (A) ถ้าใช้ output: 'standalone'
+# COPY --from=builder /app/.next/standalone ./
+# COPY --from=builder /app/.next/static ./.next/static
+# COPY --from=builder /app/public ./public
+
+# (B) ถ้าไม่ได้ใช้ standalone (เวิร์กแน่นอน)
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.mjs ./next.config.mjs
+COPY --from=builder /app/package.json ./package.json
 
-# Set non-root user for security
-RUN chown -R node:node /app
-USER node
-
-# Expose port
 EXPOSE 3000
 
-# Add healthcheck
-HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost:3000 || exit 1
+# Healthcheck ง่าย ๆ
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD node -e "fetch('http://127.0.0.1:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
-# Start the app
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]

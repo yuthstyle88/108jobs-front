@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    container_name: fast-work-clone-app-1
+    restart: unless-stopped
+    ports:
+      - "2999:3000"
+    environment:
+      NODE_ENV: "production"
+      TZ: "Asia/Bangkok"
+      # ชี้ API ไปที่โดเมน staging (ให้ตรงกับ nginx และ next.config.mjs)
+      NEXT_PUBLIC_API_HOST_NAME: "api-staging.108jobs.com"
+      NEXT_PUBLIC_USE_HTTPS: "true"
