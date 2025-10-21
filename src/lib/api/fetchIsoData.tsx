@@ -93,6 +93,13 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
         if (auth) {
             (headers as any).Authorization = `Bearer ${auth}`;
         }
+        // Forward original Cookie header to backend (Rust often expects it explicitly)
+        const incomingCookie = (incomingHeaders as any).cookie || (incomingHeaders as any).Cookie;
+        if (incomingCookie) {
+            // Some HTTP clients/libs care about casing; set both just in case
+            (headers as any).cookie = incomingCookie;
+            (headers as any).Cookie = incomingCookie;
+        }
         // Create a per-request client and set headers without mutating the shared client
         const host = getHttpBase();
         console.log("host", host)

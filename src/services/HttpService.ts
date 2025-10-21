@@ -79,6 +79,20 @@ class WrappedLemmyHttpClient {
   cacheTTL: number = 60000; // Cache TTL in milliseconds (1 minute)
   [prop: string]: any;
 
+  defaultHeaders: Record<string, string> = {};
+
+  /**
+   * Pass-through header setter so external code (e.g., ensureAuthHeader) can
+   * set Authorization/Cookie/etc. on the underlying Lemmy client.
+   */
+  setHeaders(headers: Record<string, string>) {
+    this.defaultHeaders = { ...this.defaultHeaders, ...headers };
+    const rc: any = this.rawClient as any;
+    if (typeof rc.setHeaders === 'function') {
+      rc.setHeaders(this.defaultHeaders);
+    }
+  }
+
   constructor(client: LemmyHttp) {
     this.rawClient = client;
 
@@ -86,7 +100,7 @@ class WrappedLemmyHttpClient {
     for (const key of Object.getOwnPropertyNames(
       Object.getPrototypeOf(this.rawClient),
     )) {
-      if (key !== "constructor") {
+      if (key !== "constructor" && key !== "setHeaders") {
         this[key] = async(
           ...args: Parameters<LemmyHttp[keyof LemmyHttp]>
         ) => {
