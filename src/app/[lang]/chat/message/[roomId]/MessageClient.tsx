@@ -6,7 +6,6 @@ import ChatRoomView from "../../../../../modules/chat/components/ChatRoomView";
 import {UserService} from "@/services";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {LocalUserId, PersonId, Post} from "@/lib/lemmy-js-client";
-import {RoomNotFound} from "@/components/RoomNotFound";
 import {useStateMachineStore} from "@/modules/chat/store/stateMachineStore";
 
 export default function MessageClient({roomId}: { roomId: string }) {
@@ -33,10 +32,12 @@ export default function MessageClient({roomId}: { roomId: string }) {
 
     return (
         <PhoenixChatBridgeProvider
+            key={roomId}
             isLoggedIn={isLoggedIn}
             roomId={roomId}
         >
             <ChatRoomView
+                key={roomId}
                 post={state.post}
                 partnerName={state.partnerName}
                 partnerAvatar={state?.partnerAvatar}
