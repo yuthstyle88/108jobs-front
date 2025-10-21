@@ -104,7 +104,7 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
             (tempClient as any).getMyUser(),
             (tempClient as any).listCommunities()
         ]);
-
+        console.log("tryUser", tryUser)
         // Process profile data with improved error handling
         await processUserData(tryUser);
 
