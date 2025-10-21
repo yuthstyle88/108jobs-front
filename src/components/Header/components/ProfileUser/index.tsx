@@ -20,8 +20,10 @@ type ProfileUserProps = {
     profile: Person;
 };
 
+import React, { memo, useCallback } from "react";
+
 const ProfileUser = ({profile}: ProfileUserProps) => {
-    const logout = () => UserService.Instance.logout();
+    const logout = useCallback(() => UserService.Instance.logout(), []);
     const {lang: currentLang} = useLanguage();
     const {t} = useTranslation();
     return (
@@ -34,8 +36,11 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
                                 src={profile.avatar || ProfileImage.avatar}
                                 alt="avatar"
                                 className="rounded-full w-12 h-12 object-cover border-1 border-border-primary"
-                                width={500}
-                                height={500}
+                                width={48}
+                                height={48}
+                                sizes="48px"
+                                loading="eager"
+                                priority
                             />
                         </div>
                         <div>
@@ -51,6 +56,9 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
                         className="absolute top-0 right-0 bottom-0 opacity-40 "
                         width={65}
                         height={80}
+                        loading="lazy"
+                        sizes="80px"
+                        aria-hidden
                     />
                 </div>
             </Link>
@@ -130,4 +138,4 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
     );
 };
 
-export default ProfileUser;
+export default memo(ProfileUser);
