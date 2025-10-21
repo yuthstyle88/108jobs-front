@@ -32,7 +32,6 @@ export default function MessageClient({roomId}: { roomId: string }) {
         loading: true,
     });
     const reset = useStateMachineStore((s) => s.reset);
-
     useEffect(() => {
         if (roomId) reset();
     }, [roomId, reset]);
