@@ -29,10 +29,11 @@ function ChatRoomListComponent({room, isActive, currentLang, localUser}: ChatRoo
     }, [room.participants, localUser?.id]);
 
     const online = usePeerOnline(peerUserId);
-    const handleClick = () => {
+    const handleClick = async () => {
         try {
-            markRoomRead(String(room.id));
-        } catch {
+            await markRoomRead(String(room.id));
+        } catch (e) {
+            // ignore errors so navigation still proceeds
         }
     };
 

@@ -45,6 +45,7 @@ interface ServerMessageModel {
     readerId?: ChatRoomId;
     lastReadMessageId?: string;
     content?: string;
+    secure: boolean;
     status?: 'pending' | 'sent' | 'failed' | string;
     typing?: boolean;
     updateType?: string;
@@ -103,6 +104,7 @@ export function normalizePhoenixEnvelope(
                 roomId: rid,
                 senderId: p.senderId,
                 content: p.content,
+                secure: p.secure,
                 status: (p.status as ChatStatus) ?? 'sent',
                 createdAt: p.createdAt ?? new Date().toISOString(),
                 isOwner: undefined,

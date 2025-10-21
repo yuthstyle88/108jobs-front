@@ -98,6 +98,7 @@ export const PhoenixChatBridgeProvider: React.FC<WebSocketProviderProps> = ({chi
                       roomId: m.roomId as ChatRoomId,
                       senderId: m.senderId as number,
                       content: m.content as string,
+                      secure: m.secure as boolean,
                       status: "failed" as ChatStatus,
                       createdAt: m.createdAt as string,
                       isOwner: Boolean(m.isOwner),

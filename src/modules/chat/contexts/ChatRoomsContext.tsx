@@ -85,7 +85,8 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         isMutating: isLoading,
         execute
     } = useHttpGet("listChatRooms", {limit: page * pageSize});
-    const error = reqState.state === "failed" ? (reqState as any).err : null;
+    const error =
+      reqState.state === REQUEST_STATE.FAILED ? (reqState as any).err : null;
 
 
     const mapToRooms = useCallback(async (input?: ListUserChatRoomsResponse): Promise<RoomsState> => {

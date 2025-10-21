@@ -112,6 +112,7 @@ export class ResendManager {
           roomId: msg.roomId,
           senderId: msg.senderId,
           content: msg.content,
+          secure: msg.secure,
           createdAt: msg.createdAt,
           status: 'pending',
           id: msg.id, // ใช้ client id เพื่อให้ server ทำ idempotency ได้
