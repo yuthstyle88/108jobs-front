@@ -51,7 +51,10 @@ export async function middleware(req: NextRequest) {
     : (pathname || "/");
 
   if (applicationPending === true && cleanPathname !== "/update-term") {
-    return NextResponse.redirect(new URL(`${langPrefix}/update-term`, origin));
+    const url = req.nextUrl.clone();
+    url.pathname = `${langPrefix}/update-term`;
+    url.search = '';
+    return NextResponse.redirect(url);
   }
 
   // Allow public routes by prefix (e.g., "/job-board" and "/job-board/*")
@@ -65,7 +68,10 @@ export async function middleware(req: NextRequest) {
 
   if (cleanPathname === "/login") {
     if (!isLoggedIn) return NextResponse.next();
-    return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
+    const url = req.nextUrl.clone();
+    url.pathname = `${langPrefix}/`;
+    url.search = '';
+    return NextResponse.redirect(url);
   }
 
   if (!protectedRoutes.some((route) => cleanPathname.startsWith(route))) {
@@ -74,9 +80,10 @@ export async function middleware(req: NextRequest) {
 
   if (!isLoggedIn) {
     const callbackUrl = encodeURIComponent(cleanPathname);
-    return NextResponse.redirect(
-      new URL(`${langPrefix}/login?redirect=${callbackUrl}`, origin)
-    );
+    const url = req.nextUrl.clone();
+    url.pathname = `${langPrefix}/login`;
+    url.search = `?redirect=${callbackUrl}`;
+    return NextResponse.redirect(url);
   }
 
   // No role-based restrictions; logged-in users can access all protected routes
