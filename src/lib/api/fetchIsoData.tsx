@@ -95,7 +95,7 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
 
         // Check authentication for protected routes
         if (!auth && isAuthPath(url)) {
-            logger.debug(`Redirecting unauthenticated user from protected route: ${url}`);
+            logger.error(`Redirecting unauthenticated user from protected route: ${url}`);
             return NextResponse.redirect(new URL(`/login?prev=${encodeURIComponent(url)}`,
                 origin)) as any;
         }
