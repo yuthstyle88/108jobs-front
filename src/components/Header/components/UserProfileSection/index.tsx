@@ -15,9 +15,11 @@ import {useTranslation} from "react-i18next";
 import ChatBadge from "@/components/Header/components/ChatBadge";
 import {ProfileIcon} from "@/constants/icons";
 import React, { memo, useCallback, useState } from "react";
+import NotFound from "@/app/[lang]/notFound";
 
 const UserProfileSection = () => {
     const {wallet, person} = useMyUser();
+    if (!person) return <NotFound />;
     const {isOpen, toggle, close} = useToggle();
     const {t} = useTranslation();
     const [showImprove, setShowImprove] = useState(false);
