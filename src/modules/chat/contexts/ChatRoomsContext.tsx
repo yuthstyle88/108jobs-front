@@ -3,17 +3,15 @@
 import React, {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import {ChatRoom as AppChatRoom} from "@/modules/chat/types/chat";
 import {HttpService, UserService} from "@/services";
-// E2EE exchange is ensured for future needs
-import {exchange} from "@/lib/api/auth";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import type {ListUserChatRoomsResponse} from "lemmy-js-client";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {isBrowser} from "@/utils/browser";
 import {useUnreadStore} from "@/modules/chat/store/unreadStore";
+import { onChatNewMessage, onWsReconnected } from "@/modules/chat/events";
 import {useActiveRoomId, useRoomsStore} from "@/modules/chat/store/roomsStore";
 import {disableBackgroundUnread, enableBackgroundUnread} from "@/modules/chat/utils/backgroundUnreadWatcher";
-import {ensureIdentityKeyPair, ensureSharedKeyForLocalUser} from "@/modules/chat/utils/security/crypto";
 
 // Context state for listing chat rooms with pagination and E2EE-aware lastMessage preview
 
@@ -256,31 +254,21 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         };
     }, [localUser?.id]);
 
-    const refresh = useCallback(() => {
-        execute();
+    const refresh = useCallback(async () => {
+        try {
+            await execute();
+        } catch {
+            // intentionally ignore errors here; state will reflect via reqState
+        }
     }, [execute]);
 
     // Refetch when WS reconnects (event dispatched from RealtimeChatContext)
     useEffect(() => {
-        const off = (async () => {
-            const {onWsReconnected} = await import("@/modules/chat/events");
-            return onWsReconnected(() => {
-                try {
-                    execute();
-                } catch {
-                }
-            });
-        })();
-        let unsub: (() => void) | null = null;
-        off.then((u) => {
-            unsub = u as any;
-        }).catch(() => {
+        const unsubscribe = onWsReconnected(() => {
+            execute().catch(() => {});
         });
         return () => {
-            try {
-                unsub?.();
-            } catch {
-            }
+            try { unsubscribe?.(); } catch {}
         };
     }, [execute]);
 
@@ -293,7 +281,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         setState(prev => ({...prev, rooms: prev.rooms.map(r => r.id === roomId ? {...r, unreadCount: 0} : r)}));
         try {
             // Keep global unread badge in sync
-            const {markSeen} = (await import("@/modules/chat/store/unreadStore")).useUnreadStore.getState();
+            const { markSeen } = useUnreadStore.getState();
             markSeen(roomId);
         } catch {
         }
@@ -333,28 +321,17 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
 
     // Listen for global chat:new-message events for UI ordering ONLY (no unread increments here)
     useEffect(() => {
-        let unsubscribe: (() => void) | null = null;
-        (async () => {
-            try {
-                const {onChatNewMessage} = await import("@/modules/chat/events");
-                unsubscribe = onChatNewMessage((detail) => {
-                    console.log('New message event received:', detail); // Debug log
-                    if (!detail || !detail.roomId) {
-                        console.warn('Invalid chat:new-message event:', detail);
-                        return;
-                    }
-
-                    // Only reorder list here; unread counting handled by realtime + background watcher
-                    bumpRoomToTop(detail.roomId, detail.createdAt);
-                });
-            } catch (e) {
-                console.error('Failed to set up chat:new-message listener:', e);
+        const unsubscribe = onChatNewMessage((detail) => {
+            console.log('New message event received:', detail); // Debug log
+            if (!detail || !detail.roomId) {
+                console.warn('Invalid chat:new-message event:', detail);
+                return;
             }
-        })();
+            // Only reorder list here; unread counting handled by realtime + background watcher
+            bumpRoomToTop(detail.roomId, detail.createdAt);
+        });
         return () => {
-            try {
-                unsubscribe?.();
-            } catch (e) {
+            try { unsubscribe?.(); } catch (e) {
                 console.error('Failed to unsubscribe from chat:new-message:', e);
             }
         };
@@ -367,41 +344,26 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     //   - Single source of truth: useUnreadStore handles active-room policy & dedupe
     //   - Avoids double counting from multiple listeners/providers
     useEffect(() => {
-        let unsub: undefined | (() => void);
-        let cancelled = false;
-        (async () => {
-            try {
-                const {useUnreadStore} = await import("@/modules/chat/store/unreadStore");
-                const applyPerRoom = (perRoom: Record<string, number>) => {
-                    if (cancelled) return;
-                    setState(prev => {
-                        if (!prev.rooms || prev.rooms.length === 0) return prev as any;
-                        const nextRooms = prev.rooms.map((r: any) => {
-                            const cnt = perRoom?.[r.id] || 0;
-                            return cnt === r.unreadCount ? r : {...r, unreadCount: cnt};
-                        });
-                        return {...prev, rooms: nextRooms} as any;
-                    });
-                };
-                // initial apply
-                applyPerRoom(useUnreadStore.getState().perRoom);
-                // subscribe for future changes
-                // store doesn't use subscribeWithSelector; listen to full state and react when perRoom reference changes
-                unsub = useUnreadStore.subscribe((s, prev) => {
-                    if (s.perRoom !== prev?.perRoom) applyPerRoom(s.perRoom);
+        const applyPerRoom = (perRoom: Record<string, number>) => {
+            setState(prev => {
+                if (!prev.rooms || prev.rooms.length === 0) return prev as any;
+                const nextRooms = prev.rooms.map((r: any) => {
+                    const cnt = perRoom?.[r.id] || 0;
+                    return cnt === r.unreadCount ? r : { ...r, unreadCount: cnt };
                 });
-            } catch {
-            }
-        })();
-        return () => {
-            cancelled = true;
-            try {
-                unsub?.();
-            } catch {
-            }
+                return { ...prev, rooms: nextRooms } as any;
+            });
         };
-        // Re-run when room list identity changes (ids), so unread can be applied to new rooms
-    }, [state.rooms.map?.(r => r.id).join("|")]);
+        // initial apply
+        applyPerRoom(useUnreadStore.getState().perRoom);
+        // subscribe for future changes
+        const unsub = useUnreadStore.subscribe((s, prev) => {
+            if (s.perRoom !== prev?.perRoom) applyPerRoom(s.perRoom);
+        });
+        return () => {
+            try { unsub?.(); } catch {}
+        };
+    }, [state.rooms]);
 
     // Sync current rooms into the global rooms store so background watchers can observe them
     useEffect(() => {
@@ -453,7 +415,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
             console.warn('[rooms-store] failed to sync rooms:', e);
         }
         // Re-run when the set of room ids changes
-    }, [state.rooms.map?.(r => r.id).join('|')]);
+    }, [state.rooms]);
 
     // removed effect that released activeToken on unmount
 
