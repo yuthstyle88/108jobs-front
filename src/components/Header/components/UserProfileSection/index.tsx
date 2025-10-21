@@ -76,15 +76,13 @@ const UserProfileSection = () => {
                     className="flex items-center justify-center gap-0.5 min-w-0"
                 >
                     <div className="w-8 h-8 rounded-full overflow-hidden bg-white shrink-0">
-                        {person && (
-                            <Image
-                                src={person.avatar || ProfileImage.avatar}
-                                alt="avatar"
-                                className="w-full h-full object-cover object-center"
-                                width={32}
-                                height={32}
-                            />
-                        )}
+                        <Image
+                            src={person?.avatar || ProfileImage.avatar}
+                            alt="avatar"
+                            className="w-full h-full object-cover object-center"
+                            width={32}
+                            height={32}
+                        />
                     </div>
                     <FontAwesomeIcon
                         icon={faChevronDown}
