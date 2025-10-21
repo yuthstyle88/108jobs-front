@@ -4,11 +4,12 @@ const nextConfig = {
         unoptimized: true,
         remotePatterns: [
             { protocol: 'https', hostname: 'staging.108jobs.com', pathname: '/api/v4/image/**' },
+            { protocol: 'https', hostname: 'staging.108jobs.com', pathname: '/api/v4/files/**' },
             { protocol: 'https', hostname: 'api-staging.108jobs.com', pathname: '/api/v4/image/**' },
-            { protocol: 'http', hostname: 'localhost', pathname: '/api/v4/image/**' },
-            { protocol: 'http', hostname: 'localhost', pathname: '/api/v4/files/**' },
+            { protocol: 'https', hostname: 'api-staging.108jobs.com', pathname: '/api/v4/files/**' },
+            { protocol: 'http',  hostname: 'localhost',            pathname: '/api/v4/image/**' },
+            { protocol: 'http',  hostname: 'localhost',            pathname: '/api/v4/files/**' },
             { protocol: 'https', hostname: 'images.unsplash.com' },
-            { protocol: 'https', hostname: '*.unsplash.com' },
             { protocol: 'https', hostname: 'storage.googleapis.com' },
             { protocol: 'https', hostname: '*.googleusercontent.com' },
             { protocol: 'https', hostname: 'fastlance.vn' },
@@ -27,12 +28,6 @@ const nextConfig = {
     compress: true,
     eslint: { ignoreDuringBuilds: true },
     typescript: { ignoreBuildErrors: false },
-    compiler: {
-        removeConsole:
-            process.env.NODE_ENV === 'production' && process.env.DEBUG !== 'true'
-                ? { exclude: ['error', 'warn'] }
-                : false,
-    },
     experimental: {
         optimizeCss: true,
         optimizePackageImports: ['@fortawesome/fontawesome-svg-core', '@fortawesome/free-solid-svg-icons'],
@@ -53,11 +48,14 @@ const nextConfig = {
     allowedDevOrigins: ['192.168.1.35', '192.168.1.*', 'my-proxy.local'],
     env: { COMMIT_HASH: process.env.COMMIT_HASH || 'default' },
     async rewrites() {
-        const apiHost =
-            process.env.NEXT_PUBLIC_USE_HTTPS === 'true'
-                ? `https://${process.env.NEXT_PUBLIC_API_HOST_NAME}`
-                : `http://${process.env.NEXT_PUBLIC_API_HOST_NAME}`;
-        console.log(`Rewrites: API host set to ${apiHost}`);
+        const host = process.env.NEXT_PUBLIC_API_HOST_NAME;
+        const useHttps = process.env.NEXT_PUBLIC_USE_HTTPS === 'true';
+        if (!host) {
+            console.warn('[next.config] Skipping /api rewrite: NEXT_PUBLIC_API_HOST_NAME is not set');
+            return [];
+        }
+        const apiHost = `${useHttps ? 'https' : 'http'}://${host}`;
+        console.log(`[next.config] Rewrites: API host set to ${apiHost}`);
         return [{ source: '/api/:path*', destination: `${apiHost}/api/:path*` }];
     },
     webpack: (config) => {
@@ -66,6 +64,8 @@ const nextConfig = {
     },
 };
 
-console.log('next.config.mjs loaded with images.remotePatterns:', JSON.stringify(nextConfig.images.remotePatterns, null, 2));
+if (process.env.NODE_ENV !== 'production') {
+    console.log('next.config.mjs loaded with images.remotePatterns:', JSON.stringify(nextConfig.images.remotePatterns, null, 2));
+}
 
 export default nextConfig;

@@ -18,6 +18,7 @@ export default async function isoDataInitializer(): Promise<IsoData | null> {
     const hdr = await headers();
     const url = hdr.get("x-url") || "/";
     const incomingHttpHeaders: IncomingHttpHeaders = Object.fromEntries(hdr.entries());
+
     try {
         return await fetchIsoData(url,
           incomingHttpHeaders);

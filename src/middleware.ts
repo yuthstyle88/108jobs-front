@@ -26,7 +26,8 @@ const protectedRoutes: string[] = [
   "/manage-product",
 ];
 
-const publicRoutes = [
+// Public route prefixes (match exact or any subpath under these)
+const publicRoutePrefixes: string[] = [
   "/job-board",
   "/apply-freelance/landing",
   "/coin",
@@ -53,7 +54,10 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL(`${langPrefix}/update-term`, origin));
   }
 
-  if (publicRoutes.includes(cleanPathname)) {
+  // Allow public routes by prefix (e.g., "/job-board" and "/job-board/*")
+  if (publicRoutePrefixes.some((prefix) =>
+    cleanPathname === prefix || cleanPathname.startsWith(prefix + "/")
+  )) {
     return NextResponse.next();
   }
 
