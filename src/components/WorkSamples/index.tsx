@@ -35,7 +35,11 @@ export default function WorkSamples() {
     };
 
     const handleAddOrUpdateSample = async () => {
-        editingSampleId ? await editSample(editingSampleId) : await addSample();
+        if (editingSampleId) {
+            await editSample(editingSampleId);
+        } else {
+            await addSample();
+        }
     };
 
     return (

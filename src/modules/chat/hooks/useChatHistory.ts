@@ -56,7 +56,7 @@ export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResul
                 },
             );
 
-            let filteredCount = 0;
+            const filteredCount = 0;
             if (items && Array.isArray(items)) {
                 // Reverse items before inserting to match ascending render order
                 upsertHistory(items.reverse());

@@ -51,7 +51,11 @@ export function waitForAck(deps: SendMessageDeps, clientId: string, timeoutMs = 
     const cleanup = () => {
       try { clearTimeout(timer); } catch {}
       for (const off of unsubs) {
-        try { typeof off === 'function' && off(); } catch {}
+        try {
+          if (typeof off === 'function') {
+            off();
+          }
+        } catch {}
       }
       unsubs = [];
     };

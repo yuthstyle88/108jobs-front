@@ -229,46 +229,46 @@ export async function sendChatMessage(deps: SendMessageDeps, data: MessagePayloa
     }
     return;
 }
-
-/** Manual resend (used when user taps "resend" in UI) */
-export async function resendChatMessage(
-  deps: SendMessageDeps,
-  originalOrId: string | ChatMessage
-): Promise<{ id: string; sent: boolean; }> {
-    const store = useChatStore();
-    try {
-        // Resolve message from id or use provided ChatMessage directly
-        let msg: ChatMessage | undefined;
-        let messageId: string;
-        if(typeof originalOrId === 'string') {
-            messageId = originalOrId;
-            msg = store?.getMessageById ? store.getMessageById(messageId) : undefined;
-            if(!msg) {
-                console.warn("[chat] resend: message not found in store", messageId);
-                return {id: messageId, sent: false};
-            }
-        } else {
-            msg = originalOrId;
-            messageId = String(originalOrId.id);
-        }
-
-        if(msg) {
-            return await doSend(deps, msg);
-        }
-        return {id: messageId, sent: false,};
-    } catch (err) {
-        console.error("[chat] resend failed", err);
-        // messageId is always defined by this point
-        let messageId: string;
-        if(typeof originalOrId === 'string') {
-            messageId = originalOrId;
-        } else {
-            messageId = String(originalOrId.id);
-        }
-        store?.commitStatus?.(messageId, "failed");
-        return {id: messageId, sent: false};
-    }
-}
+//
+// /** Manual resend (used when user taps "resend" in UI) */
+// export async function resendChatMessage(
+//   deps: SendMessageDeps,
+//   originalOrId: string | ChatMessage
+// ): Promise<{ id: string; sent: boolean; }> {
+//     const store = useChatStore();
+//     try {
+//         // Resolve message from id or use provided ChatMessage directly
+//         let msg: ChatMessage | undefined;
+//         let messageId: string;
+//         if(typeof originalOrId === 'string') {
+//             messageId = originalOrId;
+//             msg = store?.getMessageById ? store.getMessageById(messageId) : undefined;
+//             if(!msg) {
+//                 console.warn("[chat] resend: message not found in store", messageId);
+//                 return {id: messageId, sent: false};
+//             }
+//         } else {
+//             msg = originalOrId;
+//             messageId = String(originalOrId.id);
+//         }
+//
+//         if(msg) {
+//             return await doSend(deps, msg);
+//         }
+//         return {id: messageId, sent: false,};
+//     } catch (err) {
+//         console.error("[chat] resend failed", err);
+//         // messageId is always defined by this point
+//         let messageId: string;
+//         if(typeof originalOrId === 'string') {
+//             messageId = originalOrId;
+//         } else {
+//             messageId = String(originalOrId.id);
+//         }
+//         store?.commitStatus?.(messageId, "failed");
+//         return {id: messageId, sent: false};
+//     }
+// }
 
 // ปลอดภัยกับ SSR
 const getWin = (): Window | undefined => {

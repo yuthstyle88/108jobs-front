@@ -97,22 +97,26 @@ export function emitChatTyping(detail: { roomId: string; senderId: number; typin
         const typing = Boolean((detail as any)?.typing);
         if (!roomId || !Number.isFinite(senderId)) return;
 
-        // Build event with better DOM propagation
-        const evt = new CustomEvent(CHAT_EVENT.TYPING as string, {
-            detail: {roomId, senderId, typing},
+        const baseInit: CustomEventInit = {
+            detail: { roomId, senderId, typing },
             bubbles: true,
             composed: true,
             cancelable: false,
-        } as any);
-        // Dispatch to both window and document to cover different listeners
+        };
+
+        // Dispatch to window
         try {
-            window.dispatchEvent(evt);
-        } catch {
-        }
+            const evtWin = new CustomEvent(CHAT_EVENT.TYPING as string, baseInit);
+            window.dispatchEvent(evtWin);
+        } catch {}
+
+        // Dispatch to document (if available)
         try {
-            document && document.dispatchEvent && document.dispatchEvent(evt);
-        } catch {
-        }
+            if (typeof document !== 'undefined' && typeof document.dispatchEvent === 'function') {
+                const evtDoc = new CustomEvent(CHAT_EVENT.TYPING as string, baseInit);
+                document.dispatchEvent(evtDoc);
+            }
+        } catch {}
     } catch (e) {
         // swallow errors to keep callers simple
     }

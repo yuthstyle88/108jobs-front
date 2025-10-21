@@ -21,6 +21,7 @@ import {LandingImage} from "@/constants/images";
 import ChatWrapper from "@/containers/ChatWrapper";
 import {ChatRoomsProvider} from "@/modules/chat/contexts/ChatRoomsContext";
 import {ChatLanguageProvider} from "@/contexts/ChatLanguage";
+import Link from "next/link";
 
 export default function Home() {
     const {t} = useTranslation();
@@ -72,12 +73,12 @@ export default function Home() {
                                     {t("home.titleBannerHomePage2")}
                                 </p>
                                 <SearchInput/>
-                                <a
+                                <Link
                                     href="/job-board"
                                     className="mt-6 inline-block bg-blue-600 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
                                 >
                                     {t("home.exploreNow")}
-                                </a>
+                                </Link>
                             </div>
                         </section>
 

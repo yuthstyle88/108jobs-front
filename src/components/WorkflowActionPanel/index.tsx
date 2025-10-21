@@ -3,6 +3,7 @@ import React from "react";
 import {ActionButton} from "@/modules/chat/components/ActionButton";
 import {WorkFlowAction} from "@/modules/chat/types/workflow";
 import {useTranslation} from "react-i18next";
+import Link from "next/link";
 
 interface WorkflowActionPanelProps {
     actions: WorkFlowAction[];
@@ -62,9 +63,9 @@ export const WorkflowActionPanel: React.FC<WorkflowActionPanelProps> = ({
                             <div className="font-medium">{t("profileChat.insufficientBalanceTitle")}</div>
                             <div className="mt-1">
                                 {t("profileChat.insufficientBalanceWarning")}{" "}
-                                <a href="/coin" className="underline font-medium">
+                                <Link href="/coin" className="underline font-medium">
                                     {t("profileChat.topUpNow")}
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     )}
