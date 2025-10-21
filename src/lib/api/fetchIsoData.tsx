@@ -88,7 +88,9 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
         const headers = setForwardedHeaders(incomingHeaders);
         const auth = getJwtCookie(incomingHeaders);
         // Create a per-request client and set headers without mutating the shared client
-        const tempClient = wrapClient(new LemmyHttp(getHttpBase()));
+        const host = getHttpBase();
+        console.log("host", host)
+        const tempClient = wrapClient(new LemmyHttp(host));
         await (tempClient as any).setHeaders(headers);
 
         // Check authentication for protected routes
