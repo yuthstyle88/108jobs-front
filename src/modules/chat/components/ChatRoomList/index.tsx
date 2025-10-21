@@ -6,7 +6,6 @@ import Link from "next/link";
 import {useChatRoomsContext} from "@/modules/chat/contexts/ChatRoomsContext";
 import AvatarBadge from "@/components/AvatarBadge";
 import {usePeerOnline} from "@/modules/chat/store/presenceStore";
-import {dbg} from "@/modules/chat/utils";
 
 interface ChatRoomListProps {
     room: ChatRoom;
@@ -36,8 +35,6 @@ function ChatRoomListComponent({room, isActive, currentLang, localUser}: ChatRoo
             // ignore errors so navigation still proceeds
         }
     };
-
-    console.log("room.name: ", room)
 
     // Parse room name to extract partner name and job ID
     const [partnerName = "Unknown", jobId = ""] = (room.name || "?").split(":Job ");

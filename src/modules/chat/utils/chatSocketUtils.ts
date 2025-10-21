@@ -39,14 +39,9 @@ export type NormalizedEnvelope =
 };
 
 // Server-side payload shapes (mirroring Rust `MessageModel` and `IncomingEvent`)
-interface ServerMessageModel {
-    id?: string;
-    senderId: LocalUserId;
+export type ServerMessageModel = ChatMessage & {
     readerId?: ChatRoomId;
     lastReadMessageId?: string;
-    content?: string;
-    secure: boolean;
-    status?: 'pending' | 'sent' | 'failed' | string;
     typing?: boolean;
     updateType?: string;
     statusTarget?: string;
@@ -103,8 +98,8 @@ export function normalizePhoenixEnvelope(
                 id: String(p.id ?? ''),
                 roomId: rid,
                 senderId: p.senderId,
+                secure: p.secure ?? false,
                 content: p.content,
-                secure: p.secure,
                 status: (p.status as ChatStatus) ?? 'sent',
                 createdAt: p.createdAt ?? new Date().toISOString(),
                 isOwner: undefined,
