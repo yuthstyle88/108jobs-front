@@ -1,6 +1,21 @@
 import {isBrowser} from "@/utils/browser";
 import {testHost} from "@/utils/config";
 
+function normalizeHost(v?: string): string {
+  if (!v) return '';
+  try {
+    // If value already includes scheme, use URL to parse and extract host[:port]
+    if (/^https?:\/\//i.test(v)) {
+      const u = new URL(v);
+      return u.host; // host = hostname[:port]
+    }
+    // Otherwise, trim any leading/trailing slashes and whitespace
+    return String(v).trim().replace(/^\/*/, '').replace(/\/*$/, '');
+  } catch {
+    return String(v).trim();
+  }
+}
+
 export function getBaseLocal(s = "") {
   return `http${s}://${process.env.NEXT_PUBLIC_API_HOST_NAME}`;
 }
@@ -9,7 +24,8 @@ export function getExternalHost() {
   if (isBrowser()) {
     // Prefer server-provided external host when available; fallback to current location host
     const fromIso = (window as any)?.isoData?.lemmyExternalHost;
-      return typeof fromIso === 'string' && fromIso.length > 0 ? fromIso : window.location.host;
+    const raw = (typeof fromIso === 'string' && fromIso.length > 0) ? fromIso : window.location.host;
+    return normalizeHost(raw);
   }
   return process.env.LEMMY_UI_LEMMY_EXTERNAL_HOST ?? testHost;
 }
@@ -25,7 +41,8 @@ export function getHttpBase() {
 }
 
 export function getHttpBaseExternal() {
-  return `http${getSecure()}://${getExternalHost()}`;
+  // Always use HTTPS for external calls in runtime
+  return `https://${getExternalHost()}`;
 }
 
 export function getHttpBaseInternal() {
