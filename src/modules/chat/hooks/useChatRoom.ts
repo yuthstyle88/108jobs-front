@@ -36,7 +36,6 @@ const PEER_ACTIVE_BUMP_MIN_MS = 1000; // throttle markPeerActive to avoid runawa
 
 export interface UseChatRoomParams {
     roomId: string;
-    shareKey: string;
     onRemoteTyping?: (detail: { roomId: string; senderId: number; typing: boolean }) => void;
     localUser: LocalUser,
     roomData: ChatRoomData;
@@ -44,7 +43,6 @@ export interface UseChatRoomParams {
 
 export function useChatRoom({
     roomId,
-    shareKey,
     onRemoteTyping,
     localUser,
     roomData,
@@ -325,7 +323,6 @@ export function useChatRoom({
         const deps = {
             isE2EMock,
             roomId,
-            shareKey,
             sentSet: sentMessagesRef.current,
             addMessageListener, // allow waitForAck to subscribe when adapter lacks onAny/onmessage
             onAfterSend: () => {
@@ -335,7 +332,7 @@ export function useChatRoom({
             ...(adapter ? {adapter} : {}),
         } as const;
         await sendChatMessage(deps, payload);
-    }, [ws, roomId, localUser.id, isE2EMock, shareKey]);
+    }, [ws, roomId, localUser.id, isE2EMock]);
 
     const resendMessage = useCallback(async (id: string) => {
         const st = useChatStore.getState();

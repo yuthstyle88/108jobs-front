@@ -59,7 +59,6 @@ export interface PhoenixPacket<T = any> {
 export interface SendMessageDeps {
     isE2EMock: boolean;
     roomId: string;
-    shareKey?: string;
     sentSet: Set<string>;
     onAfterSend?: () => void; // ใช้เคลียร์ typing flag ที่ provider
     // เชื่อม Chat Store แบบ optional: ถ้าไม่ได้ส่งมาก็ยังทำงานผ่าน DOM event เหมือนเดิม

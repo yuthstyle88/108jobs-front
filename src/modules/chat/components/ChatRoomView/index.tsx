@@ -90,7 +90,6 @@ interface ChatRoomViewProps {
     partnerAvailable?: boolean;
     roomData: ChatRoomData;
     localUser: LocalUser;
-    shareKey: string;
 }
 
 function ResponsiveFlowPanel({isOpen, children}: { isOpen: boolean; children: React.ReactNode }) {
@@ -120,7 +119,6 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
                                                        partnerAvailable,
                                                        roomData,
                                                        localUser,
-                                                       shareKey
                                                    }) => {
     const {t} = useTranslation();
     const {person, wallet} = useMyUser();
@@ -226,7 +224,7 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
     const {
         actions: {sendMessage, sendTyping, sendRoomUpdate, sendReadReceipt},
         state: {refreshRoomData, isPartnerTyping},
-    } = useChatRoom({roomId, shareKey, localUser, roomData: currentRoom});
+    } = useChatRoom({roomId, localUser, roomData: currentRoom});
 
     // Deduplicate read-receipts: remember last sent message id
     const lastReadSentRef = useRef<string | null>(null);
