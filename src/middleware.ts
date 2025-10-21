@@ -5,6 +5,20 @@ import {VALID_LANGUAGES} from "@/constants/language";
 import {jwtDecode} from "jwt-decode";
 import {Claims} from "@/services/UserService";
 
+function isNextDataLike(req: NextRequest): boolean {
+  const headers = req.headers;
+  const purpose = (headers.get("purpose") || headers.get("sec-purpose") || "").toLowerCase();
+  const dest = (headers.get("sec-fetch-dest") || "").toLowerCase();
+  const accept = (headers.get("accept") || "").toLowerCase();
+  // Next internal signals for app-router client nav / prefetch
+  const isPrefetch = purpose.includes("prefetch") || headers.get("x-middleware-prefetch") === "1";
+  const isRSC = accept.includes("text/x-component"); // flight/RSC requests
+  const isNextDataHeader = headers.has("x-nextjs-data") || headers.has("next-router-prefetch");
+  const isNavigateDoc = dest === "document" && (headers.get("sec-fetch-mode") || "").toLowerCase() === "navigate";
+  // We only want to bypass for RSC/data/prefetch fetches, not for actual document navigations.
+  return isPrefetch || isRSC || isNextDataHeader;
+}
+
 function getApplicationPending(token: string): boolean | null {
   if (!token) return null;
   const payload = jwtDecode<Claims>(token);
@@ -35,13 +49,12 @@ const publicRoutePrefixes: string[] = [
 ];
 
 export async function middleware(req: NextRequest) {
-  // Skip all middleware logic for prefetch/prerender requests to avoid interfering with navigation
-  const purpose = req.headers.get("purpose") || req.headers.get("sec-purpose") || "";
-  if (purpose.toLowerCase().includes("prefetch") || purpose.toLowerCase().includes("prerender")) {
+  // Bypass middleware for Next.js internal RSC/flight/prefetch requests to prevent
+  // client-side navigation from failing ("Fetch failed loading").
+  if (isNextDataLike(req)) {
     return NextResponse.next();
   }
-  // Skip middleware for Next.js App Router RSC/flight data requests (e.g., ?rsc=...)
-  // These fetches must not be redirected or altered, otherwise navigation can fail.
+  // Also ignore explicit query markers sometimes present in older/newer Next builds
   const searchParams = req.nextUrl.searchParams;
   if (searchParams.has("rsc") || searchParams.has("_rsc") || searchParams.has("next-router-state-tree") || searchParams.has("__nextDataReq")) {
     return NextResponse.next();
