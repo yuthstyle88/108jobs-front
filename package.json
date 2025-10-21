@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3004",
-    "build": "next build",
-    "start": "next start",
+    "build": "next build && mkdir -p .next/standalone/.next && cp -R .next/static .next/standalone/.next/ 2>/dev/null || true && cp -R public .next/standalone/ 2>/dev/null || true",
+    "start": "node .next/standalone/server.js",
     "lint": "next lint",
     "setup:lemmy": "cd src/lib/lemmy-js-client && pnpm i"
   },
