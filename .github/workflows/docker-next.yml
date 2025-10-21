@@ -12,6 +12,9 @@ permissions:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     env:
       IMAGE: ghcr.io/yuthstyle88/108jobs-front
       BRANCH: ${{ github.ref_name }}
@@ -19,6 +22,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       - name: Compute short SHA
         run: echo "SHA_SHORT=${GITHUB_SHA::7}" >> $GITHUB_ENV
@@ -34,7 +42,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN }}   # ใช้ PAT ที่มี write:packages
+          password: ${{ secrets.GHCR_TOKEN }}   # PAT ที่มี write:packages + read:packages
 
       - name: Build & Push
         uses: docker/build-push-action@v6
@@ -44,5 +52,7 @@ jobs:
           tags: |
             ${{ env.IMAGE }}:${{ env.BRANCH }}
             ${{ env.IMAGE }}:${{ env.BRANCH }}-${{ env.SHA_SHORT }}
+          build-args: |
+            NEXT_PUBLIC_API_BASE=https://api-staging.108jobs.com
           cache-from: type=gha
           cache-to: type=gha,mode=max
