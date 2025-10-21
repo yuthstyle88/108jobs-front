@@ -40,10 +40,31 @@ export async function middleware(req: NextRequest) {
   if (purpose.toLowerCase().includes("prefetch") || purpose.toLowerCase().includes("prerender")) {
     return NextResponse.next();
   }
-  // Skip middleware for Next.js App Router RSC/flight data requests (e.g., ?rsc=...)
-  // These fetches must not be redirected or altered, otherwise navigation can fail.
+
+  const { pathname } = req.nextUrl;
   const searchParams = req.nextUrl.searchParams;
-  if (searchParams.has("rsc") || searchParams.has("_rsc") || searchParams.has("next-router-state-tree") || searchParams.has("__nextDataReq")) {
+  const isRscOrDataReq = (
+    searchParams.has("rsc") ||
+    searchParams.has("_rsc") ||
+    searchParams.has("next-router-state-tree") ||
+    searchParams.has("__nextDataReq")
+  );
+
+  // For RSC/flight/data requests without a language prefix, rewrite internally to include the current/default language.
+  if (isRscOrDataReq) {
+    const pathSegments = pathname.split("/");
+    const firstSegment = pathSegments[1] ?? "";
+    const hasLangPrefix = VALID_LANGUAGES.includes(firstSegment);
+    if (!hasLangPrefix) {
+      // Lazy import to avoid unnecessary work when not needed
+      const { getCurrentLanguage } = await import("@/actions/getCurrentLanguage");
+      const lang = await getCurrentLanguage();
+      const url = req.nextUrl.clone();
+      url.pathname = `/${lang}${pathname}`;
+      // Preserve existing search parameters
+      return NextResponse.rewrite(url);
+    }
+    // Already has a language prefix; proceed
     return NextResponse.next();
   }
 
@@ -51,8 +72,6 @@ export async function middleware(req: NextRequest) {
   const applicationPending = getApplicationPending(rawCookie);
   const langRedirect = await langMiddleware(req);
   if (langRedirect) return langRedirect;
-
-  const { pathname, origin } = req.nextUrl;
 
   const pathSegments = pathname.split("/");
   const firstSegment = pathSegments[1] ?? "";

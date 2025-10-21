@@ -24,7 +24,7 @@ import {ChatLanguageProvider} from "@/contexts/ChatLanguage";
 import Link from "next/link";
 
 export default function Home() {
-    const {t} = useTranslation();
+    const {t, i18n} = useTranslation();
     const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);
     const catalogData = useCommunities();
     const serviceCatalogs = buildCommunitiesTree(catalogData.communities) || [];
@@ -74,7 +74,7 @@ export default function Home() {
                                 </p>
                                 <SearchInput/>
                                 <Link
-                                    href="/job-board"
+                                    href={`/${i18n.language}/job-board`}
                                     className="mt-6 inline-block bg-blue-600 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
                                 >
                                     {t("home.exploreNow")}
