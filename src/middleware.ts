@@ -7,16 +7,25 @@ import {Claims} from "@/services/UserService";
 
 function isNextDataLike(req: NextRequest): boolean {
   const headers = req.headers;
+  const url = req.nextUrl;
   const purpose = (headers.get("purpose") || headers.get("sec-purpose") || "").toLowerCase();
   const dest = (headers.get("sec-fetch-dest") || "").toLowerCase();
+  const mode = (headers.get("sec-fetch-mode") || "").toLowerCase();
   const accept = (headers.get("accept") || "").toLowerCase();
-  // Next internal signals for app-router client nav / prefetch
-  const isPrefetch = purpose.includes("prefetch") || headers.get("x-middleware-prefetch") === "1";
-  const isRSC = accept.includes("text/x-component"); // flight/RSC requests
-  const isNextDataHeader = headers.has("x-nextjs-data") || headers.has("next-router-prefetch");
-  const isNavigateDoc = dest === "document" && (headers.get("sec-fetch-mode") || "").toLowerCase() === "navigate";
-  // We only want to bypass for RSC/data/prefetch fetches, not for actual document navigations.
-  return isPrefetch || isRSC || isNextDataHeader;
+
+  // Signals for Next internal data/flight/prefetch
+  const isPrefetch = purpose.includes("prefetch") || headers.get("x-middleware-prefetch") === "1" || headers.get("next-router-prefetch") === "1";
+  const isRSC = accept.includes("text/x-component") || headers.has("rsc");
+  const isNextDataHeader = headers.has("x-nextjs-data");
+
+  // Query markers sometimes used by different Next versions
+  const sp = url.searchParams;
+  const hasRscQuery = sp.has("rsc") || sp.has("_rsc") || sp.has("__nextDataReq") || sp.has("next-router-state-tree") || sp.has("__flight__");
+
+  // We only bypass for internal data (not full document navigations)
+  const isNavigateDoc = dest === "document" && mode === "navigate";
+
+  return !isNavigateDoc && (isPrefetch || isRSC || isNextDataHeader || hasRscQuery);
 }
 
 function getApplicationPending(token: string): boolean | null {
@@ -57,6 +66,9 @@ export async function middleware(req: NextRequest) {
   // Also ignore explicit query markers sometimes present in older/newer Next builds
   const searchParams = req.nextUrl.searchParams;
   if (searchParams.has("rsc") || searchParams.has("_rsc") || searchParams.has("next-router-state-tree") || searchParams.has("__nextDataReq")) {
+    if (process.env.NEXT_DEBUG_MW === "1") {
+      console.log("[mw] bypass by query flags:", req.nextUrl.pathname, req.nextUrl.search);
+    }
     return NextResponse.next();
   }
 
@@ -116,5 +128,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|lottie).*)"],
+  matcher: [
+    "/((?!api|_next/|favicon.ico|lottie).*)",
+  ],
 };
