@@ -21,7 +21,7 @@ import {IncomingHttpHeaders} from "http";
 import {GetSiteResponse, LemmyHttp, ListCommunitiesResponse, MyUserInfo} from "lemmy-js-client";
 import {NextResponse} from "next/server";
 import {testHost} from "@/utils/config";
-import {getHost, getHttpBase} from "@/utils/env";
+import {getHttpBase} from "@/utils/env";
 
 /**
  * Optimized logger that conditionally logs based on environment
@@ -101,7 +101,7 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
             (headers as any).Cookie = incomingCookie;
         }
         // Create a per-request client and set headers without mutating the shared client
-        const host = getHost();
+        const host = getHttpBase();
         console.log("host", host)
         const tempClient = wrapClient(new LemmyHttp(host));
         await (tempClient as any).setHeaders(headers);
