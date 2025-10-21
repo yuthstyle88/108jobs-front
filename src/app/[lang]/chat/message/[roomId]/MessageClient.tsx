@@ -48,13 +48,13 @@ export default function MessageClient({roomId}: { roomId: string }) {
         };
     }, [isReady]);
 
-    if (!isReady) {
-        return (
-            <div style={{ padding: '2rem', textAlign: 'center', color: '#999' }}>
-                ⚠️ Chat room is not ready or missing required data.
-            </div>
-        );
-    }
+    // if (!isReady) {
+    //     return (
+    //         <div style={{ padding: '2rem', textAlign: 'center', color: '#999' }}>
+    //             ⚠️ Chat room is not ready or missing required data.
+    //         </div>
+    //     );
+    // }
 
     if (state.notFound) {
         return <RoomNotFound/>;
