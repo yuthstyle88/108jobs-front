@@ -129,18 +129,11 @@ export async function sendChatMessage(deps: SendMessageDeps, data: MessagePayloa
             return {id: msgId, sent: false};
         }
 
-        // Resolve shared key as hex string (room-level or user-level), not boolean
-        const sharedKeyHex: string | null = (
-          (typeof (deps as any)?.shareKey === 'string' && (deps as any).shareKey) ||
-          (typeof UserService.Instance?.authInfo?.sharedKey === 'string' && UserService.Instance.authInfo.sharedKey) ||
-          null
-        );
-
         // Respect caller's intent: if data.secure === false, force plaintext
         const allowEncrypt = data?.secure !== false;
 
         // ---- 2) Create a single pending entity and optimistically insert once ----
-        const p = createMessage(message, roomId, data.senderId, data.id);
+        const p = createMessage(data.secure, message, roomId, data.senderId, data.id);
         if(!p) {
             try {
                 (deps as any).onAfterSend?.();
@@ -160,9 +153,6 @@ export async function sendChatMessage(deps: SendMessageDeps, data: MessagePayloa
             if(msgId) sentSet?.add?.(msgId);
         } catch {
         }
-
-        // NOTE: sharedKeyHex must be provisioned during room join; do not derive here.
-        // ---- 3) Encrypt if shared key is already provisioned for this room ----
         try {
             const aesKey = UserService.Instance.authInfo?.sharedKey;
             const shouldEncrypt = Boolean(aesKey && message && allowEncrypt);
@@ -171,9 +161,6 @@ export async function sendChatMessage(deps: SendMessageDeps, data: MessagePayloa
                     const cipher = await encrypt(message, aesKey);
                     if(cipher && cipher !== message) {
                         (p as any).content = cipher;
-                        (p as any).secure = true;
-                    } else {
-                        (p as any).secure = false;
                     }
                 } catch (err) {
                     (p as any).secure = false; // encryption failed → plaintext

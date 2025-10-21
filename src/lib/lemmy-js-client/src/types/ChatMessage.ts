@@ -8,6 +8,7 @@ export type ChatMessage = {
   roomId: ChatRoomId;
   senderId: LocalUserId;
   content: string;
+  secure: boolean;
   status: ChatStatus;
   createdAt: string;
   // UI-only field to help rendering; not required from server
