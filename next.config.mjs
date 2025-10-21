@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        unoptimized: process.env.NODE_ENV === 'development',
+        unoptimized: true,
         remotePatterns: [
             { protocol: 'https', hostname: 'staging.108jobs.com', pathname: '/api/v4/image/**' },
             { protocol: 'https', hostname: 'api-staging.108jobs.com', pathname: '/api/v4/image/**' },

@@ -204,13 +204,13 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
                 };
 
                 // Development-only code to test race conditions
-                if (process.env.NODE_ENV === "development" && process.env.SIMULATE_RACE_CONDITIONS === "true") {
-                    setTimeout(() => {
-                        // Intentionally break things if fetchInitialData tries to use global state
-                        // after the first await of an unresolved promise.
-                        myUserInfo = undefined;
-                    });
-                }
+                // if (process.env.NODE_ENV === "development" && process.env.SIMULATE_RACE_CONDITIONS === "true") {
+                //     setTimeout(() => {
+                //         // Intentionally break things if fetchInitialData tries to use global state
+                //         // after the first await of an unresolved promise.
+                //         myUserInfo = undefined;
+                //     });
+                // }
 
                 try {
                     routeData = await activeRoute.fetchInitialData(initialFetchReq);
