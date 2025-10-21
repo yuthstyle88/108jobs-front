@@ -16,43 +16,61 @@ function normalizeHost(v?: string): string {
   }
 }
 
-export function getApiBaseLocal(s = "") {
-  return `http${s}://${process.env.NEXT_PUBLIC_API_HOST_NAME}`;
+/**
+ * API base used for server-side/internal calls (SSR, workers).
+ * Chooses host from env and scheme via getSecure().
+ */
+export function getApiBaseInternal(): string {
+  const scheme = getSecure();
+  const raw = process.env.LEMMY_UI_LEMMY_INTERNAL_HOST
+    ?? process.env.NEXT_PUBLIC_API_HOST_NAME
+    ?? testHost;
+  const host = normalizeHost(raw);
+  return `http${scheme}://${host}`;
 }
 
-export function getExternalHost() {
+/**
+ * UI-facing external host (the public hostname the browser should target).
+ */
+export function getUiExternalHost(): string {
   if (isBrowser()) {
-    // Prefer server-provided external host when available; fallback to current location host
     const fromIso = (window as any)?.isoData?.lemmyExternalHost;
-    const raw = (typeof fromIso === 'string' && fromIso.length > 0) ? fromIso : window.location.host;
+    const raw = (typeof fromIso === 'string' && fromIso.length > 0)
+      ? fromIso
+      : window.location.host;
     return normalizeHost(raw);
   }
-  return process.env.LEMMY_UI_LEMMY_EXTERNAL_HOST ?? testHost;
+  return normalizeHost(process.env.LEMMY_UI_LEMMY_EXTERNAL_HOST ?? testHost);
 }
 
-export function getHost() {
-  return isBrowser() ? getExternalHost() : getInternalHost();
+export function getHost(): string {
+  return isBrowser() ? getUiExternalHost() : getApiInternalHost();
 }
 
-export function getHttpBase() {
-  // Use the browser's current origin in production/runtime to avoid hardcoded localhost
-  // Fall back to internal/local base when running on the server (SSR / scripts)
-  return isBrowser() ? getHttpBaseExternal() : getApiHttpBaseInternal();
+/**
+ * Resolve the API base URL depending on runtime:
+ * - Browser → external (public) API base (forced HTTPS)
+ * - Server  → internal API base (scheme via getSecure)
+ */
+export function getApiBase(): string {
+  return isBrowser() ? getApiBaseExternal() : getApiBaseInternal();
 }
 
-export function getHttpBaseExternal() {
-  // Always use HTTPS for external calls in runtime
-  return `https://${getExternalHost()}`;
+/**
+ * Public API base for browser usage. Always HTTPS.
+ */
+export function getApiBaseExternal(): string {
+  return `https://${getUiExternalHost()}`;
 }
 
 export function getApiHttpBaseInternal() {
-  return getApiBaseLocal("s");
+  return getApiBaseInternal();
 }
 
-export function getInternalHost() {
+export function getApiInternalHost(): string {
   return !isBrowser()
-    ? (process.env.LEMMY_UI_LEMMY_INTERNAL_HOST ?? testHost)
-    : testHost; // used for local dev
+    ? normalizeHost(process.env.LEMMY_UI_LEMMY_INTERNAL_HOST ?? testHost)
+    : normalizeHost(testHost); // used for local dev
 }
 
 export function getSecure(): string {
@@ -80,10 +98,12 @@ export function getStaticDir() {
  * This is for html tags, don't include port
  */
 export function httpExternalPath(path: string) {
-  const host = getExternalHost() ?? "";
+  const host = getUiExternalHost() ?? "";
   return `http${getSecure()}://${host.replace(/:\d+/g, "")}${path}`;
 }
 
 export function isHttps() {
   return getSecure() === "s";
 }
+
+export const getHttpBase = getApiBase; // DEPRECATED
