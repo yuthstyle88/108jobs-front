@@ -88,6 +88,11 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
         const headers = setForwardedHeaders(incomingHeaders);
         const auth = getJwtCookie(incomingHeaders);
         console.log("auth", auth)
+        // If we have a JWT cookie, also set Authorization for lemmy endpoints
+        // (some deployments require explicit Bearer header instead of Cookie)
+        if (auth) {
+            (headers as any).Authorization = `Bearer ${auth}`;
+        }
         // Create a per-request client and set headers without mutating the shared client
         const host = getHttpBase();
         console.log("host", host)
@@ -101,12 +106,30 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
                 origin)) as any;
         }
 
-        // Fetch site data and profile info in parallel for better performance
-        const [trySite, tryUser, tryCommunities] = await Promise.all([
+        const fetches: Promise<any>[] = [
             (tempClient as any).getSite(),
-            (tempClient as any).getMyUser(),
-            (tempClient as any).listCommunities()
-        ]);
+            auth ? (tempClient as any).getMyUser() : Promise.resolve({ state: 'skipped' }),
+            (tempClient as any).listCommunities(),
+        ];
+
+        const [siteResSettled, userResSettled, commResSettled] = await Promise.allSettled(fetches);
+
+        const trySite: RequestState<GetSiteResponse> =
+            siteResSettled.status === 'fulfilled'
+                ? siteResSettled.value
+                : { state: 'failed', err: siteResSettled.reason ?? new Error('getSite failed') };
+
+        const tryUser: RequestState<MyUserInfo> =
+            !auth
+                ? { state: 'failed', err: new Error('unauthenticated') }
+                : (userResSettled.status === 'fulfilled'
+                    ? userResSettled.value
+                    : { state: 'failed', err: userResSettled.reason ?? new Error('getMyUser failed') });
+
+        const tryCommunities: RequestState<ListCommunitiesResponse> =
+            commResSettled.status === 'fulfilled'
+                ? commResSettled.value
+                : { state: 'failed', err: commResSettled.reason ?? new Error('listCommunities failed') };
 
         // Process profile data with improved error handling
         await processUserData(tryUser);
