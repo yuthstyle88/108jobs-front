@@ -20,7 +20,7 @@ export default function WorkSamples() {
         startEditing,
         cancelEditing,
         validateField,
-    } = useWorkSamplesForm(person);
+    } = useWorkSamplesForm(person ?? undefined);
     const [currentSampleIndex, setCurrentSampleIndex] = useState(0);
     const samplesPerPage = 2;
 
