@@ -35,6 +35,12 @@ const publicRoutePrefixes: string[] = [
 ];
 
 export async function middleware(req: NextRequest) {
+  // Skip all middleware logic for prefetch/prerender requests to avoid interfering with navigation
+  const purpose = req.headers.get("purpose") || req.headers.get("sec-purpose") || "";
+  if (purpose.toLowerCase().includes("prefetch") || purpose.toLowerCase().includes("prerender")) {
+    return NextResponse.next();
+  }
+
   const rawCookie = req.cookies.get(authCookieName)?.value ?? "";
   const applicationPending = getApplicationPending(rawCookie);
   const langRedirect = await langMiddleware(req);
