@@ -64,7 +64,7 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
             </Link>
             <div className="py-2">
                 <Link prefetch={false}
-                      href="/account-setting/basic-information"
+                      href={`/${currentLang}/account-setting/basic-information`}
                       className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                 >
                     <FontAwesomeIcon
@@ -74,7 +74,7 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
                     <span className="text-gray-700">{t("global.menuAccountSettings")}</span>
                 </Link>
                 <Link prefetch={false}
-                      href="/chat"
+                      href={`/${currentLang}/chat`}
                       className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                 >
                     <FontAwesomeIcon
@@ -84,7 +84,7 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
                     <span className="text-gray-700">{t("global.menuMessagesOrders")}</span>
                 </Link>
                 <Link prefetch={false}
-                      href="/favorites"
+                      href={`/${currentLang}/favorites`}
                       className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                 >
                     <FontAwesomeIcon
@@ -94,7 +94,7 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
                     <span className="text-gray-700">{t("global.menuFavoriteJobs")}</span>
                 </Link>
                 <Link prefetch={false}
-                      href="/job-board"
+                      href={`/${currentLang}/job-board`}
                       className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                 >
                     <FontAwesomeIcon
@@ -104,7 +104,7 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
                     <span className="text-gray-700">{t("global.menuJobBoard")}</span>
                 </Link>
                 <Link prefetch={false}
-                      href="/job-board/jobs"
+                      href={`/${currentLang}/job-board/jobs`}
                       className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                 >
                     <FontAwesomeIcon
@@ -114,7 +114,7 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
                     <span className="text-gray-700">{t("global.menuMyJob")}</span>
                 </Link>
                 <Link prefetch={false}
-                      href="/account-setting/manage"
+                      href={`/${currentLang}/account-setting/manage`}
                       className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
                 >
                     <FontAwesomeIcon
