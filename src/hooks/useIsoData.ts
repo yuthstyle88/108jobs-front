@@ -6,5 +6,8 @@ import {isBrowser} from "@/utils/browser";
  * หากรันบน SSR ให้คืนค่า null
  */
 export function getIsoData(): IsoData | null {
-    return (window as { isoData: IsoData }).isoData;
+    if (isBrowser() && "isoData" in window) {
+        return (window as { isoData: IsoData }).isoData;
+    }
+    return null;
 }
