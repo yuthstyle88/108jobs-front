@@ -21,11 +21,13 @@ type ProfileUserProps = {
 };
 
 import React, { memo, useCallback } from "react";
+import { useRouter } from "next/navigation";
 
 const ProfileUser = ({profile}: ProfileUserProps) => {
     const logout = useCallback(() => UserService.Instance.logout(), []);
     const {lang: currentLang} = useLanguage();
     const {t} = useTranslation();
+    const router = useRouter();
     return (
         <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-job-card z-50 select-none">
             <Link prefetch={false} href={`/${currentLang}/profile/${profile.name}`}>
@@ -113,16 +115,17 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
                     />
                     <span className="text-gray-700">{t("global.menuMyJob")}</span>
                 </Link>
-                <Link prefetch={false}
-                      href={`/${currentLang}/account-setting/manage`}
-                      className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
+                <button
+                    type="button"
+                    onClick={() => router.push(`/${currentLang}/account-setting/manage`)}
+                    className="w-full flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t text-left"
                 >
                     <FontAwesomeIcon
                         icon={faBarsProgress}
                         className="text-[24px] text-primary "
                     />
                     <span className="text-gray-700">{t("global.menuDataManagement")}</span>
-                </Link>
+                </button>
                 <button
                     onClick={logout}
                     className="w-full flex items-center gap-5 px-4 py-3 hover:bg-gray-50 "
