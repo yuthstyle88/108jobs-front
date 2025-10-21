@@ -18,8 +18,8 @@ const nextConfig = {
         deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
         dangerouslyAllowSVG: true,
-        contentSecurityPolicy:
-            "default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data:; img-src 'self' data: https://staging.108jobs.com https://api-staging.108jobs.com https://fastwork.ibrowe.com https://images.unsplash.com https://*.unsplash.com https://storage.googleapis.com https://*.googleusercontent.com https://fastlance.vn; connect-src 'self' https://api-staging.108jobs.com wss://staging.108jobs.com;",
+        // contentSecurityPolicy:
+        //     "default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data:; img-src 'self' data: https://staging.108jobs.com https://api-staging.108jobs.com https://fastwork.ibrowe.com https://images.unsplash.com https://*.unsplash.com https://storage.googleapis.com https://*.googleusercontent.com https://fastlance.vn; connect-src 'self' https://api-staging.108jobs.com wss://staging.108jobs.com;",
     },
     reactStrictMode: false,
     output: 'standalone',

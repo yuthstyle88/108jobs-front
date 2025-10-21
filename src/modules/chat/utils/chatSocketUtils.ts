@@ -39,14 +39,9 @@ export type NormalizedEnvelope =
 };
 
 // Server-side payload shapes (mirroring Rust `MessageModel` and `IncomingEvent`)
-interface ServerMessageModel {
-    id?: string;
-    senderId: LocalUserId;
+export type ServerMessageModel = ChatMessage & {
     readerId?: ChatRoomId;
     lastReadMessageId?: string;
-    secure?: boolean;
-    content?: string;
-    status?: 'pending' | 'sent' | 'failed' | string;
     typing?: boolean;
     updateType?: string;
     statusTarget?: string;
