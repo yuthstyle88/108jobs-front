@@ -55,7 +55,6 @@ export class UserService {
     public login({
         res,
         showToast = false,
-        sharedKey,
     }: {
         res: LoginResponse | string;
         showToast?: boolean;
@@ -66,9 +65,7 @@ export class UserService {
                 toast("loggedIn");
             }
             setAuthCookie(res.jwt);
-            this.#setAuthInfo({ sharedKey });
             this.#hydrateReadLastMap();
-
             if(!VALID_LANGUAGES.includes(this.currentLanguage)) return;
             document.cookie = `${LANGUAGE_COOKIE}=${this.currentLanguage}; path=/`;
             const langsPattern = `(?:${VALID_LANGUAGES.join('|')})`;
@@ -117,9 +114,7 @@ export class UserService {
 
     #hydrateReadLastMap() {
         if(!isBrowser()) return;
-        const uid = this.authInfo?.claims?.sub ?? "anon";
         try {
-            const raw = localStorage.getItem(READ_LAST_STORAGE_PREFIX + uid);
             if(!this.authInfo) this.authInfo = {auth: ""} as AuthInfo;
         } catch {
             if(!this.authInfo) this.authInfo = {auth: ""} as AuthInfo;
@@ -128,9 +123,9 @@ export class UserService {
     }
 
     #setAuthInfo(
-        opts: { rawCookie?: string; sharedKey?: CryptoKey } = {}
+        opts: { rawCookie?: string; } = {}
     ) {
-        const { rawCookie = "", sharedKey } = opts;
+        const { rawCookie = "" } = opts;
         const auth = isBrowser() ? cookie.parse(document.cookie)[authCookieName] : rawCookie;
         if (!auth) {
             this.authInfo = undefined;
@@ -138,7 +133,7 @@ export class UserService {
             return;
         }
         const claims = jwtDecode<Claims>(auth);
-        this.authInfo = { auth, claims, sharedKey };
+        this.authInfo = { auth, claims };
         this.currentLanguage = claims?.lang;
         this.applicationPending = !claims?.accepted_application;
     }

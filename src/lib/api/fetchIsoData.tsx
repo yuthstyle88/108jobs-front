@@ -125,6 +125,7 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
                 : (userResSettled.status === 'fulfilled'
                     ? userResSettled.value
                     : { state: 'failed', err: userResSettled.reason ?? new Error('getMyUser failed') });
+        console.log("tryUser", tryUser)
 
         const tryCommunities: RequestState<ListCommunitiesResponse> =
             commResSettled.status === 'fulfilled'
