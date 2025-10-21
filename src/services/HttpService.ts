@@ -271,6 +271,7 @@ let cachedJwt: string | undefined;
 
 function ensureAuthHeader() {
   const jwt = UserService.Instance?.authInfo?.auth;
+  console.log("JWT", jwt);
   if (jwt && jwt !== cachedJwt) {
     cachedJwt = jwt;
     (HttpService.client as any).setHeaders?.({Authorization: `Bearer ${jwt}`});
