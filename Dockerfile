@@ -11,8 +11,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # รับค่าที่ต้องใช้ตอน build (แก้ให้ตรงโปรเจกต์)
-ARG NEXT_PUBLIC_API_BASE
-ENV NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE
+ARG NEXT_PUBLIC_API_BASE=https://api-staging.108jobs.com
+ENV NEXT_PUBLIC_API_BASE=${NEXT_PUBLIC_API_BASE}
 RUN npm run build
 
 # ---- runner (Next standalone) ----
