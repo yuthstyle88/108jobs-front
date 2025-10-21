@@ -16,7 +16,7 @@ function normalizeHost(v?: string): string {
   }
 }
 
-export function getBaseLocal(s = "") {
+export function getApiBaseLocal(s = "") {
   return `http${s}://${process.env.NEXT_PUBLIC_API_HOST_NAME}`;
 }
 
@@ -37,7 +37,7 @@ export function getHost() {
 export function getHttpBase() {
   // Use the browser's current origin in production/runtime to avoid hardcoded localhost
   // Fall back to internal/local base when running on the server (SSR / scripts)
-  return isBrowser() ? getHttpBaseExternal() : getHttpBaseInternal();
+  return isBrowser() ? getHttpBaseExternal() : getApiHttpBaseInternal();
 }
 
 export function getHttpBaseExternal() {
@@ -45,8 +45,8 @@ export function getHttpBaseExternal() {
   return `https://${getExternalHost()}`;
 }
 
-export function getHttpBaseInternal() {
-  return getBaseLocal(); // Don't use secure here
+export function getApiHttpBaseInternal() {
+  return getApiBaseLocal("s");
 }
 
 export function getInternalHost() {

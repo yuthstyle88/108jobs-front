@@ -21,7 +21,7 @@ import {IncomingHttpHeaders} from "http";
 import {GetSiteResponse, LemmyHttp, ListCommunitiesResponse, MyUserInfo} from "lemmy-js-client";
 import {NextResponse} from "next/server";
 import {testHost} from "@/utils/config";
-import {getExternalHost, getHttpBase} from "@/utils/env";
+import {getApiHttpBaseInternal} from "@/utils/env";
 
 /**
  * Optimized logger that conditionally logs based on environment
@@ -87,57 +87,23 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
         // Set up headers and authentication
         const headers = setForwardedHeaders(incomingHeaders);
         const auth = getJwtCookie(incomingHeaders);
-        console.log("auth", auth)
-        // If we have a JWT cookie, also set Authorization for lemmy endpoints
-        // (some deployments require explicit Bearer header instead of Cookie)
-        if (auth) {
-            (headers as any).Authorization = `Bearer ${auth}`;
-        }
-        // Forward original Cookie header to backend (Rust often expects it explicitly)
-        const incomingCookie = (incomingHeaders as any).cookie || (incomingHeaders as any).Cookie;
-        if (incomingCookie) {
-            // Some HTTP clients/libs care about casing; set both just in case
-            (headers as any).cookie = incomingCookie;
-            (headers as any).Cookie = incomingCookie;
-        }
         // Create a per-request client and set headers without mutating the shared client
-        const host = getExternalHost();
-        console.log("host", host)
-        const tempClient = wrapClient(new LemmyHttp(host));
+        const tempClient = wrapClient(new LemmyHttp(getApiHttpBaseInternal()));
         await (tempClient as any).setHeaders(headers);
 
         // Check authentication for protected routes
         if (!auth && isAuthPath(url)) {
-            logger.error(`Redirecting unauthenticated user from protected route: ${url}`);
+            logger.debug(`Redirecting unauthenticated user from protected route: ${url}`);
             return NextResponse.redirect(new URL(`/login?prev=${encodeURIComponent(url)}`,
                 origin)) as any;
         }
 
-        const fetches: Promise<any>[] = [
+        // Fetch site data and profile info in parallel for better performance
+        const [trySite, tryUser, tryCommunities] = await Promise.all([
             (tempClient as any).getSite(),
-            auth ? (tempClient as any).getMyUser() : Promise.resolve({ state: 'skipped' }),
-            (tempClient as any).listCommunities(),
-        ];
-
-        const [siteResSettled, userResSettled, commResSettled] = await Promise.allSettled(fetches);
-
-        const trySite: RequestState<GetSiteResponse> =
-            siteResSettled.status === 'fulfilled'
-                ? siteResSettled.value
-                : { state: 'failed', err: siteResSettled.reason ?? new Error('getSite failed') };
-
-        const tryUser: RequestState<MyUserInfo> =
-            !auth
-                ? { state: 'failed', err: new Error('unauthenticated') }
-                : (userResSettled.status === 'fulfilled'
-                    ? userResSettled.value
-                    : { state: 'failed', err: userResSettled.reason ?? new Error('getMyUser failed') });
-        console.log("tryUser", tryUser)
-
-        const tryCommunities: RequestState<ListCommunitiesResponse> =
-            commResSettled.status === 'fulfilled'
-                ? commResSettled.value
-                : { state: 'failed', err: commResSettled.reason ?? new Error('listCommunities failed') };
+            (tempClient as any).getMyUser(),
+            (tempClient as any).listCommunities()
+        ]);
 
         // Process profile data with improved error handling
         await processUserData(tryUser);
