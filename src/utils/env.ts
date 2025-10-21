@@ -19,7 +19,9 @@ export function getHost() {
 }
 
 export function getHttpBase() {
-  return getBaseLocal(getSecure());
+  // Use the browser's current origin in production/runtime to avoid hardcoded localhost
+  // Fall back to internal/local base when running on the server (SSR / scripts)
+  return isBrowser() ? getHttpBaseExternal() : getHttpBaseInternal();
 }
 
 export function getHttpBaseExternal() {
