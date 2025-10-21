@@ -87,6 +87,7 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
         // Set up headers and authentication
         const headers = setForwardedHeaders(incomingHeaders);
         const auth = getJwtCookie(incomingHeaders);
+        console.log("auth", auth)
         // Create a per-request client and set headers without mutating the shared client
         const host = getHttpBase();
         console.log("host", host)
