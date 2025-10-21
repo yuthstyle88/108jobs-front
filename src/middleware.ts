@@ -40,6 +40,12 @@ export async function middleware(req: NextRequest) {
   if (purpose.toLowerCase().includes("prefetch") || purpose.toLowerCase().includes("prerender")) {
     return NextResponse.next();
   }
+  // Skip middleware for Next.js App Router RSC/flight data requests (e.g., ?rsc=...)
+  // These fetches must not be redirected or altered, otherwise navigation can fail.
+  const searchParams = req.nextUrl.searchParams;
+  if (searchParams.has("rsc") || searchParams.has("_rsc") || searchParams.has("next-router-state-tree") || searchParams.has("__nextDataReq")) {
+    return NextResponse.next();
+  }
 
   const rawCookie = req.cookies.get(authCookieName)?.value ?? "";
   const applicationPending = getApplicationPending(rawCookie);
