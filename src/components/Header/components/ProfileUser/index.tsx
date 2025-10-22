@@ -1,3 +1,4 @@
+'use client';
 import {ProfileImage} from "@/constants/images";
 import {useLanguage} from "@/contexts/LanguageContext";
 import {

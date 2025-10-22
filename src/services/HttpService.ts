@@ -1,6 +1,7 @@
 import {LemmyHttp} from "lemmy-js-client";
 import {getHttpBase} from "@/utils/env";
 import {UserService} from "@/services/UserService";
+import {isBrowser} from "@/utils";
 
 /* ---------- static states ----------------------------------- */
 export const EMPTY_REQUEST = {
@@ -284,7 +285,9 @@ export function callHttp<
   method: K,
   ...args: Parameters<WrappedLemmyHttp[K]>
 ): ReturnType<WrappedLemmyHttp[K]> {
-  ensureAuthHeader();
+    if(isBrowser() && UserService.Instance?.authInfo?.auth) {
+        ensureAuthHeader();
+    }
   // Do not inject auth into payload; rely on Authorization header
   return HttpService.client[method](...args) as ReturnType<
     WrappedLemmyHttp[K]

@@ -12,7 +12,7 @@
  */
 import {FailedRequestState, RequestState, wrapClient} from "@/services/HttpService";
 import {isAuthPath} from "@/utils/app";
-import {getErrorPageData, getJwtCookie, matchPath, setForwardedHeaders} from "@/utils/helpers";
+import {getErrorPageData, getJwtCookieFromServer, matchPath, setForwardedHeaders} from "@/utils/helpers";
 import {Match} from "@/utils/router";
 import {routes} from "@/utils/routes";
 import {ErrorPageData, IsoData, RouteData} from "@/utils/types";
@@ -84,7 +84,7 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
     try {
         // Set up headers and authentication
         const headers = setForwardedHeaders(incomingHeaders);
-        const auth = getJwtCookie(incomingHeaders);
+        const auth = getJwtCookieFromServer(incomingHeaders);
         // Create a per-request client and set headers without mutating the shared client
         const tempClient = wrapClient(new LemmyHttp(getHttpBase()));
         await (tempClient as any).setHeaders(headers);

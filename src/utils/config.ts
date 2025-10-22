@@ -28,7 +28,7 @@ export const fetchLimit = 20;
 export const similarPostFetchLimit = 6;
 export const relTags = "noopener nofollow";
 export const emDash = "\u2014";
-export const authCookieName = "jwt";
+export const authCookieName =  process.env.NEXT_PUBLIC_APP_NAME ?? "jwt";
 export const adultConsentCookieKey = "adultConsent";
 
 // No. of max displayed communities per
