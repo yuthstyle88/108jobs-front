@@ -1642,6 +1642,7 @@ export const en = {
             enlargedPortfolioImage: "Enlarged portfolio image",
             startChat: "Start chat",
             noSkills: "No skills listed",
+            noContacts: "No contact information available",
             noBio: "No bio available",
             noPortfolio: "No portfolio listed",
             noWorkSamples: "No work samples available",

@@ -1653,6 +1653,7 @@ export const vi = {
             enlargedPortfolioImage: "Hình ảnh danh mục được phóng to",
             startChat: "Bắt đầu trò chuyện",
             noSkills: "Không có kỹ năng nào được liệt kê",
+            noContacts: "Không có thông tin liên hệ",
             noBio: "Không có tiểu sử",
             noPortfolio: "Không có danh mục đầu tư",
             noWorkSamples: "Không có mẫu công việc",
