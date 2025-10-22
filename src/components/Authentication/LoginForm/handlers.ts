@@ -63,7 +63,7 @@ export const handleLogin = async(i: LoginFormClass, data: any) => {
     switch (loginRes.state) {
       case REQUEST_STATE.FAILED: {
         const {name, message} = loginRes.err ?? {};
-        if (name === "missing_totp_token") {
+        if (name === "missingTotpToken") {
           // Trigger modal to ask for TOTP token
           i.setState({show2faModal: true});
         } else {
