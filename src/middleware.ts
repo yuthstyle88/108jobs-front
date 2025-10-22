@@ -1,126 +1,84 @@
-import {type NextRequest, NextResponse} from "next/server";
-import {middleware as langMiddleware} from "./middlewareLang";
-import {authCookieName} from "@/utils/config";
-import {VALID_LANGUAGES} from "@/constants/language";
-import {jwtDecode} from "jwt-decode";
-import {Claims} from "@/services/UserService";
+import { NextRequest, NextResponse } from 'next/server';
+import {LANGUAGE_COOKIE} from "@/constants/language";
 
-function getApplicationPending(token: string): boolean | null {
-  if (!token) return null;
-  const payload = jwtDecode<Claims>(token);
-  if (!payload) return null;
-  return !payload.accepted_application;
+// NOTE: Use the actual cookie name string. If the browser has `const LANGUAGE_COOKIE = 'u:lng'`,
+// middleware must also use 'u:lng' (the value), not the identifier text.
+const CK = { SID: 'sid', TERMS: 'needsTerms', LNG: 'u:lng' } as const;
+
+const STATIC_PATHS = ['/_next', '/favicon', '/robots', '/sitemap', '/images', '/fonts', '/static'];
+const PROTECTED_PATHS = ['/dashboard', '/account', '/chat']; // ← ปรับตรงนี้ได้
+
+function isStatic(p: string) {
+    return STATIC_PATHS.some((x) => p.startsWith(x));
+}
+const SUPPORTED = ['th', 'en', 'vi'] as const;
+type Lang = typeof SUPPORTED[number];
+
+function normalizeLang(s?: string | null): Lang {
+    const v = (s ?? '').toLowerCase().split('-')[0];
+    return (SUPPORTED as readonly string[]).includes(v) ? (v as Lang) : 'en';
 }
 
-// All protected routes that require login (no role restrictions)
-const protectedRoutes: string[] = [
-  "/account-setting",
-  "/employer/applicants",
-  "/apply-freelance",
-  "/favorites",
-  "/reward",
-  "/job-board/create-job",
-  "/chat",
-  "/seller",
-  "/seller-account-setting",
-  "/manage-product",
-];
+function langFromBrowser(req: NextRequest): Lang {
+    const header = req.headers.get('accept-language') ?? '';
+    const first = header.split(',')[0];
+    return normalizeLang(first);
+}
 
-// Public route prefixes (match exact or any subpath under these)
-const publicRoutePrefixes: string[] = [
-  "/job-board",
-  "/apply-freelance/landing",
-  "/coin",
-  "/promotion",
-];
+function langFromPath(pathname: string): Lang | null {
+    const m = pathname.match(/^\/([a-z]{2})(\/|$)/i);
+    return m ? normalizeLang(m[1]) : null;
+}
 
-export async function middleware(req: NextRequest) {
-  // Skip all middleware logic for prefetch/prerender requests to avoid interfering with navigation
-  const purpose = req.headers.get("purpose") || req.headers.get("sec-purpose") || "";
-  if (purpose.toLowerCase().includes("prefetch") || purpose.toLowerCase().includes("prerender")) {
-    return NextResponse.next();
-  }
+export function middleware(req: NextRequest) {
+    const { pathname, search } = req.nextUrl;
+    if (isStatic(pathname)) return NextResponse.next();
 
-  const { pathname } = req.nextUrl;
-  const searchParams = req.nextUrl.searchParams;
-  const isRscOrDataReq = (
-    searchParams.has("rsc") ||
-    searchParams.has("_rsc") ||
-    searchParams.has("next-router-state-tree") ||
-    searchParams.has("__nextDataReq")
-  );
+    const sid = req.cookies.get(CK.SID)?.value;
+    const needsTerms = req.cookies.get(CK.TERMS)?.value === '1';
 
-  // For RSC/flight/data requests without a language prefix, rewrite internally to include the current/default language.
-  if (isRscOrDataReq) {
-    const pathSegments = pathname.split("/");
-    const firstSegment = pathSegments[1] ?? "";
-    const hasLangPrefix = VALID_LANGUAGES.includes(firstSegment);
-    if (!hasLangPrefix) {
-      // Lazy import to avoid unnecessary work when not needed
-      const { getCurrentLanguage } = await import("@/actions/getCurrentLanguage");
-      const lang = await getCurrentLanguage();
-      const url = req.nextUrl.clone();
-      url.pathname = `/${lang}${pathname}`;
-      // Preserve existing search parameters
-      return NextResponse.rewrite(url);
+    // --- language resolution: query > path > cookie > browser ---
+    const qlng = req.nextUrl.searchParams.get('lng') || req.nextUrl.searchParams.get('lang');
+    const pathLng = langFromPath(pathname);
+    const cookieLng = req.cookies.get(CK.LNG)?.value
+      ?? req.cookies.get(LANGUAGE_COOKIE)?.value
+      ?? '';
+    const effectiveLng = normalizeLang(qlng || pathLng || cookieLng || langFromBrowser(req));
+
+    const setLangCookie = (resp: NextResponse, value: string) => {
+        resp.cookies.set(CK.LNG, value, { path: '/', maxAge: 60 * 60 * 24 * 365, sameSite: 'lax' });
+        return resp;
+    };
+
+    // --- protect dynamic routes ---
+    const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p));
+    if (isProtected && !sid) {
+        const login = new URL('/login', req.url);
+        login.searchParams.set('next', pathname + search);
+        const resp = NextResponse.redirect(login);
+        if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
+        return resp;
     }
-    // Already has a language prefix; proceed
-    return NextResponse.next();
-  }
 
-  const rawCookie = req.cookies.get(authCookieName)?.value ?? "";
-  const applicationPending = getApplicationPending(rawCookie);
-  const langRedirect = await langMiddleware(req);
-  if (langRedirect) return langRedirect;
+    // --- terms gate ---
+    if (sid && needsTerms && !pathname.startsWith('/update-terms')) {
+        const resp = NextResponse.redirect(new URL('/update-terms', req.url));
+        if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
+        return resp;
+    }
+    // --- i18n auto prefix + persist cookie ---
+    if (!pathLng) {
+        const resp = NextResponse.rewrite(new URL(`/${effectiveLng}${pathname}${search}`, req.url));
+        if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
+        return resp;
+    }
 
-  const pathSegments = pathname.split("/");
-  const firstSegment = pathSegments[1] ?? "";
-  const hasLangPrefix = VALID_LANGUAGES.includes(firstSegment);
-  const langPrefix = hasLangPrefix ? `/${firstSegment}` : "";
-  const cleanPathname = hasLangPrefix
-    ? (pathname.slice(langPrefix.length) || "/")
-    : (pathname || "/");
-
-  if (applicationPending === true && cleanPathname !== "/update-term") {
-    const url = req.nextUrl.clone();
-    url.pathname = `${langPrefix}/update-term`;
-    url.search = '';
-    return NextResponse.redirect(url);
-  }
-
-  // Allow public routes by prefix (e.g., "/job-board" and "/job-board/*")
-  if (publicRoutePrefixes.some((prefix) =>
-    cleanPathname === prefix || cleanPathname.startsWith(prefix + "/")
-  )) {
-    return NextResponse.next();
-  }
-
-  const isLoggedIn = Boolean(rawCookie);
-
-  if (cleanPathname === "/login") {
-    if (!isLoggedIn) return NextResponse.next();
-    const url = req.nextUrl.clone();
-    url.pathname = `${langPrefix}/`;
-    url.search = '';
-    return NextResponse.redirect(url);
-  }
-
-  if (!protectedRoutes.some((route) => cleanPathname.startsWith(route))) {
-    return NextResponse.next();
-  }
-
-  if (!isLoggedIn) {
-    const callbackUrl = encodeURIComponent(cleanPathname);
-    const url = req.nextUrl.clone();
-    url.pathname = `${langPrefix}/login`;
-    url.search = `?redirect=${callbackUrl}`;
-    return NextResponse.redirect(url);
-  }
-
-  // No role-based restrictions; logged-in users can access all protected routes
-  return NextResponse.next();
+    const resp = NextResponse.next();
+    if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
+    return resp;
 }
 
+// --- matcher (exclude static) ---
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|lottie).*)"],
+    matcher: ['/((?!_next|static|fonts|images|favicon|robots|sitemap).*)'],
 };
