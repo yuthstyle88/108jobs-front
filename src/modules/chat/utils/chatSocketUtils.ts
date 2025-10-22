@@ -1,5 +1,5 @@
 import {HttpService, UserService} from "@/services";
-import {getHost, isHttps} from "@/utils/env";
+import {getApiHost, isHttps} from "@/utils/env";
 import type {
     ChatMessage,
     ChatMessagesResponse,
@@ -169,7 +169,7 @@ export function buildActixWsUrl(): string {
     // Always go through Actix first → Phoenix-compatible endpoint
     // Do not append token/roomId in the URL. Phoenix client will send auth via params.
     const proto = isHttps() ? 'wss' : 'ws';
-    const host = getHost();
+    const host = getApiHost();
     // Actix will handle `/socket/websocket` (either as WS proxy to Phoenix on :4000 or native Phoenix-compatible handler)
     return `${proto}://${host}/socket`;
 }

@@ -1,109 +1,94 @@
-import {isBrowser} from "@/utils/browser";
-import {testHost} from "@/utils/config";
+// Clean env helpers for 108Jobs Frontend
+// Source of truth (production):
+//   NEXT_PUBLIC_API_BASE_URL  – e.g. https://api-staging.108jobs.com
+//   NEXT_PUBLIC_APP_URL       – e.g. https://staging.108jobs.com
+//   API_INTERNAL_URL          – e.g. http://localhost:8523  (server-only)
 
-function normalizeHost(v?: string): string {
-  if (!v) return '';
+import { isBrowser } from "@/utils/browser";
+
+function safeString(v: any): string | undefined {
+  return typeof v === "string" && v.trim().length > 0 ? v.trim() : undefined;
+}
+
+function ensureAbsoluteUrl(raw?: string, fallback?: string): string {
+  const v = safeString(raw) ?? safeString(fallback);
+  if (!v) return "";
   try {
-    // If value already includes scheme, use URL to parse and extract host[:port]
-    if (/^https?:\/\//i.test(v)) {
-      const u = new URL(v);
-      return u.host; // host = hostname[:port]
-    }
-    // Otherwise, trim any leading/trailing slashes and whitespace
-    return String(v).trim().replace(/^\/*/, '').replace(/\/*$/, '');
+    // If already absolute (has scheme), return as-is (without trailing slash)
+    if (/^https?:\/\//i.test(v)) return v.replace(/\/$/, "");
+    // Otherwise assume https for safety when running in browser; server falls back to http
+    const scheme = isBrowser() ? "https" : "http";
+    return `${scheme}://${v.replace(/\/$/, "")}`;
   } catch {
-    return String(v).trim();
+    return v as string;
   }
 }
 
-/**
- * API base used for server-side/internal calls (SSR, workers).
- * Chooses host from env and scheme via getSecure().
- */
-export function getApiBaseInternal(): string {
-  const scheme = getSecure();
-  const raw = process.env.LEMMY_UI_LEMMY_INTERNAL_HOST
-    ?? process.env.NEXT_PUBLIC_API_HOST_NAME
-    ?? testHost;
-  const host = normalizeHost(raw);
-  return `http${scheme}://${host}`;
+function hostOf(u: string): string {
+  try { return new URL(u).host; } catch { return u.replace(/^https?:\/\//i, ""); }
 }
 
 /**
- * UI-facing external host (the public hostname the browser should target).
- */
-export function getUiExternalHost(): string {
-  if (isBrowser()) {
-    const fromIso = (window as any)?.isoData?.lemmyExternalHost;
-    const raw = (typeof fromIso === 'string' && fromIso.length > 0)
-      ? fromIso
-      : window.location.host;
-    return normalizeHost(raw);
-  }
-  return normalizeHost(process.env.LEMMY_UI_LEMMY_EXTERNAL_HOST ?? testHost);
-}
-
-export function getHost(): string {
-  return isBrowser() ? getUiExternalHost() : getApiInternalHost();
-}
-
-/**
- * Resolve the API base URL depending on runtime:
- * - Browser → external (public) API base (forced HTTPS)
- * - Server  → internal API base (scheme via getSecure)
+ * Public API base for browser. On the server, prefer API_INTERNAL_URL when provided.
  */
 export function getApiBase(): string {
-  return isBrowser() ? getApiBaseExternal() : getApiBaseInternal();
-}
-
-/**
- * Public API base for browser usage. Always HTTPS.
- */
-export function getApiBaseExternal(): string {
-  return `https://${getUiExternalHost()}`;
-}
-
-export function getApiHttpBaseInternal() {
-  return getApiBaseInternal();
-}
-
-export function getApiInternalHost(): string {
-  return !isBrowser()
-    ? normalizeHost(process.env.LEMMY_UI_LEMMY_INTERNAL_HOST ?? testHost)
-    : normalizeHost(testHost); // used for local dev
-}
-
-export function getSecure(): string {
   if (isBrowser()) {
-    return window.location.protocol === "https:" ? "s" : "";
+    return ensureAbsoluteUrl(process.env.NEXT_PUBLIC_API_BASE_URL) || "";
   }
-  const raw =
-    (process.env.NEXT_PUBLIC_USE_HTTPS ?? process.env.USE_HTTPS ?? "")
-      .toString()
-      .trim()
-      .toLowerCase();
-  return (raw === "true" || raw === "1" || raw === "yes" || raw === "on") ? "s" : "";
-}
-
-
-/**
- * Returns path to static directory, intended
- * for cache-busting based on latest commit hash.
- */
-export function getStaticDir() {
-  return `/static/${process.env.COMMIT_HASH}`;
+  // Server side: allow internal URL to bypass proxies and TLS if needed
+  return (
+    ensureAbsoluteUrl(process.env.API_INTERNAL_URL)
+      || ensureAbsoluteUrl(process.env.NEXT_PUBLIC_API_BASE_URL)
+      || ""
+  );
 }
 
 /**
- * This is for html tags, don't include port
+ * Public App URL used for generating absolute links.
  */
-export function httpExternalPath(path: string) {
-  const host = getUiExternalHost() ?? "";
-  return `http${getSecure()}://${host.replace(/:\d+/g, "")}${path}`;
+export function getAppUrl(): string {
+  if (isBrowser()) {
+    // Prefer declared app URL, else derive from location
+    return (
+      ensureAbsoluteUrl(process.env.NEXT_PUBLIC_APP_URL)
+        || `${window.location.protocol}//${window.location.host}`
+    );
+  }
+  return ensureAbsoluteUrl(process.env.NEXT_PUBLIC_APP_URL) || "";
 }
 
-export function isHttps() {
-  return getSecure() === "s";
+/** Convenient host helpers (rarely needed) **/
+export function getUiExternalHost(): string {
+  const app = getAppUrl();
+  return hostOf(app);
 }
 
-export const getHttpBase = getApiBase; // DEPRECATED
+export function getApiHost(): string {
+  return hostOf(getApiBase());
+}
+
+/**
+ * Returns the absolute static directory URL or path for serving static assets.
+ */
+export function getStaticDir(): string {
+  if (isBrowser()) {
+    return "/_next/static"; // browser always fetches via public path
+  }
+  return process.env.NEXT_STATIC_DIR || "/var/www/apps/108jobs-front-dev/.next/static";
+}
+
+/** Path helpers **/
+export function httpExternalPath(path: string): string {
+  const base = getAppUrl();
+  if (!base) return path;
+  // ensure single slash when joining
+  return `${base.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
+}
+
+export function isHttps(): boolean {
+  if (isBrowser()) return window.location.protocol === "https:";
+  try { return new URL(getAppUrl()).protocol === "https:"; } catch { return true; }
+}
+
+// Backward-compat export (prefer getApiBase)
+export const getHttpBase = getApiBase;

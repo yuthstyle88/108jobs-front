@@ -10,7 +10,7 @@ const defaultIsoData: IsoData = {
     path: '/',
     routeData: {} as RouteData,
     siteRes: {} as unknown as GetSiteResponse,
-    lemmyExternalHost: testHost,
+    appUrl: testHost,
     errorPageData: undefined,
 };
 

@@ -19,9 +19,7 @@ import {ErrorPageData, IsoData, RouteData} from "@/utils/types";
 import {parsePath} from "history";
 import {IncomingHttpHeaders} from "http";
 import {GetSiteResponse, LemmyHttp, ListCommunitiesResponse, MyUserInfo} from "lemmy-js-client";
-import {NextResponse} from "next/server";
-import {testHost} from "@/utils/config";
-import {getApiHttpBaseInternal} from "@/utils/env";
+import {getHttpBase} from "@/utils";
 
 /**
  * Optimized logger that conditionally logs based on environment
@@ -88,14 +86,15 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
         const headers = setForwardedHeaders(incomingHeaders);
         const auth = getJwtCookie(incomingHeaders);
         // Create a per-request client and set headers without mutating the shared client
-        const tempClient = wrapClient(new LemmyHttp(getApiHttpBaseInternal()));
+        const tempClient = wrapClient(new LemmyHttp(getHttpBase()));
         await (tempClient as any).setHeaders(headers);
 
         // Check authentication for protected routes
         if (!auth && isAuthPath(url)) {
-            logger.debug(`Redirecting unauthenticated user from protected route: ${url}`);
-            return NextResponse.redirect(new URL(`/login?prev=${encodeURIComponent(url)}`,
-                origin)) as any;
+            return createIsoDataResponse(url, undefined, undefined, undefined, {}, {
+                code: 302,
+                redirectTo: `/login?prev=${encodeURIComponent(url)}`,
+            } as any);
         }
 
         // Fetch site data and profile info in parallel for better performance
@@ -270,7 +269,7 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
             communities,
             routeData,
             errorPageData,
-            lemmyExternalHost: process.env.LEMMY_UI_LEMMY_EXTERNAL_HOST ?? testHost ?? "https://108jobs.com",
+            appUrl: process.env.NEXT_PUBLIC_APP_URL ?? "https://staging.108jobs.com",
         };
     }
 }
