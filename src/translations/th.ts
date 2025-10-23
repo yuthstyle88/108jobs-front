@@ -1599,6 +1599,7 @@ export const th = {
             enlargedPortfolioImage: "ภาพผลงานที่ขยายใหญ่",
             startChat: "เริ่มแชท",
             noSkills: "ไม่มีทักษะที่ระบุ",
+            noContacts: "ไม่มีข้อมูลการติดต่อ",
             noBio: "ไม่มีประวัติส่วนตัว",
             noPortfolio: "ไม่มีผลงานที่ระบุ",
             noWorkSamples: "ไม่มีตัวอย่างผลงาน",

@@ -40,6 +40,29 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     const [page, setPage] = useState(1);
     const sharedKeyReadyRef = useRef(false);
     const {localUser} = useMyUser();
+    if (!localUser?.id) {
+        const emptyValue: ChatRoomsContextValue = {
+            rooms: [],
+            isLoading: false,
+            error: null,
+            page: 1,
+            pageSize,
+            hasMore: false,
+            refresh: () => {},
+            loadMore: () => {},
+            markRoomRead: async () => {},
+            bumpRoomToTop: () => {},
+            activeRoomId: null,
+            setActiveRoomId: () => {},
+        };
+
+        return (
+            <ChatRoomsContext.Provider value={emptyValue}>
+                {children}
+            </ChatRoomsContext.Provider>
+        );
+    }
+
     // Persist client-known last-activity timestamps to keep room order stable across reloads
     const LOCAL_ACTIVITY_KEY = 'chat_last_activity_overrides';
     const activityOverridesRef = useRef<Record<string, string>>({});

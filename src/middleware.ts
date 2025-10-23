@@ -89,5 +89,5 @@ export function middleware(req: NextRequest) {
 
 // --- matcher (exclude static) ---
 export const config = {
-    matcher: ['/((?!_next|static|fonts|images|favicon|robots|sitemap).*)'],
+    matcher: ['/((?!_next|static|fonts|images|favicon|robots|sitemap|lottie).*)'],
 };
