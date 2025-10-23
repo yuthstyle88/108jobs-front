@@ -83,7 +83,7 @@ export function middleware(req: NextRequest) {
     }
     // --- i18n auto prefix + persist cookie ---
     if (!pathLng) {
-        const resp = NextResponse.rewrite(new URL(`/${effectiveLng}${pathname}${search}`, req.url));
+        const resp = NextResponse.redirect(new URL(`/${effectiveLng}${pathname}${search}`, req.url));
         if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
         return resp;
     }
