@@ -89,7 +89,7 @@ const SpProfile = () => {
         </Link>
       </section>
       {/* Assume profile is an employer and check if freelancerType exists to determine if profile is a freelancer */}
-      {localUser?.acceptedApplication && (
+      {localUser?.acceptedTerms && (
         <section className="grid grid-cols-4 px-3 mt-6 gap-y-6 gap-x-3">
           <Link prefetch={false} href="/seller/my-service">
             <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text-secondary font-sans">
@@ -148,7 +148,7 @@ const SpProfile = () => {
         </section>
       )}
       {/* Assume profile is an employer and check if freelancerType doesn't exist to determine if profile is not a freelancer */}
-      {!localUser?.acceptedApplication && (
+      {!localUser?.acceptedTerms && (
         <section className="grid grid-cols-4 px-3 mt-6 gap-y-6 gap-x-3">
           <Link prefetch={false} href="/reward/earn">
             <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text-secondary font-sans">
@@ -196,7 +196,7 @@ const SpProfile = () => {
         >
           <ul className="p-0 m-0 list-none">
             {/* Assume profile is an employer and check if freelancerType doesn't exist to determine if profile is not a freelancer */}
-            {!localUser?.acceptedApplication && (
+            {!localUser?.acceptedTerms && (
               <li>
                 <Link prefetch={false}
                       href="/account-setting/basic-information"
@@ -208,7 +208,7 @@ const SpProfile = () => {
               </li>
             )}
             {/* Assume profile is an employer and check if freelancerType exists to determine if profile is a freelancer */}
-            {localUser?.acceptedApplication && (
+            {localUser?.acceptedTerms && (
               <li>
                 <Link prefetch={false}
                       href="/seller-account-setting/freelance-profile"

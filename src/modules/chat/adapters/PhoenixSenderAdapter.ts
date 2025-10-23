@@ -36,65 +36,24 @@ export type PhoenixChannel = {
  * - ไม่ throw exception ออกไปข้างนอก คืน false แทน เพื่อให้ ResendManager ตัดสินใจ retry
  */
 /** Called when an outbound send fails so ResendManager can schedule retry */
+
 export class PhoenixSenderAdapter implements ChatSenderAdapter {
-  constructor(private socket: PhoenixChannel | WebSocket) {}
+    constructor(
+      private socket: PhoenixChannel | WebSocket,
+    ) {}
 
-  async sendMessage(event: string, payload: SendDraft): Promise<string | false> {
-    try {
-      const clientId = (payload as any)?.id ?? null;
-      const safePayload = (payload ?? {}) as unknown; // บังคับไม่ให้ undefined
-
-      // 1) ช่องทาง PhoenixChannel (ถ้ามี .push)
-      if (typeof (this.socket as any)?.push === 'function') {
-        const ch = this.socket as any; // PhoenixChannel
-        // phoenix.js มาตรฐาน: push(event, payload).receive('ok'|'error'...)
-        return await new Promise<string | false>((resolve) => {
-          try {
-            ch.push(event, safePayload)
-              ?.receive?.('ok', (_resp: any) => resolve(String(clientId ?? '')))
-              ?.receive?.('error', (_err: any) => resolve(false))
-              ?.receive?.('timeout', () => resolve(false));
-            // ถ้าไม่มี receive (adapter อื่น): ส่งแล้วถือว่าสำเร็จแบบ fire-and-forget
-            setTimeout(() => resolve(String(clientId ?? '')), 0);
-          } catch (_e) {
-            resolve(false);
-          }
-        });
-      }
-
-      // 2) ช่องทาง adapter ที่มี emit(event, payload)
-      if (typeof (this.socket as any)?.emit === 'function') {
-        (this.socket as any).emit(event, safePayload);
-        return String(clientId ?? '');
-      }
-
-      // 3) ช่องทาง raw WebSocket → ส่งเฟรม Phoenix 5 ช่องให้ครบตลอด
-      if (typeof (this.socket as any)?.send === 'function') {
-        const ws = this.socket as any;
-
-        // หา topic ให้ดีที่สุด: จาก channel.topic, หรือ payload.topic/roomId, ไม่ก็ 'phx'
-        const topic =
-          (ws?.topic as string) ??
-          (ws?.channel as string) ??
-          (safePayload as any)?.topic ??
-          (safePayload as any)?.roomId ??
-          'phx';
-
-        // join_ref / ref: ใช้ null เพื่อคงตำแหน่ง (หรือจะ gen ref เองก็ได้)
-        const jr: string | null = null;
-        const mr: string | null = null;
-
-        // บังคับ 5 ช่องเสมอด้วย payload {}
-        const frame = [jr, mr, String(topic), String(event), safePayload ?? {}];
-        ws.send(JSON.stringify(frame));
-
-        return String(clientId ?? '');
-      }
-
-      // ส่งไม่ได้จริง ๆ
-      return false;
-    } catch (_err) {
-      return false;
+    async sendMessage(event: string, payload: SendDraft): Promise<string | false> {
+        try {
+            const clientId = payload.id;
+            // Fallback: raw ws send (boolean only)
+                const sent = wsSend(this.socket as any, { event, payload });
+                dbg('[PhoenixSenderAdapter] wsSend', { id: (payload as any)?.id, sent });
+                if (!sent) throw new Error('socket send failed');
+                // No server id in this path → return client-side id if present
+                return String(clientId);
+        } catch (err) {
+            dbg('[PhoenixSenderAdapter] send failed', { id: (payload as any)?.id, err });
+            return false;
+        }
     }
-  }
 }

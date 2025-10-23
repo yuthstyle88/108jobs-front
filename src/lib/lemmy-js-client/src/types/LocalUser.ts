@@ -46,7 +46,7 @@ export type LocalUser = {
   /**
    * Whether their registration application has been accepted.
    */
-  acceptedApplication: boolean;
+  acceptedTerms: boolean;
   /**
    * Open links in a new tab.
    */

@@ -9,7 +9,7 @@ import {authCookieName} from "@/utils/config";
 import {LANGUAGE_COOKIE, VALID_LANGUAGES} from "@/constants/language";
 
 export interface Claims {
-    acceptedApplication: boolean;
+    acceptedTerms: boolean;
     sub: number;
     iss: string;
     iat: number;
@@ -29,7 +29,7 @@ export class UserService {
     public myUserInfo?: MyUserInfo;
     public authInfo?: AuthInfo;
     public currentLanguage: string = "th";
-    public acceptedApplication: boolean = false;
+    public acceptedTerms: boolean = false;
 
     private constructor() {
         this.#setAuthInfo();
@@ -44,8 +44,8 @@ export class UserService {
         return this.currentLanguage;
     }
 
-    get getAcceptedApplication(): boolean {
-        return this.acceptedApplication;
+    get getAcceptedTerms(): boolean {
+        return this.acceptedTerms;
     }
 
     get isLoggedIn() {
@@ -148,11 +148,11 @@ export class UserService {
             const claims = jwtDecode<Claims>(auth);
             this.authInfo = { auth, claims };
             this.currentLanguage = claims?.lang;
-            this.acceptedApplication = Boolean(claims?.acceptedApplication);
+            this.acceptedTerms = Boolean(claims?.acceptedTerms);
         } catch {
             this.authInfo = { auth } as AuthInfo;
             this.currentLanguage = this.currentLanguage || 'th';
-            this.acceptedApplication = false;
+            this.acceptedTerms = false;
         }
     }
 }

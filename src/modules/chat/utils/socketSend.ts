@@ -1,20 +1,24 @@
 import {dbg} from "@/modules/chat/utils/helpers";
 import {SendMessageDeps} from "@/modules/chat/types";
 
+let __phxRef = 0;
+const nextRef = () => String(++__phxRef);
+
 export function wsSend(socket: any, obj: any) {
     if (!socket) return false;
     const event = obj?.event ?? obj?.type ?? 'message';
     const payload = obj?.payload ?? obj;
+    const frame = { event, payload };
     try {
         // 1) Phoenix Channel API (channel.push(event, payload))
         if (typeof socket.push === 'function') {
-            dbg('send via phoenix.push', { event, payload });
+            dbg('wsSend → phoenix.push', frame);
             socket.push(event, payload);
             return true;
         }
         // 2) Adapter with emit(event, payload)
         if (typeof socket.emit === 'function') {
-            dbg('send via adapter.emit', { event, payload });
+            dbg('wsSend → adapter.emit', frame);
             socket.emit(event, payload);
             return true;
         }
@@ -22,16 +26,37 @@ export function wsSend(socket: any, obj: any) {
         if (typeof socket.send === 'function') {
             const canCheckReady = typeof (globalThis as any).WebSocket !== 'undefined' && typeof socket.readyState === 'number';
             if (canCheckReady && socket.readyState !== (globalThis as any).WebSocket.OPEN) {
-                dbg('raw ws not open', { readyState: socket.readyState });
+                dbg('wsSend → raw ws not open', { readyState: socket.readyState });
                 return false;
             }
-            dbg('send via raw WebSocket', { event });
-            socket.send(JSON.stringify({ event, payload }));
+            // If payload hints at Phoenix topic, send Phoenix wire frame; otherwise send JSON {event,payload}
+            const topic = payload?.roomTopic ?? (payload?.roomId ? `room:${payload.roomId}` : null);
+            if (topic) {
+                const phxFrame = [null, nextRef(), String(topic), String(event), payload ?? {}];
+                dbg('wsSend → raw ws (phoenix frame)', { phxFrame });
+                socket.send(JSON.stringify(phxFrame));
+            } else {
+                dbg('wsSend → raw ws (json)', frame);
+                socket.send(JSON.stringify(frame));
+            }
             return true;
         }
-        dbg('no send method found');
+        // 4) postMessage (BroadcastChannel/Worker/ServiceWorker)
+        if (typeof socket.postMessage === 'function') {
+            dbg('wsSend → postMessage', frame);
+            socket.postMessage(frame);
+            return true;
+        }
+        // 5) Generic sendMessage(event, payload) or sendMessage(frame)
+        if (typeof socket.sendMessage === 'function') {
+            dbg('wsSend → sendMessage', frame);
+            try { socket.sendMessage(event, payload); } catch { socket.sendMessage(frame); }
+            return true;
+        }
+        dbg('wsSend → no send method found');
         return false;
-    } catch {
+    } catch (err) {
+        dbg('wsSend → error', { err });
         return false;
     }
 }

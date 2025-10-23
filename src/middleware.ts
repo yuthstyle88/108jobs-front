@@ -53,15 +53,15 @@ export function middleware(req: NextRequest) {
     const rawCookie = req.cookies.get(authCookieName)?.value;
     const sid = Boolean(rawCookie);
     // Read claims from JWT (Edge-safe decode, no verification). Fall back to cookie when absent.
-    let acceptedApplication: boolean | undefined;
+    let acceptedTerms: boolean | undefined;
     let jwtLang: string | undefined;
     try {
         const claims = parseJwtClaims(rawCookie) as any;
-        acceptedApplication = (claims?.acceptedApplication ?? claims?.accepted_application) as boolean | undefined;
+        acceptedTerms = (claims?.acceptedTerms ?? claims?.acceptedTerms) as boolean | undefined;
         jwtLang = claims?.lang as string | undefined;
     } catch {}
-    const needsTerms = (acceptedApplication === false);
-
+    const needsTerms = (acceptedTerms === false);
+    console.log("needsTerms", needsTerms);
     // --- language resolution: query > path > cookie > JWT > browser ---
     const pathLng = langFromPath(pathname);
     const cookieLng = req.cookies.get(LANGUAGE_COOKIE)?.value ?? '';
@@ -84,13 +84,13 @@ export function middleware(req: NextRequest) {
     }
 
     // --- terms gate ---
-    // Only enforce terms on protected sections to avoid blocking general navigation
+    // Enforce terms on protected sections and on the register page
     if (sid && needsTerms) {
         const pathNoLang = pathname.replace(/^\/[a-z]{2}(?=\/|$)/i, '');
         const isProtectedAfterLang = PROTECTED_PATHS.some((p) => pathNoLang.startsWith(p));
         const isOnUpdateTerms = /^\/[a-z]{2}\/update-terms(\/|$)/i.test(pathname);
-        if (isProtectedAfterLang && !isOnUpdateTerms) {
-            // redirect to language-prefixed update-terms, e.g. /th/update-terms
+        const isOnRegister = /^\/[a-z]{2}\/register(\/|$)/i.test(pathname);
+        if ((isProtectedAfterLang || isOnRegister) && !isOnUpdateTerms) {
             const resp = NextResponse.redirect(new URL(`/${effectiveLng}/update-terms`, req.url));
             if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
             return resp;
