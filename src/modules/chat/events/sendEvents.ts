@@ -38,8 +38,7 @@ export interface SendEventDeps {
 export function sendTyping(deps: SendEventDeps, typing: boolean) {
     const {senderId, roomId} = deps as any;
     const adapter = (deps as any).adapter as SendMessageDeps['adapter'];
-    const secure = false;
-    const unified = createEvent('chat:typing', {secure, typing, senderId, roomId});
+    const unified = createEvent('chat:typing', {typing, senderId, roomId});
     if(!adapter) return;
     wsSend(adapter, unified);
 }
