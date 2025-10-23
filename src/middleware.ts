@@ -47,8 +47,8 @@ export function middleware(req: NextRequest) {
     const sid = Boolean(rawCookie);
 
     const { acceptedApplication, lang: jwtLang } = parseJwtClaims(rawCookie);
-   console.log(acceptedApplication)
-    const needsTerms = !acceptedApplication;
+    // Only require terms when we know it's not accepted, or when cookie explicitly says so
+    const needsTerms = (acceptedApplication === false);
 
     // --- language resolution: query > path > cookie > browser ---
     const pathLng = langFromPath(pathname);
@@ -67,6 +67,7 @@ export function middleware(req: NextRequest) {
     // --- terms gate ---
     // Only enforce terms on protected sections to avoid blocking general navigation
      if (sid && needsTerms) {
+         console.log("needsTerms", needsTerms);
         const isOnUpdateTerms = /^\/[a-z]{2}\/update-terms(\/|$)/i.test(pathname);
         if (!isOnUpdateTerms) {
             // redirect to language-prefixed update-terms, e.g. /th/update-terms
