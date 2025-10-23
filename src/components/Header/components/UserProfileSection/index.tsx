@@ -35,8 +35,9 @@ const UserProfileSection = () => {
                         <p className="truncate">{t("global.increaseHiringOpportunity")}</p>
                         <FontAwesomeIcon icon={faChevronDown} className="w-3 h-3" />
                     </div>
+                    <div className="absolute left-0 right-0 top-full h-3 bg-transparent pointer-events-none group-hover:pointer-events-auto"></div>
                 </div>
-                <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[60px] shadow-mega-menu px-[1rem] py-[1rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[400px] transition-all duration-300">
+                <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[60px] shadow-mega-menu px-[1rem] py-[1rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white pointer-events-none group-hover:pointer-events-auto group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[400px] transition-all duration-300">
                     {showImprove && <UserImproveMenu />}
                 </div>
             </div>
@@ -46,9 +47,9 @@ const UserProfileSection = () => {
                         <p className="truncate max-w-[80px]">{t("global.recruitment")}</p>
                         <FontAwesomeIcon icon={faChevronDown} className="w-3 h-3" />
                     </div>
-                    <div className="absolute left-0 right-0 w-[100px] bg-transparent h-4"></div>
+                    <div className="absolute left-0 right-0 w-[100px] bg-transparent h-4 pointer-events-none group-hover:pointer-events-auto"></div>
                 </div>
-                <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[60px] shadow-mega-menu px-[1rem] py-[1rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[400px] transition-all duration-300">
+                <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[60px] shadow-mega-menu px-[1rem] py-[1rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white pointer-events-none group-hover:pointer-events-auto group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[400px] transition-all duration-300">
                     {showRecruit && <UserMegaMenu />}
                 </div>
             </div>

@@ -5,7 +5,8 @@ import type {Claims} from "@/services/UserService";
 import {authCookieName} from "@/utils/config";
 
 const STATIC_PATHS = ['/_next', '/favicon', '/robots', '/sitemap', '/images', '/fonts', '/static'];
-const PROTECTED_PATHS = ['/dashboard', '/account', '/chat']; // ← ปรับตรงนี้ได้
+// Disable protection: make all routes public
+const PROTECTED_PATHS: string[] = [];
 function parseJwtClaims(token?: string): { lang?: string; acceptedApplication?: boolean } {
     try {
         if (!token) return {};
@@ -58,17 +59,10 @@ export function middleware(req: NextRequest) {
         return resp;
     };
 
-    // --- protect dynamic routes ---
-    // Consider both plain paths (e.g., /dashboard) and language-prefixed paths (e.g., /th/dashboard)
-    const pathNoLang = pathname.replace(/^\/[a-z]{2}(?=\/|$)/i, '');
-    const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p) || pathNoLang.startsWith(p));
-    if (isProtected && !sid) {
-        const login = new URL(`/${effectiveLng}/login`, req.url);
-        login.searchParams.set('next', pathname + search);
-        const resp = NextResponse.redirect(login);
-        if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
-        return resp;
-    }
+    // --- protect dynamic routes (disabled: all routes are public) ---
+    // const pathNoLang = pathname.replace(/^\/[a-z]{2}(?=\/|$)/i, '');
+    // const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p) || pathNoLang.startsWith(p));
+    const isProtected = false;
 
     // --- terms gate ---
     // Only enforce terms on protected sections to avoid blocking general navigation
