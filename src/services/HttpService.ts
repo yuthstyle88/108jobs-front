@@ -77,6 +77,8 @@ export type WrappedLemmyHttp = WrappedLemmyHttpClient & {
 class WrappedLemmyHttpClient {
   rawClient: LemmyHttp;
   cache: Map<string, {data: any, timestamp: number}> = new Map();
+  /** Tracks in-flight GET requests to prevent duplicate concurrent fetches */
+  inFlight: Map<string, Promise<any>> = new Map();
   cacheTTL: number = 60000; // Cache TTL in milliseconds (1 minute)
   [prop: string]: any;
 
@@ -114,6 +116,14 @@ class WrappedLemmyHttpClient {
             }
           }
 
+          // If a GET with same args is in-flight, reuse that promise to avoid duplicate fetches
+          if (isGetMethod && cacheKey) {
+            const inflight = this.inFlight.get(cacheKey);
+            if (inflight) {
+              return loadingPromise.then(() => inflight);
+            }
+          }
+
           // Perform the actual request
           const resultPromise = (async() => {
             try {
@@ -140,8 +150,18 @@ class WrappedLemmyHttpClient {
                 state: REQUEST_STATE.FAILED,
                 err: error as Error,
               };
+            } finally {
+              // Clear in-flight entry once settled
+              if (isGetMethod && cacheKey) {
+                this.inFlight.delete(cacheKey);
+              }
             }
           })();
+
+          // Mark as in-flight for GETs
+          if (isGetMethod && cacheKey) {
+            this.inFlight.set(cacheKey, resultPromise);
+          }
 
           return loadingPromise.then(() => resultPromise);
         };

@@ -57,11 +57,14 @@ export function middleware(req: NextRequest) {
     let jwtLang: string | undefined;
     try {
         const claims = parseJwtClaims(rawCookie) as any;
-        acceptedTerms = (claims?.acceptedTerms ?? claims?.acceptedTerms) as boolean | undefined;
-        jwtLang = claims?.lang as string | undefined;
+        console.log(claims);
+        const v = claims?.acceptedTerms;
+        acceptedTerms = typeof v === 'boolean' ? v : undefined;
+        jwtLang = typeof claims?.lang === 'string' ? claims.lang : undefined;
     } catch {}
-    const needsTerms = (acceptedTerms === false);
-    console.log("needsTerms", needsTerms);
+    // If the user is signed-in and the token does not explicitly confirm acceptance, assume they still need to accept.
+    const needsTerms = acceptedTerms !== true;
+    console.log(needsTerms);
     // --- language resolution: query > path > cookie > JWT > browser ---
     const pathLng = langFromPath(pathname);
     const cookieLng = req.cookies.get(LANGUAGE_COOKIE)?.value ?? '';
@@ -84,17 +87,24 @@ export function middleware(req: NextRequest) {
     }
 
     // --- terms gate ---
-    // Enforce terms on protected sections and on the register page
+    // 1) If user needs terms (acceptedTerms !== true) → force on protected sections **and** /register
+    // 2) If user already accepted terms → leaving /update-terms to home
+    const isOnUpdateTerms = /^\/[a-z]{2}\/update-terms(\/|$)/i.test(pathname);
+    const isOnRegister    = /^\/[a-z]{2}\/register(\/|$)/i.test(pathname);
+
     if (sid && needsTerms) {
         const pathNoLang = pathname.replace(/^\/[a-z]{2}(?=\/|$)/i, '');
         const isProtectedAfterLang = PROTECTED_PATHS.some((p) => pathNoLang.startsWith(p));
-        const isOnUpdateTerms = /^\/[a-z]{2}\/update-terms(\/|$)/i.test(pathname);
-        const isOnRegister = /^\/[a-z]{2}\/register(\/|$)/i.test(pathname);
         if ((isProtectedAfterLang || isOnRegister) && !isOnUpdateTerms) {
             const resp = NextResponse.redirect(new URL(`/${effectiveLng}/update-terms`, req.url));
             if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
             return resp;
         }
+    } else if (sid && !needsTerms && isOnUpdateTerms) {
+        // Accepted terms already → don't stay on update-terms
+        const resp = NextResponse.redirect(new URL(`/${effectiveLng}/`, req.url));
+        if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
+        return resp;
     }
     // --- i18n auto prefix + persist cookie ---
     if (!pathLng) {

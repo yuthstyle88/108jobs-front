@@ -50,28 +50,10 @@ class PhoenixChannelHub {
       const opts = token ? ({ params: { token } } as any) : (undefined as any);
       sock = new PhoenixSocket(url, opts);
 
-      // Custom heartbeat: trigger only after successful room join, and include both senderId and roomId.
-      if (senderId != null) {
-        const originalSendHeartbeat = (sock as any).sendHeartbeat;
-        (sock as any).sendHeartbeat = function() {
-          // ensure the socket and joined room are ready before sending heartbeat
-          if (!(this as any).isConnected() || !roomId) return;
-          const joined = (this as any).channels?.find((ch: any) => ch.topic === `room:${roomId}`);
-          if (!joined || joined.state !== 'joined') return;
-
-          (this as any).pendingHeartbeatRef = (this as any).makeRef();
-          (this as any).push({
-            topic: `room:${roomId}`,
-            event: 'heartbeat',
-            payload: { senderId, roomId },
-            ref: (this as any).pendingHeartbeatRef,
-          });
-
-          (this as any).heartbeatTimeoutTimer = setTimeout(() => {
-            (this as any).heartbeatTimeout();
-          }, (this as any).heartbeatIntervalMs);
-        };
-      }
+      // Use Phoenix's default transport heartbeat. Do NOT override per-room heartbeat
+      // because it prevents the transport from receiving pong and triggers rejoin loops.
+      // If application-level pings are needed, schedule them via a separate channel push
+      // after join, not by overriding `sendHeartbeat`.
 
       sock.connect();
       this.socketByKey.set(key, sock);
@@ -112,6 +94,10 @@ export function getChannelAdapter(token: string, topic: string, roomId: string, 
   let channel = hub.getOrCreateChannel(token, topic, roomId, senderId);
 
   let readyState = 0;
+  // Add flags for guarding rejoin loops
+  let suppressCloseOnce = false; // do not schedule retry for the next close (used during recreate)
+  let explicitClose = false;     // set when adapter.close() is called
+
   const adapter: RealtimeChannelAdapter = {
     get readyState() { return readyState; },
     set readyState(v: number) { readyState = v; },
@@ -138,6 +124,7 @@ export function getChannelAdapter(token: string, topic: string, roomId: string, 
     close() {
       if (readyState === 3) return;
       readyState = 2;
+      explicitClose = true;
       clearRetry();
       try { (channel as any).leave?.(); } catch {}
 
@@ -190,6 +177,7 @@ export function getChannelAdapter(token: string, topic: string, roomId: string, 
   }
 
   function recreateChannels() {
+    suppressCloseOnce = true;
     try { (channel as any).leave?.(); } catch {}
 
     hub.leaveChannel(token, topic);
@@ -210,10 +198,11 @@ export function getChannelAdapter(token: string, topic: string, roomId: string, 
   let rejoinInFlight = false;
   const clearRetry = () => { if (retryTimer) { try { clearTimeout(retryTimer); } catch {} retryTimer = null; } };
   const scheduleRetry = (reason: string) => {
-    clearRetry();
+    if (retryTimer || rejoinInFlight || explicitClose) return;
     const delay = Math.min(8000, 500 * Math.pow(2, Math.max(0, retryAttempt)));
     if (DEV) console.log('[phoenix] schedule rejoin', { reason, attempt: retryAttempt, delay });
     retryTimer = setTimeout(() => {
+      retryTimer = null;
       if (rejoinInFlight) return;
       rejoinInFlight = true;
       retryAttempt++;
@@ -257,6 +246,7 @@ export function getChannelAdapter(token: string, topic: string, roomId: string, 
           clearJoinTimer();
           retryAttempt = 0; // reset backoff on any success
           clearRetry();
+          explicitClose = false;
           if (readyState === 0) { readyState = 1; adapter.onopen?.(); }
         })
         .receive('error', (e: any) => {
@@ -283,6 +273,11 @@ export function getChannelAdapter(token: string, topic: string, roomId: string, 
   try {
     (channel as any).onClose?.(() => {
       if (DEV) console.log('[phoenix] channel closed');
+      // If we initiated the close (recreate/adapter.close), do not schedule a retry
+      if (explicitClose || suppressCloseOnce) {
+        suppressCloseOnce = false; // consume the suppression token
+        return;
+      }
       try { adapter.onclose?.({ code: 1006, reason: 'channel closed' }); } catch {}
       scheduleRetry('channel closed');
     });
