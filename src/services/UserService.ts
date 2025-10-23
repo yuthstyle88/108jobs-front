@@ -58,22 +58,19 @@ export class UserService {
     }: {
         res: LoginResponse | string;
         showToast?: boolean;
-        sharedKey?: CryptoKey;
     }) {
         if(isBrowser() && typeof res !== "string" && res.jwt) {
             if(showToast) {
                 toast("loggedIn");
             }
             setAuthCookie(res.jwt);
+            this.#setAuthInfo();
             this.#hydrateReadLastMap();
             if(!VALID_LANGUAGES.includes(this.currentLanguage)) return;
             document.cookie = `${LANGUAGE_COOKIE}=${this.currentLanguage}; path=/`;
             const langsPattern = `(?:${VALID_LANGUAGES.join('|')})`;
             const cleanPath = window.location.pathname.replace(new RegExp(`^/` + langsPattern + `\\b`), "");
             window.location.pathname = `/${this.currentLanguage}${cleanPath}`;
-
-        } else {
-            this.#setAuthInfo({rawCookie: res.toString()});
         }
     }
 
@@ -122,11 +119,8 @@ export class UserService {
         }
     }
 
-    #setAuthInfo(
-        opts: { rawCookie?: string; } = {}
-    ) {
-        const { rawCookie = "" } = opts;
-        const auth = isBrowser() ? cookie.parse(document.cookie)[authCookieName] : rawCookie;
+    #setAuthInfo() {
+        const auth = cookie.parse(document.cookie)[authCookieName];
         if (!auth) {
             this.authInfo = undefined;
             this.currentLanguage = "en";

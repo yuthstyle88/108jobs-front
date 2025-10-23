@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {LANGUAGE_COOKIE} from "@/constants/language";
-
-// NOTE: Use the actual cookie name string. If the browser has `const LANGUAGE_COOKIE = 'u:lng'`,
-// middleware must also use 'u:lng' (the value), not the identifier text.
-const CK = { SID: 'sid', TERMS: 'needsTerms', LNG: 'u:lng' } as const;
+import {jwtDecode} from "jwt-decode";
+import type {Claims} from "@/services/UserService";
+import {authCookieName} from "@/utils/config";
 
 const STATIC_PATHS = ['/_next', '/favicon', '/robots', '/sitemap', '/images', '/fonts', '/static'];
 const PROTECTED_PATHS = ['/dashboard', '/account', '/chat']; // ← ปรับตรงนี้ได้
+function parseJwtClaims(token?: string): { lang?: string; accepted_application?: boolean } {
+    try {
+        if (!token) return {};
+        const claims = jwtDecode<Claims>(token);
+        return { lang: (claims as any)?.lang, accepted_application: (claims as any)?.accepted_application };
+    } catch {
+        return {};
+    }
+}
 
 function isStatic(p: string) {
     return STATIC_PATHS.some((x) => p.startsWith(x));
@@ -34,26 +42,26 @@ export function middleware(req: NextRequest) {
     const { pathname, search } = req.nextUrl;
     if (isStatic(pathname)) return NextResponse.next();
 
-    const sid = req.cookies.get(CK.SID)?.value;
-    const needsTerms = req.cookies.get(CK.TERMS)?.value === '1';
+    const rawCookie = req.cookies.get(authCookieName)?.value;
+    const sid = Boolean(rawCookie);
+
+    const { accepted_application, lang: jwtLang } = parseJwtClaims(rawCookie);
+    const needsTerms = !accepted_application;
 
     // --- language resolution: query > path > cookie > browser ---
-    const qlng = req.nextUrl.searchParams.get('lng') || req.nextUrl.searchParams.get('lang');
     const pathLng = langFromPath(pathname);
-    const cookieLng = req.cookies.get(CK.LNG)?.value
-      ?? req.cookies.get(LANGUAGE_COOKIE)?.value
-      ?? '';
-    const effectiveLng = normalizeLang(qlng || pathLng || cookieLng || langFromBrowser(req));
+    const cookieLng = req.cookies.get(LANGUAGE_COOKIE)?.value ?? '';
+    const effectiveLng = normalizeLang(pathLng || cookieLng || jwtLang || langFromBrowser(req));
 
     const setLangCookie = (resp: NextResponse, value: string) => {
-        resp.cookies.set(CK.LNG, value, { path: '/', maxAge: 60 * 60 * 24 * 365, sameSite: 'lax' });
+        resp.cookies.set(LANGUAGE_COOKIE, value, { path: '/', maxAge: 60 * 60 * 24 * 365, sameSite: 'lax' });
         return resp;
     };
 
     // --- protect dynamic routes ---
     const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p));
     if (isProtected && !sid) {
-        const login = new URL('/login', req.url);
+        const login = new URL(`/${effectiveLng}/login`, req.url);
         login.searchParams.set('next', pathname + search);
         const resp = NextResponse.redirect(login);
         if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
@@ -61,8 +69,9 @@ export function middleware(req: NextRequest) {
     }
 
     // --- terms gate ---
-    if (sid && needsTerms && !pathname.startsWith('/update-terms')) {
-        const resp = NextResponse.redirect(new URL('/update-terms', req.url));
+    if (sid && needsTerms && !/^\/[a-z]{2}\/update-terms(\/|$)/i.test(pathname)) {
+        // redirect to language-prefixed update-terms, e.g. /th/update-terms
+        const resp = NextResponse.redirect(new URL(`/${effectiveLng}/update-terms`, req.url));
         if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
         return resp;
     }
