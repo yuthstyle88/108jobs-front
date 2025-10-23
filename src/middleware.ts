@@ -69,11 +69,17 @@ export function middleware(req: NextRequest) {
     }
 
     // --- terms gate ---
-    if (sid && needsTerms && !/^\/[a-z]{2}\/update-terms(\/|$)/i.test(pathname)) {
-        // redirect to language-prefixed update-terms, e.g. /th/update-terms
-        const resp = NextResponse.redirect(new URL(`/${effectiveLng}/update-terms`, req.url));
-        if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
-        return resp;
+    // Only enforce terms on protected sections to avoid blocking general navigation
+    if (sid && needsTerms) {
+        const pathNoLang = pathname.replace(/^\/[a-z]{2}(?=\/|$)/i, '');
+        const isProtectedAfterLang = PROTECTED_PATHS.some((p) => pathNoLang.startsWith(p));
+        const isOnUpdateTerms = /^\/[a-z]{2}\/update-terms(\/|$)/i.test(pathname);
+        if (isProtectedAfterLang && !isOnUpdateTerms) {
+            // redirect to language-prefixed update-terms, e.g. /th/update-terms
+            const resp = NextResponse.redirect(new URL(`/${effectiveLng}/update-terms`, req.url));
+            if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
+            return resp;
+        }
     }
     // --- i18n auto prefix + persist cookie ---
     if (!pathLng) {
