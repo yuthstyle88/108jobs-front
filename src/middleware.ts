@@ -6,11 +6,11 @@ import {authCookieName} from "@/utils/config";
 
 const STATIC_PATHS = ['/_next', '/favicon', '/robots', '/sitemap', '/images', '/fonts', '/static'];
 const PROTECTED_PATHS = ['/dashboard', '/account', '/chat']; // ← ปรับตรงนี้ได้
-function parseJwtClaims(token?: string): { lang?: string; accepted_application?: boolean } {
+function parseJwtClaims(token?: string): { lang?: string; acceptedApplication?: boolean } {
     try {
         if (!token) return {};
         const claims = jwtDecode<Claims>(token);
-        return { lang: (claims as any)?.lang, accepted_application: (claims as any)?.accepted_application };
+        return { lang: (claims as any)?.lang, acceptedApplication: (claims as any)?.accepted_application };
     } catch {
         return {};
     }
@@ -45,8 +45,8 @@ export function middleware(req: NextRequest) {
     const rawCookie = req.cookies.get(authCookieName)?.value;
     const sid = Boolean(rawCookie);
 
-    const { accepted_application, lang: jwtLang } = parseJwtClaims(rawCookie);
-    const needsTerms = !accepted_application;
+    const { acceptedApplication, lang: jwtLang } = parseJwtClaims(rawCookie);
+    const needsTerms = !acceptedApplication;
 
     // --- language resolution: query > path > cookie > browser ---
     const pathLng = langFromPath(pathname);
