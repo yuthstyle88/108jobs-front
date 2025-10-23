@@ -2,7 +2,7 @@
 import type {ChatMessage, ChatRoomId, ChatStatus, LocalUserId} from "lemmy-js-client";
 
 export function createMessage(
-  secure: boolean,
+  secure?: boolean,
   content: string,
   roomId: ChatRoomId,
   senderId: LocalUserId,
@@ -11,8 +11,9 @@ export function createMessage(
     if (!content || content.trim().length === 0) {
         throw new Error("Message content is required");
     }
+    const isSecure = secure ?? false;
     return {
-        secure,
+        secure: isSecure,
         id: id ?? crypto.randomUUID(),
         roomId,
         senderId,
