@@ -11,7 +11,7 @@ function parseJwtClaims(token?: string): { lang?: string; acceptedApplication?: 
     try {
         if (!token) return {};
         const claims = jwtDecode<Claims>(token);
-        return { lang: (claims as any)?.lang, acceptedApplication: (claims as any)?.accepted_application };
+        return { lang: (claims as any)?.lang, acceptedApplication: (claims as any)?.acceptedApplication };
     } catch {
         return {};
     }
