@@ -1,53 +1,33 @@
 "use client";
 
-import {useEffect, useState} from "react";
-import {PhoenixChatBridgeProvider} from "@/modules/chat/contexts/PhoenixChatBridgeProvider";
-import ChatRoomView from "../../../../../modules/chat/components/ChatRoomView";
-import {UserService} from "@/services";
-import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import {LocalUserId, PersonId, Post} from "@/lib/lemmy-js-client";
-import {useStateMachineStore} from "@/modules/chat/store/stateMachineStore";
+import { PhoenixChatBridgeProvider } from "@/modules/chat/contexts/PhoenixChatBridgeProvider";
+import ChatRoomView from "@/modules/chat/components/ChatRoomView";
+import { UserService } from "@/services";
+import LoadingBlur from "@/components/Common/Loading/LoadingBlur";
+import { RoomNotFound } from "@/components/RoomNotFound";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
+import {useChatSession} from "@/modules/chat/hooks/useChatSession";
 
-export default function MessageClient({roomId}: { roomId: string }) {
+export default function MessageClient({ roomId }: { roomId: string }) {
     const isLoggedIn = UserService.Instance.isLoggedIn;
-    const {localUser} = useMyUser() as { localUser: any };
-    console.log("localUser", localUser);
-    const [state, setState] = useState<{
-        partnerName: string;
-        partnerId?: LocalUserId;
-        partnerAvatar?: string;
-        partnerPersonId?: PersonId
-        currentRoom?: any;
-        post?: Post;
-        notFound: boolean;
-        partnerAvailable?: boolean;
-    }>({
-        partnerName: "Unknown",
-        notFound: false,
-    });
-    const reset = useStateMachineStore((s) => s.reset);
-    useEffect(() => {
-        if (roomId) reset();
-    }, [roomId, reset]);
-    setState((prev) => ({
-        ...prev,
-        currentRoom: {
-            ...(prev.currentRoom || {}),
-            roomId,
-        },
-    }));
+    const { localUser } = useMyUser();
+    const state = useChatSession(roomId, localUser?.id, isLoggedIn);
+
+    if (state.loading || !state.currentRoom || !localUser) {
+        return <LoadingBlur text="" />;
+    }
+
+    if (state.notFound || !state.partnerId) {
+        return <RoomNotFound />;
+    }
+
     return (
-        <PhoenixChatBridgeProvider
-            key={roomId}
-            isLoggedIn={isLoggedIn}
-            roomId={roomId}
-        >
+        <PhoenixChatBridgeProvider isLoggedIn={isLoggedIn} roomId={roomId}>
             <ChatRoomView
-                key={roomId}
                 post={state.post}
                 partnerName={state.partnerName}
-                partnerAvatar={state?.partnerAvatar}
-                partnerId={state.partnerId as LocalUserId}
+                partnerAvatar={state.partnerAvatar}
+                partnerId={state.partnerId}
                 partnerAvailable={state.partnerAvailable}
                 roomData={state.currentRoom}
                 localUser={localUser}

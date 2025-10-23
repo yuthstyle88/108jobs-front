@@ -542,15 +542,6 @@ export async function fetchHistoryPage(
     const resp = res.data as any;
     const items = Array.isArray(resp?.results) ? resp.results : [];
 
-    let sharedKey = UserService.Instance.authInfo?.sharedKey;
-    if (!sharedKey) {
-        sharedKey = await waitForSharedKey(5000);
-        if (!sharedKey) {
-            console.warn(`fetchHistory: No sharedKey available after timeout for room ${params.roomId}`);
-            return;
-        }
-    }
-
     const mappedItems: any[] = [];
     for (const view of items) {
         const m = {

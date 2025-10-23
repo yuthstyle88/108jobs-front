@@ -228,7 +228,6 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
 
     // Deduplicate read-receipts: remember last sent message id
     const lastReadSentRef = useRef<string | null>(null);
-
     const sendLatestRead = useCallback(() => {
         // Prevent sending when tab is hidden or unfocused
         if (document.visibilityState !== "visible" || !document.hasFocus()) {
