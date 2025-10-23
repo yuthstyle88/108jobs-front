@@ -46,7 +46,7 @@ export function middleware(req: NextRequest) {
     const sid = Boolean(rawCookie);
 
     const { acceptedApplication, lang: jwtLang } = parseJwtClaims(rawCookie);
-    const needsTerms = !acceptedApplication;
+    // const needsTerms = !acceptedApplication;
 
     // --- language resolution: query > path > cookie > browser ---
     const pathLng = langFromPath(pathname);
@@ -70,17 +70,17 @@ export function middleware(req: NextRequest) {
 
     // --- terms gate ---
     // Only enforce terms on protected sections to avoid blocking general navigation
-    if (sid && needsTerms) {
-        const pathNoLang = pathname.replace(/^\/[a-z]{2}(?=\/|$)/i, '');
-        const isProtectedAfterLang = PROTECTED_PATHS.some((p) => pathNoLang.startsWith(p));
-        const isOnUpdateTerms = /^\/[a-z]{2}\/update-terms(\/|$)/i.test(pathname);
-        if (isProtectedAfterLang && !isOnUpdateTerms) {
-            // redirect to language-prefixed update-terms, e.g. /th/update-terms
-            const resp = NextResponse.redirect(new URL(`/${effectiveLng}/update-terms`, req.url));
-            if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
-            return resp;
-        }
-    }
+    // if (sid && needsTerms) {
+    //     const pathNoLang = pathname.replace(/^\/[a-z]{2}(?=\/|$)/i, '');
+    //     const isProtectedAfterLang = PROTECTED_PATHS.some((p) => pathNoLang.startsWith(p));
+    //     const isOnUpdateTerms = /^\/[a-z]{2}\/update-terms(\/|$)/i.test(pathname);
+    //     if (isProtectedAfterLang && !isOnUpdateTerms) {
+    //         // redirect to language-prefixed update-terms, e.g. /th/update-terms
+    //         const resp = NextResponse.redirect(new URL(`/${effectiveLng}/update-terms`, req.url));
+    //         if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
+    //         return resp;
+    //     }
+    // }
     // --- i18n auto prefix + persist cookie ---
     if (!pathLng) {
         const resp = NextResponse.redirect(new URL(`/${effectiveLng}${pathname}${search}`, req.url));
