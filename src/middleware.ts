@@ -47,7 +47,6 @@ export function middleware(req: NextRequest) {
     const sid = Boolean(rawCookie);
 
     const { acceptedApplication, lang: jwtLang } = parseJwtClaims(rawCookie);
-    console.log("acceptedApplication", acceptedApplication);
     const needsTerms = !acceptedApplication;
 
     // --- language resolution: query > path > cookie > browser ---
@@ -60,24 +59,31 @@ export function middleware(req: NextRequest) {
         return resp;
     };
 
-    // --- protect dynamic routes (disabled: all routes are public) ---
-    // const pathNoLang = pathname.replace(/^\/[a-z]{2}(?=\/|$)/i, '');
-    // const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p) || pathNoLang.startsWith(p));
-    const isProtected = false;
+    // --- protect dynamic routes ---
+    const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p));
+    // Login gate: enforce when protected and user has no session, or token lacks acceptedApplication.
+    const isOnLogin = /^\/[a-z]{2}\/login(\/|$)/i.test(pathname);
+    if ((isProtected && !sid && !isOnLogin) || acceptedApplication === undefined) {
+        const login = new URL(`/${effectiveLng}/login`, req.url);
+        login.searchParams.set('next', pathname + search);
+        const resp = NextResponse.redirect(login);
+        if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
+        return resp;
+    }
 
     // --- terms gate ---
     // Only enforce terms on protected sections to avoid blocking general navigation
-    // if (sid && needsTerms) {
-    //     const pathNoLang = pathname.replace(/^\/[a-z]{2}(?=\/|$)/i, '');
-    //     const isProtectedAfterLang = PROTECTED_PATHS.some((p) => pathNoLang.startsWith(p));
-    //     const isOnUpdateTerms = /^\/[a-z]{2}\/update-terms(\/|$)/i.test(pathname);
-    //     if (isProtectedAfterLang && !isOnUpdateTerms) {
-    //         // redirect to language-prefixed update-terms, e.g. /th/update-terms
-    //         const resp = NextResponse.redirect(new URL(`/${effectiveLng}/update-terms`, req.url));
-    //         if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
-    //         return resp;
-    //     }
-    // }
+    if (sid && needsTerms) {
+        const pathNoLang = pathname.replace(/^\/[a-z]{2}(?=\/|$)/i, '');
+        const isProtectedAfterLang = PROTECTED_PATHS.some((p) => pathNoLang.startsWith(p));
+        const isOnUpdateTerms = /^\/[a-z]{2}\/update-terms(\/|$)/i.test(pathname);
+        if (isProtectedAfterLang && !isOnUpdateTerms) {
+            // redirect to language-prefixed update-terms, e.g. /th/update-terms
+            const resp = NextResponse.redirect(new URL(`/${effectiveLng}/update-terms`, req.url));
+            if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
+            return resp;
+        }
+    }
     // --- i18n auto prefix + persist cookie ---
     if (!pathLng) {
         const resp = NextResponse.redirect(new URL(`/${effectiveLng}${pathname}${search}`, req.url));
