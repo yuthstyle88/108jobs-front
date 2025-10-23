@@ -29,7 +29,13 @@ export default function MessageClient({roomId}: { roomId: string }) {
     useEffect(() => {
         if (roomId) reset();
     }, [roomId, reset]);
-
+    setState((prev) => ({
+        ...prev,
+        currentRoom: {
+            ...(prev.currentRoom || {}),
+            roomId,
+        },
+    }));
     return (
         <PhoenixChatBridgeProvider
             key={roomId}
