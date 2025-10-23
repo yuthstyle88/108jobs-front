@@ -84,9 +84,10 @@ export function middleware(req: NextRequest) {
         if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
         return resp;
     }
-
+    console.log("needsTerms", needsTerms);
     const resp = NextResponse.next();
     if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
+    console.log("cookieLng", cookieLng);
     return resp;
 }
 
