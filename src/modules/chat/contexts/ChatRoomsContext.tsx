@@ -386,7 +386,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         return () => {
             try { unsub?.(); } catch {}
         };
-    }, [state.rooms]);
+    }, []);
 
     // Sync current rooms into the global rooms store so background watchers can observe them
     useEffect(() => {

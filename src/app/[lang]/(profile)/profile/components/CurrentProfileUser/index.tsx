@@ -2,13 +2,13 @@
 import React, { useState } from "react";
 import { Person } from "lemmy-js-client";
 import { useMyUser } from "@/hooks/profile-api/useMyUser";
-import NotFound from "@/app/[lang]/notFound";
 import ProfileHeader from "@/components/Profile/ProfileHeader";
 import ProfileSidebar from "@/components/Profile/ProfileSidebar";
 import PortfolioSlider from "@/components/Profile/PortfolioSlider";
 import WorkSamplesSlider from "@/components/Profile/WorkSamplesSlider";
 import ImageModal from "@/components/Common/Modal/ImageModal";
 import Reviews from "@/components/Profile/Reviews";
+import NotFound from "@/components/Common/NotFound";
 
 interface ProfileProps {
     profile: Person | null;
