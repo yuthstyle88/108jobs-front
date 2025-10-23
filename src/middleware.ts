@@ -1,27 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {LANGUAGE_COOKIE} from "@/constants/language";
-import {jwtDecode} from "jwt-decode";
-import type {Claims} from "@/services/UserService";
 import {authCookieName} from "@/utils/config";
 
 const STATIC_PATHS = ['/_next', '/favicon', '/robots', '/sitemap', '/images', '/fonts', '/static'];
 // Disable protection: make all routes public
-const PROTECTED_PATHS: string[] = [];
-function parseJwtClaims(token?: string): { lang?: string; acceptedApplication?: boolean } {
-    try {
-        if (!token) return {};
-        const claims = jwtDecode<Claims>(token);
-        return { lang: (claims as any)?.lang, acceptedApplication: (claims as any)?.acceptedApplication };
-    } catch {
-        return {};
-    }
-}
+const PROTECTED_PATHS: string[] = ['/chat' ,'/account', '/admin'];
 
 function isStatic(p: string) {
     return STATIC_PATHS.some((x) => p.startsWith(x));
 }
 const SUPPORTED = ['th', 'en', 'vi'] as const;
 type Lang = typeof SUPPORTED[number];
+
+function decodeBase64Url(input: string): string {
+    const b64 = input.replace(/-/g, '+').replace(/_/g, '/');
+    const pad = '==='.slice((b64.length + 3) % 4);
+    return atob(b64 + pad);
+}
+
+function parseJwtClaims(token?: string): any {
+    if (!token) return {};
+    const parts = token.split('.');
+    if (parts.length < 2) return {};
+    try {
+        const json = decodeBase64Url(parts[1]);
+        return JSON.parse(json);
+    } catch {
+        return {};
+    }
+}
 
 function normalizeLang(s?: string | null): Lang {
     const v = (s ?? '').toLowerCase().split('-')[0];
@@ -45,11 +52,17 @@ export function middleware(req: NextRequest) {
 
     const rawCookie = req.cookies.get(authCookieName)?.value;
     const sid = Boolean(rawCookie);
+    // Read claims from JWT (Edge-safe decode, no verification). Fall back to cookie when absent.
+    let acceptedApplication: boolean | undefined;
+    let jwtLang: string | undefined;
+    try {
+        const claims = parseJwtClaims(rawCookie) as any;
+        acceptedApplication = (claims?.acceptedApplication ?? claims?.accepted_application) as boolean | undefined;
+        jwtLang = claims?.lang as string | undefined;
+    } catch {}
+    const needsTerms = (acceptedApplication === false);
 
-    const { acceptedApplication, lang: jwtLang } = parseJwtClaims(rawCookie);
-    const needsTerms = !acceptedApplication;
-
-    // --- language resolution: query > path > cookie > browser ---
+    // --- language resolution: query > path > cookie > JWT > browser ---
     const pathLng = langFromPath(pathname);
     const cookieLng = req.cookies.get(LANGUAGE_COOKIE)?.value ?? '';
     const effectiveLng = normalizeLang(pathLng || cookieLng || jwtLang || langFromBrowser(req));
@@ -61,9 +74,8 @@ export function middleware(req: NextRequest) {
 
     // --- protect dynamic routes ---
     const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p));
-    // Login gate: enforce when protected and user has no session, or token lacks acceptedApplication.
     const isOnLogin = /^\/[a-z]{2}\/login(\/|$)/i.test(pathname);
-    if ((isProtected && !sid && !isOnLogin) || acceptedApplication === undefined) {
+    if (isProtected && !sid && !isOnLogin) {
         const login = new URL(`/${effectiveLng}/login`, req.url);
         login.searchParams.set('next', pathname + search);
         const resp = NextResponse.redirect(login);
@@ -86,14 +98,16 @@ export function middleware(req: NextRequest) {
     }
     // --- i18n auto prefix + persist cookie ---
     if (!pathLng) {
-        const resp = NextResponse.redirect(new URL(`/${effectiveLng}${pathname}${search}`, req.url));
-        if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
-        return resp;
+        const target = new URL(`/${effectiveLng}${pathname}${search}`, req.url);
+        // Prevent redirect loop: only redirect when the path actually changes
+        if (target.pathname !== pathname || target.search !== search) {
+            const resp = NextResponse.redirect(target);
+            if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
+            return resp;
+        }
     }
-    console.log("needsTerms", needsTerms);
     const resp = NextResponse.next();
     if (cookieLng !== effectiveLng) setLangCookie(resp, effectiveLng);
-    console.log("cookieLng", cookieLng);
     return resp;
 }
 

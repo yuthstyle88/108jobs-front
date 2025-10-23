@@ -59,18 +59,36 @@ export class UserService {
         res: LoginResponse | string;
         showToast?: boolean;
     }) {
-        if(isBrowser() && typeof res !== "string" && res.jwt) {
-            if(showToast) {
+        if (isBrowser() && typeof res !== "string" && res.jwt) {
+            if (showToast) {
                 toast("loggedIn");
             }
+            // 1) Client-side cookie (kept for immediate client state)
             setAuthCookie(res.jwt);
             this.#setAuthInfo();
             this.#hydrateReadLastMap();
-            if(!VALID_LANGUAGES.includes(this.currentLanguage)) return;
+
+            // 2) Server-side cookie (so Next.js middleware sees it on the very next request)
+            //    This expects a Next.js Route Handler at /api/session that sets HttpOnly cookies via Set-Cookie.
+            //    Important: credentials: 'include' so the browser stores the cookie for this origin.
+            try {
+                void fetch('/api/session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ jwt: res.jwt})
+                });
+            } catch {}
+
+            // 3) Language cookie (non-HttpOnly for client-side reads)
+            if (!VALID_LANGUAGES.includes(this.currentLanguage)) return;
             document.cookie = `${LANGUAGE_COOKIE}=${this.currentLanguage}; path=/`;
+
+            // 4) Hard navigation so that the next request re-enters the server with fresh cookies
             const langsPattern = `(?:${VALID_LANGUAGES.join('|')})`;
             const cleanPath = window.location.pathname.replace(new RegExp(`^/` + langsPattern + `\\b`), "");
-            window.location.pathname = `/${this.currentLanguage}${cleanPath}`;
+            const nextPath = `/${this.currentLanguage}${cleanPath}${window.location.search ?? ''}`;
+            window.location.assign(nextPath);
         }
     }
 
@@ -126,9 +144,15 @@ export class UserService {
             this.currentLanguage = "en";
             return;
         }
-        const claims = jwtDecode<Claims>(auth);
-        this.authInfo = { auth, claims };
-        this.currentLanguage = claims?.lang;
-        this.acceptedApplication = !claims?.acceptedApplication;
+        try {
+            const claims = jwtDecode<Claims>(auth);
+            this.authInfo = { auth, claims };
+            this.currentLanguage = claims?.lang;
+            this.acceptedApplication = Boolean(claims?.acceptedApplication);
+        } catch {
+            this.authInfo = { auth } as AuthInfo;
+            this.currentLanguage = this.currentLanguage || 'th';
+            this.acceptedApplication = false;
+        }
     }
 }
