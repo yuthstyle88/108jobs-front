@@ -24,16 +24,16 @@ interface ChatRoomMessagesProps {
 }
 
 const ChatRoomMessages: React.FC<ChatRoomMessagesProps> = ({
-                                                       messages,
-                                                       partnerAvatar,
-                                                       customScrollParent,
-                                                       onTopReached,
-                                                       hasMore,
-                                                       isFetching,
-                                                       onAtBottomChange,
-                                                       initialLoadDone = false,
-                                                       partnerId
-                                                   }) => {
+                                                               messages,
+                                                               partnerAvatar,
+                                                               customScrollParent,
+                                                               onTopReached,
+                                                               hasMore,
+                                                               isFetching,
+                                                               onAtBottomChange,
+                                                               initialLoadDone = false,
+                                                               partnerId
+                                                           }) => {
     const {t} = useTranslation();
     const params = useParams();
 
@@ -120,66 +120,107 @@ const ChatRoomMessages: React.FC<ChatRoomMessagesProps> = ({
     }, [data, isAtBottom]);
 
     return (
-        <Virtuoso
-            ref={virtuosoRef}
-            data={data}
-            firstItemIndex={0}
-            initialTopMostItemIndex={data.length > 0 ? data.length - 1 : 0}
-            followOutput={true}
-            customScrollParent={customScrollParent ?? undefined}
-            computeItemKey={(_index, msg) => {
-                const m: any = msg as any;
-                const id = m?.id ?? m?.clientId;
-                if (id != null) return String(id);
-                const created = m?.createdAt ?? '';
-                const sender = m?.senderId ?? '';
-                return `${created}|${sender}`;
-            }}
-            alignToBottom
-            rangeChanged={handleRangeChanged}
-            atTopStateChange={(atTop) => {
-                // Intentionally empty to avoid double fetching
-            }}
-            atBottomStateChange={(bottom) => {
-                setIsAtBottom(bottom);
-                onAtBottomChange?.(bottom);
-            }}
-            components={{
-                Footer: () => <div className="h-4 sm:h-6" />, // Responsive footer height
-                Header: hasMore
-                    ? () => (
-                        <div className="w-full flex justify-center my-2 sm:my-3">
-                            <div className="inline-block px-2 sm:px-3 py-1 text-gray-600 bg-gray-100 text-xs sm:text-sm font-medium text-center rounded-full min-w-[80px] sm:min-w-[100px]">
-                                {isFetching ? t("profileChat.loading") : t("profileChat.previousMessages")}
-                            </div>
-                        </div>
-                    )
-                    : undefined,
-            }}
-            itemContent={(index, msg) => {
-                const currentDate = formatDateToLong(msg.createdAt, currentLocale);
-                const prev = index > 0 ? data[index - 1] : null;
-                const prevDate = prev ? formatDateToLong(prev.createdAt, currentLocale) : null;
-                const showDate = currentDate !== prevDate;
+        <>
+            <style jsx global>{`
+                @keyframes dot-flashing {
+                    0% {
+                        opacity: 0.2;
+                        transform: scale(0.8);
+                    }
+                    50% {
+                        opacity: 1;
+                        transform: scale(1.2);
+                    }
+                    100% {
+                        opacity: 0.2;
+                        transform: scale(0.8);
+                    }
+                }
 
-                return (
-                    <div className="px-2 sm:px-4 last:mb-0"> {/* Responsive padding */}
-                        {showDate && (
+                .dot-flashing {
+                    animation: dot-flashing 1.2s infinite ease-in-out;
+                    background: #042b4a;
+                }
+
+                .dot-flashing:nth-child(2) {
+                    animation-delay: 0.4s;
+                }
+
+                .dot-flashing:nth-child(3) {
+                    animation-delay: 0.8s;
+                }
+            `}</style>
+            <Virtuoso
+                ref={virtuosoRef}
+                data={data}
+                firstItemIndex={0}
+                initialTopMostItemIndex={data.length > 0 ? data.length - 1 : 0}
+                followOutput={true}
+                customScrollParent={customScrollParent ?? undefined}
+                computeItemKey={(_index, msg) => {
+                    const m: any = msg as any;
+                    const id = m?.id ?? m?.clientId;
+                    if (id != null) return String(id);
+                    const created = m?.createdAt ?? '';
+                    const sender = m?.senderId ?? '';
+                    return `${created}|${sender}`;
+                }}
+                alignToBottom
+                rangeChanged={handleRangeChanged}
+                atTopStateChange={(atTop) => {
+                    // Intentionally empty to avoid double fetching
+                }}
+                atBottomStateChange={(bottom) => {
+                    setIsAtBottom(bottom);
+                    onAtBottomChange?.(bottom);
+                }}
+                components={{
+                    Footer: () => <div className="h-4 sm:h-6"/>, // Responsive footer height
+                    Header: hasMore
+                        ? () => (
                             <div className="w-full flex justify-center my-2 sm:my-3">
                                 <div
-                                    className="inline-block px-2 sm:px-3 py-1 min-w-[80px] sm:min-w-[100px] text-gray-600 bg-gray-100 text-xs sm:text-sm font-medium text-center rounded-full"
-                                >
-                                    {currentDate}
+                                    className="inline-block px-4 sm:px-5 py-2 text-gray-800 bg-gradient-to-r from-gray-100 to-gray-200 text-xs sm:text-sm font-medium text-center rounded-full min-w-[100px] sm:min-w-[120px] shadow-sm hover:shadow-lg transition-all duration-300 border border-transparent isFetching ? 'border-blue-300' : ''">
+                                    {isFetching ? (
+                                        <div className="flex space-x-1.5 justify-center items-center">
+                                            <span className="dot-flashing w-2.5 h-2.5 rounded-full"></span>
+                                            <span className="dot-flashing w-2.5 h-2.5 rounded-full"></span>
+                                            <span className="dot-flashing w-2.5 h-2.5 rounded-full"></span>
+                                        </div>
+                                    ) : (
+                                        t("profileChat.previousMessages")
+                                    )}
                                 </div>
                             </div>
-                        )}
-                        <ChatMessageItem message={msg} partnerAvatar={partnerAvatar} partnerId={partnerId} />
-                    </div>
-                );
-            }}
-            className="w-full h-full overflow-x-hidden" // Replaced inline style with className
-        />
+                        )
+                        : undefined,
+                }}
+                itemContent={(index, msg) => {
+                    const currentDate = formatDateToLong(msg.createdAt, currentLocale);
+                    const prev = index > 0 ? data[index - 1] : null;
+                    const prevDate = prev ? formatDateToLong(prev.createdAt, currentLocale) : null;
+                    const showDate = currentDate !== prevDate;
+
+                    return (
+                        <div className="px-2 sm:px-4 last:mb-0"> {/* Responsive padding */}
+                            {showDate && (
+                                <div className="w-full flex justify-center my-2 sm:my-3">
+                                    <div
+                                        className="inline-block px-2 sm:px-3 py-1 min-w-[80px] sm:min-w-[100px] text-gray-600 bg-gray-100 text-xs sm:text-sm font-medium text-center rounded-full"
+                                    >
+                                        {currentDate}
+                                    </div>
+                                </div>
+                            )}
+                            <ChatMessageItem message={msg} partnerAvatar={partnerAvatar} partnerId={partnerId}/>
+                        </div>
+                    );
+                }}
+                className="w-full h-full overflow-x-hidden" // Replaced inline style with className
+            />
+        </>
     );
 };
+
 
 export default ChatRoomMessages;
