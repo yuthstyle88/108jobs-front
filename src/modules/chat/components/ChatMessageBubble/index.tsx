@@ -12,6 +12,7 @@ import MessageStatusIndicator from "@/modules/chat/components/MessageStatusIndic
 import {dbg} from "@/modules/chat/utils";
 import {isSameOrAfter, isApproxSame} from "@/modules/chat/utils/helpers";
 import {useReadLastIdStore} from "@/modules/chat/store/readStore";
+import {usePeerOnline} from "@/modules/chat/store/presenceStore";
 
 interface ChatMessageItemProps {
     message: ChatMessage;
@@ -76,13 +77,17 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     const time = toLocalTime(viewMsg.createdAt as any, i18n?.language || "th-TH");
     const isOwner = !!viewMsg.isOwner;
 
+    const peerOnline = usePeerOnline(Number(partnerId));
+
     const isRead = useMemo(() => {
+        // Only consider as "read" when the peer is currently online and the read timestamp covers this message
         return (
             isOwner &&
+            peerOnline === true &&
             lastReadAt != null &&
             isSameOrAfter(lastReadAt as any, (viewMsg as any).createdAt as any)
         );
-    }, [isOwner, lastReadAt, (viewMsg as any).createdAt]);
+    }, [isOwner, peerOnline, lastReadAt, (viewMsg as any).createdAt]);
 
     const isLastRead = useMemo(() => {
         return (

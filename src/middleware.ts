@@ -59,7 +59,9 @@ export function middleware(req: NextRequest) {
     };
 
     // --- protect dynamic routes ---
-    const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p));
+    // Consider both plain paths (e.g., /dashboard) and language-prefixed paths (e.g., /th/dashboard)
+    const pathNoLang = pathname.replace(/^\/[a-z]{2}(?=\/|$)/i, '');
+    const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p) || pathNoLang.startsWith(p));
     if (isProtected && !sid) {
         const login = new URL(`/${effectiveLng}/login`, req.url);
         login.searchParams.set('next', pathname + search);
