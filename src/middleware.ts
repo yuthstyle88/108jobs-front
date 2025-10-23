@@ -61,7 +61,9 @@ export function middleware(req: NextRequest) {
 
     // --- protect dynamic routes ---
     const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p));
-    if (acceptedApplication === undefined || (isProtected && !sid) ) {
+    // Login gate: enforce when protected and user has no session, or token lacks acceptedApplication.
+    const isOnLogin = /^\/[a-z]{2}\/login(\/|$)/i.test(pathname);
+    if ((isProtected && !sid && !isOnLogin) || acceptedApplication === undefined) {
         const login = new URL(`/${effectiveLng}/login`, req.url);
         login.searchParams.set('next', pathname + search);
         const resp = NextResponse.redirect(login);
