@@ -7,6 +7,7 @@ import {LoginProps} from "@/components/Authentication/LoginForm/interface";
 import getQueryParams from "@/utils/helpers";
 import {isSuccess, REQUEST_STATE} from "@/services/HttpService";
 import {getAppName} from "@/utils/appConfig";
+import {isBrowser} from "@/utils";
 
 export const handleUseOAuthProvider = async (params: {
     oauthProvider: OAuthProvider;
@@ -126,11 +127,9 @@ export async function handleLoginSuccess(i: LoginFormClass, loginRes: LoginRespo
     // ใช้ redirectUrl จาก props แทน prev
     const {redirectUrl} = i.props;
 
-    // ใช้ router จาก props แทน history
-    if (redirectUrl) {
-        i.props.router.replace(redirectUrl);
-    } else {
-        i.props.router.replace("/");
+    // ทำแค่ redirect แบบ full reload เพื่อให้ server/middleware เห็นคุกกี้ใหม่ทันที
+    if (isBrowser() && redirectUrl) {
+      window.location.assign(redirectUrl || '/');
     }
 }
 
