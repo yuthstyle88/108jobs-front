@@ -47,7 +47,7 @@ export function middleware(req: NextRequest) {
     const sid = Boolean(rawCookie);
 
     const { acceptedApplication, lang: jwtLang } = parseJwtClaims(rawCookie);
-   alert(acceptedApplication)
+   console.log(acceptedApplication)
     const needsTerms = !acceptedApplication;
 
     // --- language resolution: query > path > cookie > browser ---
