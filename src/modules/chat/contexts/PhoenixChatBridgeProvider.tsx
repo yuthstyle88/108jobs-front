@@ -83,15 +83,14 @@ export const PhoenixChatBridgeProvider: React.FC<WebSocketProviderProps> = ({chi
                 // ResendManager expects a list named failedMessages, but we supply only failed ones as per the new policy.
                 const pendings: ChatMessageModel[] = rawList
                   .filter((m: any) => {
-                      const ok = (
-                        m?.status === "failed" &&
-                        typeof m?.id === "string" && m.id.length > 0 &&
-                        typeof m?.roomId === "string" && m.roomId.length > 0 &&
-                        typeof m?.senderId === "number" && Number.isFinite(m.senderId) &&
-                        typeof m?.content === "string" && m.content.length > 0 &&
-                        typeof m?.createdAt === "string" && m.createdAt.length > 0
+                      return (
+                          m?.status === "failed" &&
+                          typeof m?.id === "string" && m.id.length > 0 &&
+                          typeof m?.roomId === "string" && m.roomId.length > 0 &&
+                          typeof m?.senderId === "number" && Number.isFinite(m.senderId) &&
+                          typeof m?.content === "string" && m.content.length > 0 &&
+                          typeof m?.createdAt === "string" && m.createdAt.length > 0
                       );
-                      return ok;
                   })
                   .map((m: any) => ({
                       id: m.id as string,

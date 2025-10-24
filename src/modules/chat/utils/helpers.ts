@@ -76,9 +76,29 @@ export function maybeHandleReadReceipt(env: any, fallbackRoomId: string): boolea
         // Emit event for internal WS listeners
         emitReadReceipt(roomId, lastReadMessageId, readerId);
         const api = require('@/modules/chat/store/readStore');
-        const { setPeerLastReadAt, getPeerLastReadAt } = api.useReadLastIdStore.getState?.() || {};
+        const { setPeerLastReadAt } = api.useReadLastIdStore.getState?.() || {};
         if (typeof setPeerLastReadAt === 'function' && updatedAt) {
             setPeerLastReadAt(roomId, readerId, updatedAt);
+        }
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+export async function maybeHandlePresenceUpdate(env: any, meId: number): Promise<boolean> {
+    try {
+        const evName = String(env?.event);
+        if (!evName || !evName.includes("heartbeat") || meId === Number(env.sender.id)) return false;
+        try {
+            const api = require('@/modules/chat/store/presenceStore');
+            const { setSnapshot, } = api.usePresenceStore.getState();
+            setSnapshot([{ userId: Number(env.sender.id), lastSeenAt: Date.now() }]);
+        } catch (err) {
+            try {
+                if (localStorage.getItem('chat_debug') === '1') console.error("Error fetching room:", err);
+            } catch {
+            }
         }
         return true;
     } catch {

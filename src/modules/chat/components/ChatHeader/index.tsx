@@ -2,7 +2,7 @@
 
 import React, {useState} from "react";
 import AvatarBadge from "@/components/AvatarBadge";
-import {ChatRoomId, LocalUserId} from "lemmy-js-client";
+import {LocalUserId} from "lemmy-js-client";
 import ChatWrapper from "@/containers/ChatWrapper";
 import {List} from "lucide-react";
 import {usePeerOnline} from "@/modules/chat/store/presenceStore";

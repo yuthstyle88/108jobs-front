@@ -48,6 +48,7 @@ export type ServerMessageModel = ChatMessage & {
     prevStatus?: string;
     createdAt?: string;
     updatedAt?: string;
+    response?: any;
 }
 
 interface IncomingEventLike {
@@ -144,6 +145,21 @@ export function normalizePhoenixEnvelope(
                 lastReadMessageId: p?.lastReadMessageId,
                 updatedAt: p?.updatedAt,
                 readerId: p?.readerId,
+            };
+        }
+    }
+
+    if (isIncomingEventLike(payload) && payload.event === 'phx_reply') {
+        const p: ServerMessageModel | undefined = payload.payload;
+        const ev = p?.response?.event;
+        const evLower = ev.toLowerCase();
+
+        // --- heartbeat presence online events ---
+        if (evLower === 'heartbeat') {
+            return {
+                event: ev,
+                roomId: 'lobby',
+                sender: p?.response.senderId ? ({id: p?.response.senderId} as unknown as ChatMessageView['sender']) : undefined,
             };
         }
     }

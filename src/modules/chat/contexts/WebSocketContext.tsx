@@ -64,7 +64,6 @@ export const WebSocketProvider: React.FC<React.PropsWithChildren<{ options?: Use
 
   // Optional: perform room join here (centralized) when allowed via options
   React.useEffect(() => {
-    const { allowJoin = false, autoJoin = true } = (options ?? {}) as any;
     const roomId = (options as any)?.roomId as string | undefined;
     const senderId = (options as any)?.senderId as number | undefined;
 
