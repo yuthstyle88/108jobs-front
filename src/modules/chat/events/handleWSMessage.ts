@@ -13,7 +13,7 @@ import {emitChatTyping,} from "@/modules/chat/events/index";
 import type {ChatMessage, ChatRoomData} from "lemmy-js-client";
 import {
     buildMessageSignature,
-    cleanupFetch,
+    cleanupFetch, maybeHandlePresenceUpdate,
     maybeHandleReadReceipt,
     maybeHandleStatusChange,
     parseTypingDetail,
@@ -80,7 +80,6 @@ export function createHandleWSMessage(deps: HandlerDeps) {
         try {
             payload = unwrapPhoenixFrame(event);
             const evt = payload?.data?.event;
-
             if (evt === 'chat:message' && !isValidIncomingChatPayload(payload)) {
                 // Keep log lightweight; the permissive mapper below will try its best.
                 try {
@@ -89,7 +88,7 @@ export function createHandleWSMessage(deps: HandlerDeps) {
             }
             // Normalize once only
             const env: NormalizedEnvelope = normalizePhoenixEnvelope(payload.data, roomIdStr);
-            
+
             // Only mark peer as active if the message is from the peer, not from local user
             try {
                 // Prefer normalized env ids; fall back to raw/nested payload (e.g., chat:active_rooms → data.payload.readerId)
@@ -102,12 +101,18 @@ export function createHandleWSMessage(deps: HandlerDeps) {
                 }
             } catch {
             }
+
             // 1) status-change → refresh & return
             if (await maybeHandleStatusChange(env, roomIdStr, setRefreshRoomData)) {
                 return null;
             }
 
-            // 2) typing → DOM + optional callback
+            // 2) presence update
+            if (await maybeHandlePresenceUpdate(env, meId)) {
+                return null;
+            }
+
+            // 3) typing → DOM + optional callback
 
             const typingInfo = parseTypingDetail(env, roomIdStr, meId);
             if (typingInfo) {
@@ -120,12 +125,12 @@ export function createHandleWSMessage(deps: HandlerDeps) {
                 } catch {
                 }
             }
-            // 3) read-receipt → persist peer's read-last then return
+            // 4) read-receipt → persist peer's read-last then return
             if (maybeHandleReadReceipt(env, roomIdStr)) {
                 return;
             }
 
-            // 4) message payloads → handle + merge
+            // 5) message payloads → handle + merge
             const msgs = await handleIncomingPayload(payload.data, {
                 roomId: roomIdStr,
                 localUserId: meId,
@@ -160,7 +165,7 @@ export function createHandleWSMessage(deps: HandlerDeps) {
                 }
 
                 if (lastAckId) (handleWSMessage as any)._batchAckLastId = lastAckId;
-                // 5) auto-ack flush (once)
+                // 6) auto-ack flush (once)
                 tryFlushAutoAck(handleWSMessage, roomIdStr, readAckRef, ackCooldownRef);
             }
         } catch (e) {

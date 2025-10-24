@@ -116,13 +116,13 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
 
     const isEmployerStarted = parsed && parsed.type === "employer-started";
     const isProposedQuote = parsed && parsed.type === "proposed-quote" && parsed.quote;
-    const isEmployerAssigned = parsed && (parsed as any).type === "employer-assigned";
-    const isStartWork = parsed && (parsed as any).type === "start-work";
-    const isCancelJob = parsed && (parsed as any).type === "cancel-job";
-    const isSubmitDelivery = parsed && (parsed as any).type === "submit-delivery";
-    const isRequestRevision = parsed && (parsed as any).type === "request-revision";
-    const isDeliveryAccepted = parsed && (parsed as any).type === "delivery-accepted";
-    const isFileMsg = parsed && (parsed as any).type === "file";
+    const isEmployerAssigned = parsed && parsed.type === "employer-assigned";
+    const isStartWork = parsed && parsed.type === "start-work";
+    const isCancelJob = parsed && parsed.type === "cancel-job";
+    const isSubmitDelivery = parsed && parsed.type === "submit-delivery";
+    const isRequestRevision = parsed && parsed.type === "request-revision";
+    const isDeliveryAccepted = parsed && parsed.type === "delivery-accepted";
+    const isFileMsg = parsed && parsed.type === "file";
 
     return (
         <div

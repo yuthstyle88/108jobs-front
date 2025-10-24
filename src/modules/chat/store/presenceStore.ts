@@ -43,11 +43,13 @@ export const usePresenceStore = create<PresenceState>()(
       _queuedDiffs: [],
 
       setSnapshot: (list) => {
-          // Apply first snapshot and flush any queued diffs that came earlier.
-          set(() => ({
-              byUserId: Object.fromEntries(list.map((p) => [p.userId, p])),
-              phase: 'ready',
-          }));
+          set((s) => {
+              const next = { ...s.byUserId };
+              for (const p of list) {
+                  next[p.userId] = p;
+              }
+              return { byUserId: next, phase: 'ready' };
+          });
 
           const queued = get()._queuedDiffs;
           if (queued.length) {
@@ -55,6 +57,7 @@ export const usePresenceStore = create<PresenceState>()(
               set({ _queuedDiffs: [] });
           }
       },
+
 
       setSubscribed: () => set({ phase: 'subscribed' }),
 

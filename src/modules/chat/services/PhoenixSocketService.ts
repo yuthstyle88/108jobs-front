@@ -3,100 +3,153 @@
  * - No retries / no heartbeat overrides / no caches
  * - Just connect → join → forward → push/emit/close
  */
-import { Socket as PhoenixSocket } from "phoenix";
-import { buildActixWsUrl } from "@/modules/chat/utils/chatSocketUtils";
+import {Socket as PhoenixSocket} from "phoenix";
+import {buildActixWsUrl} from "@/modules/chat/utils/chatSocketUtils";
 
 export interface RealtimeChannelAdapter {
-  readyState: number; // 0 connecting, 1 open, 2 closing, 3 closed
-  onopen?: () => void;
-  onmessage?: (event: { data: any }) => void;
-  onclose?: (event: { code?: number; reason?: string }) => void;
-  onerror?: (event?: any) => void;
-  send: (data: string) => void;
-  emit?: (event: string, payload: any) => void;
-  close: () => void;
+    readyState: number; // 0 connecting, 1 open, 2 closing, 3 closed
+    onopen?: () => void;
+    onmessage?: (event: { data: any }) => void;
+    onclose?: (event: { code?: number; reason?: string }) => void;
+    onerror?: (event?: any) => void;
+    send: (data: string) => void;
+    emit?: (event: string, payload: any) => void;
+    sendHeartbeat?: (payload?: Record<string, any>) => void;
+    close: () => void;
 }
 
 const DEV = typeof process !== "undefined" && process.env.NODE_ENV !== "production";
 const isInternalEvent = (ev?: string): boolean => !!ev && (
-  ev.startsWith("chan_reply") || ev === "heartbeat" || ev === "presence_state" || ev === "presence_diff"
+    ev.startsWith("chan_reply") || ev === "heartbeat" || ev === "presence_state" || ev === "presence_diff"
 );
 
 export function getChannelAdapter(token: string, topic: string, roomId: string, senderId: number): RealtimeChannelAdapter {
-  const url = buildActixWsUrl();
-  const opts = token ? ({ params: { token } } as any) : (undefined as any);
-  const socket = new PhoenixSocket(url, opts);
-  socket.connect();
+    const url = buildActixWsUrl();
+    const opts = token ? ({params: {token}} as any) : (undefined as any);
+    const socket = new PhoenixSocket(url, opts);
+    socket.connect();
 
-  const params: any = { topic };
-  if (roomId) params.roomId = roomId;
-  if (typeof senderId === "number") params.senderId = senderId;
-  if (token) params.token = token;
+    const params: any = {topic};
+    if (roomId) params.roomId = roomId;
+    if (typeof senderId === "number") params.senderId = senderId;
+    if (token) params.token = token;
 
-  const ch = socket.channel(topic, params);
+    const ch = socket.channel(topic, params);
 
-  let readyState = 0;
-  const adapter: RealtimeChannelAdapter = {
-    get readyState() { return readyState; },
-    set readyState(v: number) { readyState = v; },
-    onopen: undefined,
-    onmessage: undefined,
-    onclose: undefined,
-    onerror: undefined,
-    send(data: string | Record<string, any>) {
-      try {
-        const payload = typeof data === "string" ? JSON.parse(data) : data;
-        (ch as any).push("chat:message", payload);
-      } catch (e) {
-        if (DEV) console.error("[phoenix] send() invalid JSON payload", { data, e });
-        adapter.onerror?.({ code: "INVALID_JSON", reason: "send() expects a JSON string or object", data });
-      }
-    },
-    emit(event: string, payload: any) {
-      try { (ch as any).push(event, payload); } catch (e) { if (DEV) console.warn("[phoenix] emit failed", { event, e }); }
-    },
-    close() {
-      if (readyState === 3) return;
-      readyState = 2;
-      try { (ch as any).leave?.(); } catch {}
-      try { socket.disconnect?.(); } catch {}
-      readyState = 3;
-      adapter.onclose?.({ code: 1000, reason: "client closed" });
-    },
-  } as RealtimeChannelAdapter;
+    let readyState = 0;
+    const adapter: RealtimeChannelAdapter = {
+        get readyState() {
+            return readyState;
+        },
+        set readyState(v: number) {
+            readyState = v;
+        },
+        onopen: undefined,
+        onmessage: undefined,
+        onclose: undefined,
+        onerror: undefined,
+        send(data: string | Record<string, any>) {
+            try {
+                const payload = typeof data === "string" ? JSON.parse(data) : data;
+                (ch as any).push("chat:message", payload);
+            } catch (e) {
+                if (DEV) console.error("[phoenix] send() invalid JSON payload", {data, e});
+                adapter.onerror?.({code: "INVALID_JSON", reason: "send() expects a JSON string or object", data});
+            }
+        },
+        emit(event: string, payload: any) {
+            try {
+                (ch as any).push(event, payload);
+            } catch (e) {
+                if (DEV) console.warn("[phoenix] emit failed", {event, e});
+            }
+        },
+        sendHeartbeat() {
+            const payload = {
+                senderId,
+                event: "heartbeat",
+            };
+            try {
+                ch.push("heartbeat", payload);
+                if (DEV) console.debug("[phoenix] custom heartbeat sent", payload);
+            } catch (err) {
+                console.warn("[phoenix] heartbeat send failed", err);
+            }
+        },
+        close() {
+            if (readyState === 3) return;
+            readyState = 2;
+            try {
+                (ch as any).leave?.();
+            } catch {
+            }
+            try {
+                socket.disconnect?.();
+            } catch {
+            }
+            readyState = 3;
+            adapter.onclose?.({code: 1000, reason: "client closed"});
+        },
+    } as RealtimeChannelAdapter;
 
-  // Forward all non-internal events as a normalized envelope
-  try {
-    const orig = (ch as any).onMessage?.bind(ch);
-    (ch as any).onMessage = (event: string, payload: any, ref: any) => {
-      if (event && !isInternalEvent(event)) {
-        let outEvent = event;
-        let outPayload: any = payload == null ? {} : payload;
-        if (payload && typeof payload === "object" && typeof (payload as any).event === "string") {
-          outEvent = String((payload as any).event);
-          const inner = (payload as any).payload;
-          outPayload = inner == null ? {} : inner;
-        }
-        const env = { event: outEvent, topic: topic.replace(/^room:/, ""), payload: outPayload };
-        try { adapter.onmessage?.({ data: JSON.stringify(env) }); } catch {}
-      }
-      return orig ? orig(event, payload, ref) : payload;
-    };
-  } catch {}
+    // Forward all non-internal events as a normalized envelope
+    try {
+        const orig = (ch as any).onMessage?.bind(ch);
+        (ch as any).onMessage = (event: string, payload: any, ref: any) => {
+            if (event && !isInternalEvent(event)) {
+                let outEvent = event;
+                let outPayload: any = payload == null ? {} : payload;
+                if (payload && typeof payload === "object" && typeof (payload as any).event === "string") {
+                    outEvent = String((payload as any).event);
+                    const inner = (payload as any).payload;
+                    outPayload = inner == null ? {} : inner;
+                }
+                const env = {event: outEvent, topic: topic.replace(/^room:/, ""), payload: outPayload};
+                try {
+                    adapter.onmessage?.({data: JSON.stringify(env)});
+                } catch {
+                }
+            }
+            return orig ? orig(event, payload, ref) : payload;
+        };
+    } catch {
+    }
 
-  // Basic lifecycle hooks
-  try { (ch as any).onError?.((e: any) => { if (DEV) console.log("[phoenix] channel error", e); adapter.onerror?.(e); }); } catch {}
-  try { (ch as any).onClose?.(() => { if (DEV) console.log("[phoenix] channel closed"); readyState = 3; adapter.onclose?.({ code: 1006, reason: "channel closed" }); }); } catch {}
+    // Basic lifecycle hooks
+    try {
+        (ch as any).onError?.((e: any) => {
+            if (DEV) console.log("[phoenix] channel error", e);
+            adapter.onerror?.(e);
+        });
+    } catch {
+    }
+    try {
+        (ch as any).onClose?.(() => {
+            if (DEV) console.log("[phoenix] channel closed");
+            readyState = 3;
+            adapter.onclose?.({code: 1006, reason: "channel closed"});
+        });
+    } catch {
+    }
 
-  // Single join
-  try {
-    (ch as any).join()
-      .receive("ok", () => { if (DEV) console.log("[phoenix] join ok", { topic }); if (readyState === 0) { readyState = 1; adapter.onopen?.(); } })
-      .receive("error", (e: any) => { if (DEV) console.log("[phoenix] join error", { topic, e }); adapter.onerror?.(e); });
-  } catch (e) {
-    if (DEV) console.log("[phoenix] join exception", { topic, e });
-    adapter.onerror?.(e);
-  }
+    // Single join
+    try {
+        (ch as any).join()
+            .receive("ok", () => {
+                if (DEV) console.log("[phoenix] join ok", {topic});
+                if (readyState === 0) {
+                    readyState = 1;
+                    adapter.onopen?.();
+                }
+            })
+            .receive("error", (e: any) => {
+                if (DEV) console.log("[phoenix] join error", {topic, e});
+                adapter.onerror?.(e);
+            });
+    } catch (e) {
+        if (DEV) console.log("[phoenix] join exception", {topic, e});
+        adapter.onerror?.(e);
+    }
 
-  return adapter;
+    return adapter;
 }
