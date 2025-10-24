@@ -488,7 +488,8 @@ export const en = {
             emailRegistered: "This email has already been registered. Please login with your password.",
             invalidPassword: "Invalid password",
             titleVerifyingCode: "Check your inbox",
-            enterCodeWithEmail: "Enter the code sent to <strong>{{email}}</strong> to verify your account."
+            enterCodeWithEmail: "Enter the code sent to <strong>{{email}}</strong> to verify your account.",
+            newPasswordRequirements: "Password must be at least 8 characters long, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character."
         },
         breadcrumb: {
             accountSettingsBreadcrumb: "Account Settings",

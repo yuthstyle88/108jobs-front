@@ -484,7 +484,8 @@ export const th = {
             emailRegistered: "อีเมลนี้ได้ลงทะเบียนไว้แล้ว กรุณาเข้าสู่ระบบด้วยรหัสผ่านของคุณ",
             invalidPassword: "รหัสผ่านไม่ถูกต้อง",
             titleVerifyingCode: "ตรวจสอบกล่องจดหมายของคุณ",
-            enterCodeWithEmail: "ป้อนรหัสที่ส่งไปยัง <strong>{{email}}</strong> เพื่อยืนยันบัญชีของคุณ"
+            enterCodeWithEmail: "ป้อนรหัสที่ส่งไปยัง <strong>{{email}}</strong> เพื่อยืนยันบัญชีของคุณ",
+            newPasswordRequirements: "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร รวมถึงตัวพิมพ์ใหญ่ 1 ตัว, ตัวพิมพ์เล็ก 1 ตัว, ตัวเลข 1 ตัว และอักขระพิเศษ 1 ตัว",
         },
         breadcrumb: {
             accountSettingsBreadcrumb: "การตั้งค่าบัญชี",

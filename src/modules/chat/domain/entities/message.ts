@@ -2,10 +2,10 @@
 import type {ChatMessage, ChatRoomId, ChatStatus, LocalUserId} from "lemmy-js-client";
 
 export function createMessage(
-  secure?: boolean,
   content: string,
   roomId: ChatRoomId,
   senderId: LocalUserId,
+  secure?: boolean,
   id?: string,
 ): ChatMessage {
     if (!content || content.trim().length === 0) {
