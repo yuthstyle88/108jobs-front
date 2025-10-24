@@ -203,7 +203,7 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
     // fetch the last read timestamp from the backend and store it into useReadLastIdStore
     useLoadLastRead(roomId, partnerId);
     // Fetch one-shot presence snapshot for the active room/peer
-    useRoomPresence(roomId, partnerId);
+    useRoomPresence(partnerId);
 
     // --- History management ---
     // Pulls paginated history for this room and writes pages into the global store via upsertHistory.
