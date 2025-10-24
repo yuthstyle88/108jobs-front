@@ -485,7 +485,8 @@ export const vi = {
             emailRegistered: "Email này đã được đăng ký. Vui lòng đăng nhập bằng mật khẩu của bạn.",
             invalidPassword: "Mật khẩu không hợp lệ",
             titleVerifyingCode: "Kiểm tra hộp thư của bạn",
-            enterCodeWithEmail: "Nhập mã được gửi đến <strong>{{email}}</strong> để xác minh tài khoản của bạn"
+            enterCodeWithEmail: "Nhập mã được gửi đến <strong>{{email}}</strong> để xác minh tài khoản của bạn",
+            newPasswordRequirements: "Mật khẩu phải dài ít nhất 8 ký tự, bao gồm 1 chữ cái in hoa, 1 chữ cái thường, 1 số và 1 ký tự đặc biệt.",
         },
         breadcrumb: {
             accountSettingsBreadcrumb: "Cài đặt tài khoản",

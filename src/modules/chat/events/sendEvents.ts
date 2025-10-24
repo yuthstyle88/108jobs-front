@@ -110,8 +110,7 @@ export async function sendChatMessage(deps: SendMessageDeps, data: MessagePayloa
     const store = useChatStore.getState();
     try {
         // ---- 0) Sanitize & validate input here (do not rely on caller) ----
-        const raw = (data?.message ?? '');
-        const message = typeof raw === 'string' ? raw.trim() : raw;
+        const message = (data?.message ?? '');
         if(!message) {
             try {
                 (deps as any).onAfterSend?.();
@@ -135,7 +134,7 @@ export async function sendChatMessage(deps: SendMessageDeps, data: MessagePayloa
         const allowEncrypt = data?.secure !== false;
 
         // ---- 2) Create a single pending entity and optimistically insert once ----
-        const p = createMessage(data.secure, message, roomId, data.senderId, data.id);
+        const p = createMessage(message, roomId, data.senderId, data.secure, data.id);
         if(!p) {
             try {
                 (deps as any).onAfterSend?.();

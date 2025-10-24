@@ -15,7 +15,7 @@ interface ChatRoomListProps {
 }
 
 function ChatRoomListComponent({room, isActive, currentLang, localUser}: ChatRoomListProps) {
-    const {markRoomRead} = useChatRoomsContext();
+    const {markRoomRead, setActiveRoomId} = useChatRoomsContext();
 
     // Derive peer user id (the other participant, not me)
     const peerUserId = React.useMemo(() => {

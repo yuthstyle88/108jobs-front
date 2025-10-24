@@ -2,30 +2,29 @@
 import LoadingCircle from "@/components/Common/Loading/LoadingCircle";
 import {CustomInput} from "@/components/ui/InputField";
 import {ERROR_CONSTANTS} from "@/constants/error";
-import {LanguageFile} from "@/constants/language";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import useNotification from "@/hooks/useNotification";
-import {getNamespace} from "@/utils/i18nHelper";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useState} from "react";
 import {useForm} from "react-hook-form";
-import {z} from "zod"; // ★ เพิ่ม
+import {z} from "zod";
+import {useTranslation} from "react-i18next"; // ★ เพิ่ม
 
 type ChangePasswordProps = {token: string};
 
 export const ChangePassword = ({token}: ChangePasswordProps) => {
-  const authen = getNamespace(LanguageFile.AUTHEN);
+  const {t} = useTranslation();
 
   /* -------- schema & form -------------------------------------- */
   const changePasswordSchema = z
   .object({
     password: z.string().min(6,
-      authen?.passwordMin6),
+      t("authen.passwordMin6")),
     confirmPassword: z.string(),
   })
   .refine((d) => d.password === d.confirmPassword,
     {
-      message: authen?.notMatchPassword,
+      message: t("authen.notMatchPassword"),
       path: ["confirmPassword"],
     });
 
@@ -44,7 +43,7 @@ export const ChangePassword = ({token}: ChangePasswordProps) => {
   const {
     state: changeState,
     execute: passwordChange,
-  } = useHttpPost("passwordChange");
+  } = useHttpPost("passwordChangeAfterReset");
 
   /* -------- UI states ------------------------------------------ */
   const {successMessage} = useNotification();
@@ -70,7 +69,7 @@ export const ChangePassword = ({token}: ChangePasswordProps) => {
     if (res.state === "success") {
       successMessage(null,
         null,
-        authen?.changePasswordSuccess);
+        t("authen.changePasswordSuccess"));
       window.location.href = "/login";
     }
   };
@@ -79,7 +78,7 @@ export const ChangePassword = ({token}: ChangePasswordProps) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <p className="text-text-primary text-sm font-sans">
-        {authen?.newPasswordRequirements}
+        {t("authen.newPasswordRequirements")}
       </p>
 
       {errors.root && (
@@ -89,23 +88,23 @@ export const ChangePassword = ({token}: ChangePasswordProps) => {
       )}
 
       <CustomInput
-        label={authen?.labelPassword}
+        label={t("authen.labelPassword")}
         name="password"
         type="password"
         register={register("password")}
         error={errors.password?.message}
-        placeholder={authen?.placeholderPassword}
+        placeholder={t("authen.placeholderPassword")}
         showPassword={showPassword}
         toggleShowPassword={() => setShowPassword(!showPassword)}
       />
 
       <CustomInput
-        label={authen?.labelConfirmPassword}
+        label={t("authen.labelConfirmPassword")}
         name="confirmPassword"
         type="password"
         register={register("confirmPassword")}
         error={errors.confirmPassword?.message}
-        placeholder={authen?.placeholderConfirmPassword}
+        placeholder={t("authen.placeholderConfirmPassword")}
         showPassword={showConfirmPassword}
         toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
       />
@@ -125,7 +124,7 @@ export const ChangePassword = ({token}: ChangePasswordProps) => {
           {changeState.state === "loading" ? (
             <LoadingCircle/>
           ) : (
-            authen?.confirmButton
+           t("authen.confirmButton")
           )}
         </button>
       </div>
