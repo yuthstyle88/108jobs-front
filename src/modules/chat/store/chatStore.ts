@@ -37,6 +37,23 @@ function removeAt<T>(arr: T[], index: number): T[] {
     return [...arr.slice(0, index), ...arr.slice(index + 1)];
 }
 
+function flushByStatus(
+  getFn: () => ChatStoreState & ChatStoreActions,
+  status: 'pending' | 'failed',
+  roomId?: string
+): ChatMessage[] {
+  const { listMessages, retryMeta } = getFn();
+  const now = Date.now();
+  const norm = roomId ? normRoom(String(roomId)) : undefined;
+  return listMessages.filter((m: any) => {
+    const isRoomOk = !norm || normRoom(String(m.roomId)) === norm;
+    const isStatus = m.status === status;
+    const meta = retryMeta[String(m.id)];
+    const due = !meta || meta.next <= now;
+    return isRoomOk && isStatus && due;
+  });
+}
+
 type RetryMeta = Record<string, { retry: number; next: number }>
 
 interface ChatStoreState {
@@ -71,50 +88,39 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
     listMessages: [],
 
     addMessage: (msg) => set((s) => {
-        const keep = (msg as any).status === 'pending' || (msg as any).status === 'failed';
-        if(!keep) return {} as any;
-        return {listMessages: mergeIntoMessages(s.listMessages, msg)};
-    }),
-
-    upsertHistory: (items) => set((s) => {
-        if (!Array.isArray(items) || items.length === 0) return {} as any;
-
-        const map = new Map<string, ChatMessage>(
-          s.listMessages.map(m => [String(m.id), m])
-        );
-
-        for (const msg of items) {
-            // sync read-last-id
-            if (isBrowser() && msg.roomId && msg.senderId && msg.createdAt) {
-                try {
-                    readLastIdUtils.setLastReadAt(msg.roomId, msg.senderId, msg.createdAt);
-                } catch {}
+        // Store every message; this store is the render source of truth.
+        if (isBrowser() && (msg as any).roomId && (msg as any).senderId && (msg as any).createdAt) {
+            const ts = Date.parse(String((msg as any).createdAt));
+            if (Number.isFinite(ts)) {
+                try { readLastIdUtils.setLastReadAt((msg as any).roomId, (msg as any).senderId, (msg as any).createdAt); } catch {}
             }
-            const key = String(msg.id);
-            const prev = map.get(key);
-            map.set(key, { ...(prev ?? {}), ...msg });
         }
-
-        return { listMessages: Array.from(map.values()) } as Partial<ChatStoreState>;
+        return { listMessages: mergeIntoMessages(s.listMessages, msg) };
     }),
+
+    upsertHistory: (items) => {
+        if (!Array.isArray(items) || items.length === 0) return;
+        const upsert = get().upsertMessage;
+        for (const msg of items) upsert(msg);
+    },
 
     upsertMessage: (msg) => set((s) => {
         // Persist peer's read-last-at for any valid message
         if (isBrowser() && msg.roomId && msg.senderId && msg.createdAt) {
-            try { readLastIdUtils.setLastReadAt(msg.roomId, msg.senderId, msg.createdAt); } catch {}
+            const ts = Date.parse(String(msg.createdAt));
+            if (Number.isFinite(ts)) {
+                try { readLastIdUtils.setLastReadAt(msg.roomId, msg.senderId, msg.createdAt); } catch {}
+            }
         }
         // Always merge incoming messages regardless of status to ensure real-time display
         // Pending/failed messages will still be updated/cleaned up via commitStatus
         return { listMessages: mergeIntoMessages(s.listMessages, msg) };
     }),
 
-    addPending: (msg) => set((s) => {
-        const k = String(msg.id);
-        const map = new Map(s.listMessages.map(m => [String(m.id), m]));
-        const prev = map.get(k);
-        map.set(k, {...(prev ?? ({} as ChatMessage)), ...msg, isOwner: true, status: 'pending' as ChatStatus});
-        return {listMessages: Array.from(map.values())};
-    }),
+    addPending: (msg) => {
+        const withPending = { ...(msg as any), isOwner: true, status: 'pending' as ChatStatus } as ChatMessage;
+        get().addMessage(withPending);
+    },
 
     removePending: (id) => set((s) => ({
         listMessages: s.listMessages.filter((m) => String(m.id) !== String(id))
@@ -145,9 +151,12 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
         const norm = normRoom(String(roomId));
         const list = get().listMessages.filter(m => normRoom(String(m.roomId)) === norm);
         list.sort((a, b) => {
-            const ta = a.createdAt ?? '';
-            const tb = b.createdAt ?? '';
-            if(ta && tb && ta !== tb) return ta.localeCompare(tb);
+            const ta = Date.parse(String(a.createdAt ?? ''));
+            const tb = Date.parse(String(b.createdAt ?? ''));
+            if (Number.isFinite(ta) && Number.isFinite(tb) && ta !== tb) return ta - tb;
+            // fallback: compare numeric id when possible
+            const ia = Number(a.id), ib = Number(b.id);
+            if (Number.isFinite(ia) && Number.isFinite(ib) && ia !== ib) return ia - ib;
             return String(a.id).localeCompare(String(b.id));
         });
         return list;
@@ -194,30 +203,8 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
         };
     }),
 
-    flushPending: (roomId) => {
-        const {listMessages, retryMeta} = get();
-        const now = Date.now();
-        const norm = roomId ? normRoom(String(roomId)) : undefined;
-        return listMessages.filter((m: any) => {
-            const isRoomOk = !norm || normRoom(String(m.roomId)) === norm;
-            const isPending = m.status === 'pending';
-            const meta = retryMeta[String(m.id)];
-            const due = !meta || meta.next <= now;
-            return isRoomOk && isPending && due;
-        });
-    },
-    flushFailed: (roomId) => {
-        const {listMessages, retryMeta} = get();
-        const now = Date.now();
-        const norm = roomId ? normRoom(String(roomId)) : undefined;
-        return listMessages.filter((m: any) => {
-            const isRoomOk = !norm || normRoom(String(m.roomId)) === norm;
-            const isFailed = m.status === 'failed';
-            const meta = retryMeta[String(m.id)];
-            const due = !meta || meta.next <= now;
-            return isRoomOk && isFailed && due;
-        });
-    },
+    flushPending: (roomId) => flushByStatus(get, 'pending', roomId),
+    flushFailed:  (roomId) => flushByStatus(get, 'failed', roomId),
 
     removeMessage: (id) => set((s) => {
         const nextMeta = {...s.retryMeta};

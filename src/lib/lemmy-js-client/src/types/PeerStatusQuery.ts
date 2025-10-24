@@ -6,6 +6,5 @@ import {ChatRoomId} from "./ChatRoomId";
  * Query params for fetching the peer status.
  */
 export type PeerStatusQuery = {
-    roomId: ChatRoomId;
     peerId: LocalUserId;
 };

@@ -29,6 +29,10 @@ const ChatWrapper = ({
     const {rooms, isLoading, error} = chatCtx || {} as any;
     const [searchQuery, setSearchQuery] = useState("");
 
+    // Refs to prevent repeated connect/join on re-renders
+    const connectedRef = React.useRef(false);
+    const lastJoinedRoomRef = React.useRef<string | undefined>(undefined);
+
     // Debounce search input to prevent excessive re-renders
     const debouncedSetSearchQuery = useCallback(
         debounce((value: string) => setSearchQuery(value), 300),
@@ -40,17 +44,26 @@ const ChatWrapper = ({
         };
     }, [debouncedSetSearchQuery]);
 
-    // Auto-join when the route roomId changes and the chat context is ready
+    // Auto-connect once; join when roomId changes
     useEffect(() => {
-        if (!activeRoomId || !chatCtx) return;
+        if (!chatCtx) return;
         try {
-            (chatCtx as any)?.connect?.();
+            if (!connectedRef.current) {
+                (chatCtx as any)?.connect?.();
+                connectedRef.current = true;
+            }
 
+            if (!activeRoomId) return;
             const roomKey = activeRoomId;
-            const ensured = (chatCtx as any)?.ensureJoined?.(roomKey);
-            if (!ensured) {
-                const joinFn = (chatCtx as any)?.joinRoom ?? (chatCtx as any)?.openRoom;
-                joinFn?.(roomKey);
+
+            // Skip if we already joined this room (prevents duplicate joins on re-render)
+            if (lastJoinedRoomRef.current !== roomKey) {
+                const ensured = (chatCtx as any)?.ensureJoined?.(roomKey);
+                if (!ensured) {
+                    const joinFn = (chatCtx as any)?.joinRoom ?? (chatCtx as any)?.openRoom;
+                    joinFn?.(roomKey);
+                }
+                lastJoinedRoomRef.current = roomKey;
             }
 
             (chatCtx as any)?.setActiveRoom?.(roomKey);
@@ -59,7 +72,20 @@ const ChatWrapper = ({
         }
 
         if (isSidebarOpen) setIsSidebarOpen(false);
+
     }, [activeRoomId, chatCtx, isSidebarOpen, setIsSidebarOpen]);
+
+    // Reset connection state when auth user changes (logout/login)
+    useEffect(() => {
+        if (!chatCtx) return;
+        // reset guards so next login will connect/join fresh
+        connectedRef.current = false;
+        lastJoinedRoomRef.current = undefined;
+        // on logout explicitly disconnect
+        if (!localUser) {
+            try { (chatCtx as any)?.disconnect?.(); } catch {}
+        }
+    }, [localUser?.id, chatCtx]);
 
 
     // Memoized filtered rooms to optimize search performance

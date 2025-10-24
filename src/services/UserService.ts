@@ -92,21 +92,40 @@ export class UserService {
         }
     }
 
-    public logout() {
-        this.authInfo = undefined;
-        this.myUserInfo = undefined;
+    public async logout() {
+        try {
+            this.authInfo = undefined;
+            this.myUserInfo = undefined;
 
-        if(isBrowser()) {
-            clearAuthCookie();
+            if (isBrowser()) {
+                // Clear client-side cookies
+                clearAuthCookie();
+
+                // Invalidate session cookie on server (if exists)
+                await fetch('/api/session', {
+                    method: 'DELETE',
+                    credentials: 'include',
+                }).catch(() => {});
+
+                // Clear possible legacy cache
+                window.caches?.delete?.('instance-cache');
+            }
+
+            // Notify backend logout endpoint safely
+            try {
+                await HttpService.client.logout();
+            } catch {}
+
+            // Redirect to language-aware login/home page
+            const lang = this.currentLanguage || 'th';
+            const redirectPath = `/${lang}/login`;
+            setTimeout(() => {
+                if (isBrowser()) location.replace(redirectPath);
+            }, 150);
+        } catch (err) {
+            console.warn('[UserService.logout] failed', err);
+            if (isBrowser()) location.replace('/');
         }
-
-        HttpService.client.logout();
-
-        // TODO: Remove this in a few releases when this cache has been deleted from most users' browsers
-        if(isBrowser()) {
-            window.caches?.delete?.("instance-cache");
-        }
-        location.replace("/");
     }
 
     public auth(throwErr = false): string | undefined {

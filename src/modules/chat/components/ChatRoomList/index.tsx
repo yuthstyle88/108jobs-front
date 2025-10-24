@@ -28,12 +28,11 @@ function ChatRoomListComponent({room, isActive, currentLang, localUser}: ChatRoo
     }, [room.participants, localUser?.id]);
 
     const online = usePeerOnline(peerUserId);
-    const handleClick = async () => {
+    const handleClick = () => {
         try {
-            await markRoomRead(String(room.id));
-        } catch (e) {
-            // ignore errors so navigation still proceeds
-        }
+            // fire-and-forget after click so Link navigation is never blocked
+            setTimeout(() => { try { void markRoomRead(String(room.id)); } catch {} }, 0);
+        } catch {}
     };
 
     // Parse room name to extract partner name and job ID
@@ -49,8 +48,8 @@ function ChatRoomListComponent({room, isActive, currentLang, localUser}: ChatRoo
             onClick={handleClick}
         >
             <div
-                className={`flex items-center gap-3 p-3 rounded-lg border-b border-blue-950 ${
-                    isActive ? "bg-blue-50 border-l-4 border-blue-500" : "bg-white hover:bg-gray-50"
+                className={`flex items-center gap-3 p-3 rounded-lg border-b border-blue-950 border-l-4 ${
+                    isActive ? "bg-blue-50 border-blue-500" : "bg-white hover:bg-gray-50 border-transparent"
                 }`}
             >
                 <AvatarBadge
@@ -82,7 +81,7 @@ function ChatRoomListComponent({room, isActive, currentLang, localUser}: ChatRoo
                 {/* Unread Badge */}
                 {room.unreadCount > 0 && (
                     <span
-                        className="ml-auto text-xs bg-blue-500 text-white rounded-full px-2 py-0.5"
+                        className="ml-auto text-xs bg-blue-500 text-white rounded-full px-2 py-0.5 pointer-events-none"
                     >
                         {room.unreadCount}
                     </span>

@@ -5,6 +5,7 @@
 //   API_INTERNAL_URL          – e.g. http://localhost:8523  (server-only)
 
 import { isBrowser } from "@/utils/browser";
+import {NextRequest} from "next/server";
 
 function safeString(v: any): string | undefined {
   return typeof v === "string" && v.trim().length > 0 ? v.trim() : undefined;
@@ -85,9 +86,15 @@ export function httpExternalPath(path: string): string {
   return `${base.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
 }
 
-export function isHttps(): boolean {
-  if (isBrowser()) return window.location.protocol === "https:";
-  try { return new URL(getAppUrl()).protocol === "https:"; } catch { return true; }
+export function isHttps(req?: Request | NextRequest): boolean {
+    if (typeof window !== "undefined") return window.location.protocol === "https:";
+    try {
+        const forwarded = req?.headers?.get?.("x-forwarded-proto");
+        if (forwarded) return forwarded === "https";
+        return new URL(getAppUrl()).protocol === "https:";
+    } catch {
+        return true;
+    }
 }
 
 // Backward-compat export (prefer getApiBase)

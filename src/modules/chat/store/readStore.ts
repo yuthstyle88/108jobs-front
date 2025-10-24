@@ -9,7 +9,7 @@ function normRoom(roomId: string | number): string {
 
 interface ReadStoreState {
     /** Unified map: key = `${roomId}:${userId}` */
-    byRoomUser: Record<string, { lastReadAt?: string; lastReadMsgId?: string; updatedAt?: number | null }>;
+    byRoomUser: Record<string, { lastReadAt?: string; lastReadMsgId?: string }>;
 
     // self-side (legacy API kept)
     setLastReadAt: (roomId: ChatRoomId, userId: LocalUserId, at: string | null | undefined) => void;
@@ -80,7 +80,7 @@ export function pruneReadLastByRooms(rooms: Array<{ id: string | number }>) {
     const allowed = new Set<string>(Array.isArray(rooms) ? rooms.map((r: any) => String(normRoom(r?.id ?? ''))) : []);
     const st = useReadLastIdStore.getState();
 
-    const next: Record<string, { lastReadAt?: string; lastReadMsgId?: string; updatedAt?: number | null }> = {};
+    const next: Record<string, { lastReadAt?: string; lastReadMsgId?: string }> = {};
     let changed = false;
 
     for (const [k, v] of Object.entries(st.byRoomUser)) {

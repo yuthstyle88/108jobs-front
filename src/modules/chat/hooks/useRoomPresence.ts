@@ -4,20 +4,20 @@
 import {useEffect} from 'react';
 import {usePresenceStore} from '@/modules/chat/store/presenceStore';
 import {HttpService} from "@/services";
-import {ChatRoomId, LocalUserId} from "lemmy-js-client";
+import {LocalUserId} from "lemmy-js-client";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {dbg} from "@/modules/chat/utils";
 
-export function useRoomPresence(roomId: ChatRoomId, peerId: LocalUserId, readerId?: LocalUserId) {
+export function useRoomPresence(peerId: LocalUserId) {
   const { setSnapshot } = usePresenceStore.getState();
 
   // Helper: fetch & update presence snapshot once
   const fetchPeerStatusOnce = async (reason: string) => {
     try {
-      const res = await HttpService.client.getPeerStatus({ roomId, peerId, readerId } as any);
+      const res = await HttpService.client.getPeerStatus({peerId} as any);
       if (res.state === REQUEST_STATE.SUCCESS) {
         const payload: any = res.data;
-        dbg('[useRoomPresence] getPeerStatus', { reason, roomId, peerId, readerId, payload });
+        dbg('[useRoomPresence] getPeerStatus', { reason, peerId, payload });
         const online: boolean = payload?.online ?? payload?.data?.online;
         if (online) {
           setSnapshot([{ userId: Number(peerId), lastSeenAt: Date.now() }]);
@@ -27,7 +27,7 @@ export function useRoomPresence(roomId: ChatRoomId, peerId: LocalUserId, readerI
       }
     } catch (e) {
       // keep phase=unknown; UI may show “checking…”
-      dbg('[useRoomPresence] getPeerStatus error', { reason, roomId, peerId, readerId, e });
+      dbg('[useRoomPresence] getPeerStatus error', { reason, peerId, e });
     }
   };
 
@@ -35,7 +35,7 @@ export function useRoomPresence(roomId: ChatRoomId, peerId: LocalUserId, readerI
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      if (!roomId || peerId == null) return;
+      if (peerId == null) return;
       if (cancelled) return;
       await fetchPeerStatusOnce('mount');
     })();
@@ -43,11 +43,11 @@ export function useRoomPresence(roomId: ChatRoomId, peerId: LocalUserId, readerI
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomId, peerId, readerId]);
+  }, [peerId]);
 
   // 2) Re-check when tab becomes visible, window focuses, page shows from bfcache, or network comes online
   useEffect(() => {
-    if (!roomId || peerId == null) return;
+    if (peerId == null) return;
 
     let timer: ReturnType<typeof setTimeout> | null = null;
     const debounced = (reason: string) => {
@@ -84,5 +84,5 @@ export function useRoomPresence(roomId: ChatRoomId, peerId: LocalUserId, readerI
       window.removeEventListener('online', onOnline);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomId, peerId, readerId]);
+  }, [peerId]);
 }
