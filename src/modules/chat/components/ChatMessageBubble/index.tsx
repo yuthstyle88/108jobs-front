@@ -83,7 +83,6 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
         // Only consider as "read" when the peer is currently online and the read timestamp covers this message
         return (
             isOwner &&
-            peerOnline === true &&
             lastReadAt != null &&
             isSameOrAfter(lastReadAt as any, (viewMsg as any).createdAt as any)
         );
