@@ -19,6 +19,7 @@ import {PhoenixSenderAdapter} from '@/modules/chat/adapters/PhoenixSenderAdapter
 import {usePresenceStore} from '@/modules/chat/store/presenceStore';
 import {useReadLastIdStore} from "@/modules/chat/store/readStore";
 import { usePartnerTyping } from '@/modules/chat/hooks/usePartnerTyping';
+import { useRoomPresence } from '@/modules/chat/hooks/useRoomPresence';
 
 // Safe DOM CustomEvent dispatcher
 function dispatchDomEvent(name: string, detail: any) {
@@ -63,6 +64,8 @@ export function useChatRoom({
         const peer = participants.find((p: any) => String(p.memberId) !== String(localUser?.id));
         return peer ? Number(peer.memberId) : 0;
     }, [roomData?.room?.participants, localUser?.id]);
+    // Bind presence watcher (HTTP + focus/visibility + heartbeat). Safe for 0/undefined.
+    useRoomPresence((peerUserId || undefined) as any);
 
     const markPeerActive = useCallback(() => {
         const now = Date.now();
