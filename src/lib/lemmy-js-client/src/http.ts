@@ -3491,7 +3491,8 @@ function createFormData(image: File | Buffer, fieldName: string = "images[]"): F
         formData.append(fieldName, image);
     } else {
         const isUploadFile = fieldName === "uploadFile";
-        const blob = new Blob([image], {type: isUploadFile ? "application/octet-stream" : "image/jpeg"});
+        const mime = isUploadFile ? "application/octet-stream" : "image/jpeg";
+        const blob = new Blob([Buffer.isBuffer(image) ? new Uint8Array(image) : (image as unknown as ArrayBuffer)], { type: mime });
         const filename = isUploadFile ? "file.bin" : "image.jpg";
         formData.append(fieldName, blob, filename);
     }
