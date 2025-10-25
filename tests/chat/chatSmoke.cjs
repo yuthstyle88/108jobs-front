@@ -1,2 +1,2 @@
 require('ts-node').register({ transpileOnly: true, compilerOptions: { module: 'commonjs' } });
-require('./chatSmoke.ts');
+require(__dirname + '/chatSmoke.ts');
