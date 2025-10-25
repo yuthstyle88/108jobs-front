@@ -92,18 +92,6 @@ const CatalogBanner = (props: Props) => {
                             <h2 className="text-lg font-bold text-gray-900">
                                 {t("catalogs.subcatalogs")}
                             </h2>
-                            <Link
-                                prefetch={false}
-                                href="/categories/popular-service"
-                                className="group flex items-center text-blue-600 font-semibold text-sm hover:text-blue-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                aria-label={t("home.labelSeeMoreTittle")}
-                            >
-                                {t("home.labelSeeMoreTittle")}
-                                <FontAwesomeIcon
-                                    icon={faArrowRight}
-                                    className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200"
-                                />
-                            </Link>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             {activeCatalog?.children?.slice(0, 12).map(({ community }) => {
