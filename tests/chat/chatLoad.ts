@@ -16,34 +16,6 @@ for (let i = 0; i < TOTAL; i++) {
   setTimeout(() => {
     const topic = `room:${i}`;
     const ch = getChannelAdapter(TOKEN, topic, ROOM, BASE + i);
-    conns.push(ch);
-
-    ch.onopen = () => {
-      open++;
-      if (open % 50 === 0) console.log("OPEN:", open);
-    };
-
-    ch.onerror = (e?: any) => {
-      errs++;
-      if (errs % 10 === 0) console.log("ERR :", errs, e ?? "");
-    };
-
-    ch.onmessage = (ev: any) => {
-      try {
-        const data = typeof ev?.data === 'string' ? ev.data : '';
-        if (data) {
-          const msg = JSON.parse(data);
-          if (msg?.event === 'error' || msg?.payload?.error) {
-            console.log('[chan:error]', msg.payload?.error || msg);
-          }
-        }
-      } catch {}
-    };
-
-    ch.onclose = () => {
-      closed++;
-      if (closed % 50 === 0) console.log("CLOSE:", closed);
-    };
   }, i * 15);
 }
 
