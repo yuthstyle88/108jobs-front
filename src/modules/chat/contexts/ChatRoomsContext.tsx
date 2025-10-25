@@ -11,7 +11,7 @@ import {isBrowser} from "@/utils/browser";
 import {useUnreadStore} from "@/modules/chat/store/unreadStore";
 import { onChatNewMessage, onWsReconnected } from "@/modules/chat/events";
 import {useActiveRoomId, useRoomsStore} from "@/modules/chat/store/roomsStore";
-import {disableBackgroundUnread, enableBackgroundUnread} from "@/modules/chat/utils/backgroundUnreadWatcher";
+import {disableBackgroundUnread, enableBackgroundUnread} from "@/modules/chat/services/backgroundUnreadWatcher";
 
 // Context state for listing chat rooms with pagination and E2EE-aware lastMessage preview
 

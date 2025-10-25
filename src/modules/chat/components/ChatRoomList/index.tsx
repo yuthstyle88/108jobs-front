@@ -9,13 +9,13 @@ import {usePeerOnline} from "@/modules/chat/store/presenceStore";
 
 interface ChatRoomListProps {
     room: ChatRoom;
-    isActive: boolean;
     currentLang: string;
     localUser?: Pick<LocalUser, "id"> | null;
 }
 
-function ChatRoomListComponent({room, isActive, currentLang, localUser}: ChatRoomListProps) {
-    const {markRoomRead, setActiveRoomId} = useChatRoomsContext();
+function ChatRoomListComponent({room, currentLang, localUser}: ChatRoomListProps) {
+    const {markRoomRead, activeRoomId} = useChatRoomsContext();
+    const isActive = String(room.id) === String(activeRoomId || "");
 
     // Derive peer user id (the other participant, not me)
     const peerUserId = React.useMemo(() => {
@@ -78,8 +78,8 @@ function ChatRoomListComponent({room, isActive, currentLang, localUser}: ChatRoo
                         )}
                     </div>
                 </div>
-                {/* Unread Badge */}
-                {room.unreadCount > 0 && (
+                {/* Unread Badge: Do not show for the active room */}
+                {room.unreadCount > 0 && !isActive && (
                     <span
                         className="ml-auto text-xs bg-blue-500 text-white rounded-full px-2 py-0.5 pointer-events-none"
                     >

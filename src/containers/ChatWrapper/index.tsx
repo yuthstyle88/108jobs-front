@@ -66,7 +66,7 @@ const ChatWrapper = ({
                 lastJoinedRoomRef.current = roomKey;
             }
 
-            (chatCtx as any)?.setActiveRoom?.(roomKey);
+            (chatCtx as any)?.setActiveRoomId?.(roomKey);
         } catch (e) {
             console.warn('[ChatWrapper] auto-join failed', e);
         }
@@ -142,7 +142,6 @@ const ChatWrapper = ({
                         <ChatListItem
                             key={room.id}
                             room={room}
-                            isActive={String(room.id) === activeRoomId}
                             currentLang={currentLang || "th"}
                             localUser={localUser}
                         />
