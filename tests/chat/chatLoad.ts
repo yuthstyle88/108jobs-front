@@ -16,6 +16,15 @@ for (let i = 0; i < TOTAL; i++) {
   setTimeout(() => {
     const topic = `room:${i}`;
     const ch = getChannelAdapter(TOKEN, topic, ROOM, BASE + i);
+    conns.push(ch);
+    ch.onopen    = () => open++;
+    ch.onmessage = (e) => console.log("MSG", e.data);
+    ch.onerror   = (e) => errs++;
+    ch.onclose   = (e) => closed++;
+    ch.close();
+    console.log(
+      `Open: ${open}, Closed: ${closed}, Errs: ${errs}, Topic: ${topic}, Room: ${ROOM}, Sender: ${BASE + i}`
+    )
   }, i * 15);
 }
 
