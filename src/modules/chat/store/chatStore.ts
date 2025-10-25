@@ -118,7 +118,7 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
     }),
 
     addPending: (msg) => {
-        const withPending = { ...(msg as any), isOwner: true, status: 'pending' as ChatStatus } as ChatMessage;
+        const withPending = { ...(msg as any), clientId: (msg as any).id, isOwner: true, status: 'pending' as ChatStatus } as ChatMessage;
         get().addMessage(withPending);
     },
 
@@ -166,34 +166,40 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
 
     commitStatus: (id, status) => set((s) => {
         const k = String(id);
-        const idx = s.listMessages.findIndex(m => String(m.id) === k);
-        let next = s.listMessages;
-        const nextMeta = {...s.retryMeta};
-
-        if(idx !== -1) {
-            const cur = s.listMessages[idx];
-            if(status === 'sent') {
-                // remove successful messages from local store
-                next = removeAt(s.listMessages, idx);
-                delete nextMeta[k];
-            } else {
-                next = s.listMessages.map((m, i) => i === idx ? ({...m, status} as ChatMessage) : m);
-            }
-        } else {
-            if(status === 'sent') {
-                // ensure cleanup if somehow present
-                next = s.listMessages.filter(m => String(m.id) !== k);
-                delete nextMeta[k];
-            }
+        // 1) try match by message id (server or temp id)
+        let idx = s.listMessages.findIndex(m => String(m.id) === k);
+        // 2) fallback: match by clientId (stable on sender)
+        if (idx === -1) {
+            idx = s.listMessages.findIndex((m: any) => m && m.clientId && String(m.clientId) === k);
         }
 
-        return {listMessages: next, retryMeta: nextMeta} as Partial<ChatStoreState>;
+        let next = s.listMessages;
+        const nextMeta = { ...s.retryMeta } as RetryMeta;
+
+        if (idx !== -1) {
+            const target: any = s.listMessages[idx];
+            next = s.listMessages.map((m, i) => (i === idx ? ({ ...m, status } as ChatMessage) : m));
+
+            // Clear retry meta when message is confirmed sent (both id & clientId variants)
+            if (status === 'sent') {
+                if (target) {
+                    if (target.id != null) delete nextMeta[String(target.id)];
+                    if (target.clientId != null) delete nextMeta[String(target.clientId)];
+                }
+                delete nextMeta[k];
+            }
+        } else if (status === 'sent') {
+            // No matching message found, still try to clear meta under provided key
+            delete nextMeta[k];
+        }
+
+        return { listMessages: next, retryMeta: nextMeta } as Partial<ChatStoreState>;
     }),
 
     retryMessage: (id) => set((s) => {
         const cur = s.retryMeta[id] ?? {retry: 0, next: 0};
         const retry = cur.retry + 1;
-        const delay = Math.min(60000, Math.round(1500 * Math.pow(2, cur.retry)));
+        const delay = Math.min(60000, Math.round(1500 * Math.pow(2, retry)));
         const nextTime = Date.now() + delay;
         return {
             listMessages: s.listMessages.map((m) =>
