@@ -38,10 +38,38 @@ for (let i = 0; i < TOTAL; i++) {
     console.log('JOIN ->', topic, 'sender:', sender);
 
     const ch: any = getChannelAdapter(TOKEN, topic, ROOM, sender);
-    ch.onopen = () => {
-        console.log('OPEN ->', topic, 'sender:', sender);
-    }
-    ch.onmessage = (e: any) => {    }
+    const joinWatch = setTimeout(() => {
+      console.error('JOIN WATCHDOG TIMEOUT ->', topic, 'sender:', sender, '(no onopen within 5s)');
+    }, 5000);
+
+    ch.onopen = (resp?: any) => {
+      clearTimeout(joinWatch);
+      console.log('OPEN ->', topic, 'sender:', sender, resp ? JSON.stringify(resp) : '');
+    };
+
+    ch.onerror = (e?: any) => {
+      try {
+        const out = e && (e.reason || e.message) ? (e.reason || e.message) : e;
+        console.error('ERR ->', topic, 'sender:', sender, out ? JSON.stringify(out) : '(undefined)');
+      } catch {
+        console.error('ERR ->', topic, 'sender:', sender, '(unserializable)');
+      }
+    };
+
+    ch.onclose = (reason?: any) => {
+      try {
+        console.warn('CLOSE ->', topic, 'sender:', sender, reason ? JSON.stringify(reason) : '');
+      } catch {
+        console.warn('CLOSE ->', topic, 'sender:', sender);
+      }
+    };
+
+    ch.onmessage = (e: any) => {
+      // keep minimal to avoid console flood
+      if (!e) return;
+      const msg = typeof e?.data === 'string' ? e.data : '';
+      if (msg) console.log('MSG ->', topic, 'sender:', sender, msg.slice(0, 160));
+    };
 
     if ((i + 1) % 200 === 0) {
       console.log(`[batch] created: ${i + 1}/${TOTAL} | topic=${topic}`);
