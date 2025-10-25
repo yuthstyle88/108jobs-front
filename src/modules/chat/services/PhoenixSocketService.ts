@@ -12,6 +12,7 @@ export interface RealtimeChannelAdapter {
     onmessage?: (event: { data: any }) => void;
     onclose?: (event: { code?: number; reason?: string }) => void;
     onerror?: (event?: any) => void;
+    onheartbeat?: (ts: number) => void;
     send: (data: string) => void;
     emit?: (event: string, payload: any) => void;
     sendHeartbeat?: (payload?: Record<string, any>) => void;
@@ -72,6 +73,9 @@ export function getChannelAdapter(token: string, topic: string, roomId: string, 
             };
             try {
                 ch.push("heartbeat", payload);
+                // แจ้งให้ชั้นบนรู้ว่าเพิ่งส่ง heartbeat (onheartbeat) และปล่อย DOM event ให้ hook ฟังได้
+                try { adapter.onheartbeat?.(Date.now()); } catch {}
+                try { if (typeof window !== 'undefined') window.dispatchEvent(new Event('chat:heartbeat')); } catch {}
                 if (DEV) console.debug("[phoenix] custom heartbeat sent", payload);
             } catch (err) {
                 console.warn("[phoenix] heartbeat send failed", err);

@@ -27,6 +27,8 @@ type PresenceState = {
     upsertMany: (list: PeerPresence[]) => void;
     remove: (userId: number) => void;
     removeMany: (ids: number[]) => void;
+    setPeer: (userId: number, lastSeenAt?: number) => void;
+    setPeerOffline: (userId: number) => void;
 
     // Utilities
     touch: (userId: number, ts?: number) => void;
@@ -87,6 +89,24 @@ export const usePresenceStore = create<PresenceState>()(
             return { byUserId: next };
         }),
 
+      setPeer: (userId, lastSeenAt) =>
+        set((s) => ({
+            byUserId: {
+                ...s.byUserId,
+                [userId]: { userId, lastSeenAt: lastSeenAt ?? Date.now() },
+            },
+            phase: s.phase === 'unknown' ? 'ready' : s.phase,
+        })),
+
+      setPeerOffline: (userId) =>
+        set((s) => ({
+            byUserId: {
+                ...s.byUserId,
+                [userId]: { userId, lastSeenAt: 0 },
+            },
+            phase: s.phase === 'unknown' ? 'ready' : s.phase,
+        })),
+
       touch: (userId, ts) =>
         set((s) => {
             const cur = s.byUserId[userId];
@@ -129,13 +149,27 @@ export function isOnline(userId: number, thresholdMs = 20_000, now = Date.now())
 
 /** React hook for reactive online status with three-state return. */
 export function usePeerOnline(userId: number, thresholdMs = 20_000) {
-    return usePresenceStore(
-      (s) => {
-          const p = s.byUserId[userId];
-          if (!p) return undefined; // unknown
-          return Date.now() - p.lastSeenAt < thresholdMs;
-      }
-    );
+    // Subscribe only to the lastSeenAt we care about
+    const lastSeenAt = usePresenceStore((s) => s.byUserId[userId]?.lastSeenAt);
+
+    // Local tick: re-compute exactly when the status would flip (heartbeat expiry)
+    const [, forceTick] = React.useReducer((c) => c + 1, 0);
+
+    React.useEffect(() => {
+        if (lastSeenAt == null) return; // still unknown ⇒ no timer
+        const now = Date.now();
+        const msUntilFlip = lastSeenAt + thresholdMs - now;
+        if (msUntilFlip <= 0) {
+            // already expired; trigger a recompute once
+            forceTick();
+            return;
+        }
+        const t = setTimeout(forceTick, msUntilFlip);
+        return () => clearTimeout(t);
+    }, [lastSeenAt, thresholdMs]);
+
+    if (lastSeenAt == null) return undefined; // unknown
+    return Date.now() - lastSeenAt < thresholdMs;
 }
 
 

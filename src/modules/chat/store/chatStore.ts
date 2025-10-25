@@ -149,7 +149,7 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
 
     getByRoom: (roomId) => {
         const norm = normRoom(String(roomId));
-        const list = get().listMessages.filter(m => normRoom(String(m.roomId)) === norm);
+        const list = get().listMessages.filter(m => normRoom(String(m.roomId)) === norm && (m as any).status !== 'removed');
         list.sort((a, b) => {
             const ta = Date.parse(String(a.createdAt ?? ''));
             const tb = Date.parse(String(b.createdAt ?? ''));
@@ -213,12 +213,14 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
     flushFailed:  (roomId) => flushByStatus(get, 'failed', roomId),
 
     removeMessage: (id) => set((s) => {
-        const nextMeta = {...s.retryMeta};
+        const nextMeta = { ...s.retryMeta };
         delete nextMeta[String(id)];
-        return {
-            listMessages: s.listMessages.filter((m) => String(m.id) !== String(id)),
-            retryMeta: nextMeta,
-        };
+        const next = s.listMessages.map((m) =>
+            String(m.id) === String(id)
+                ? ({ ...m, status: 'removed' as ChatStatus } as ChatMessage)
+                : m
+        );
+        return { listMessages: next, retryMeta: nextMeta };
     }),
 
     addPendingMessage: (msg) => get().addPending(msg),

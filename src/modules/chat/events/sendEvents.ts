@@ -7,6 +7,11 @@ import {createMessage} from "@/modules/chat/domain/entities/message";
 import {waitForAck, wsSend} from "@/modules/chat/utils/socketSend";
 import {useChatStore} from "@/modules/chat/store/chatStore";
 
+// ---- Ack / Retry tuning (keep minimal & explicit)
+const ACK_TIMEOUT_MS   = Number(process.env.CHAT_ACK_TIMEOUT ?? 8000);
+// Allow extending ACK wait more than once. Default 3x (24s total when timeout=8s)
+const ACK_EXTENDS     = Number(process.env.CHAT_ACK_EXTENDS ?? 3);
+
 // ---- Packet helpers ----
 export function createEvent<T>(event: PhoenixEvent, payload?: T): PhoenixPacket<T> & {
     roomId?: string;
@@ -52,21 +57,38 @@ export function sendRoomUpdateEvent(deps: SendEventDeps, update: Record<string, 
 
 // ---- Core send/ack ----
 async function doSend(deps: SendMessageDeps, msg: ChatMessage): Promise<{ id: string; sent: boolean }> {
-    const id = String(msg.id);
+    const id = (msg as any).id; // keep original id type (number/string) to match store keys
     const s = (deps as any).sender;
+    const a = (deps as any).adapter;
+    const isChannelClosed = () => {
+        try {
+            return a && (a.closed === true || a.isClosed?.() === true || a.isOpen?.() === false);
+        } catch { return false; }
+    };
     if(!s) return {id, sent: false};
     dbg('doSend:start', {id, roomId: (deps as any)?.roomId});
     try {
         const ok = await s.sendMessage('chat:message', msg);
         if(!ok) return (dbg('doSend:sendMessage failed', {id}), {id, sent: false});
-        const acked = await waitForAck(deps, msg.id, 8000).catch((e) => (dbg('doSend:waitForAck error', e), false));
+        // Wait for ACK, auto-extend waiting if no reply
+        let totalWait = 0;
+        let acked = false;
+        while (totalWait < ACK_TIMEOUT_MS * ACK_EXTENDS && !acked) {
+            if (isChannelClosed()) { dbg('doSend:channel-closed-before-ack', { id, totalWait }); break; }
+            acked = await waitForAck(deps, msg.id, ACK_TIMEOUT_MS).catch((e) => (dbg('doSend:waitForAck error', e), false));
+            if (!acked) {
+                totalWait += ACK_TIMEOUT_MS;
+                dbg('doSend:auto-extend-wait', { id, totalWait });
+            }
+        }
         return acked ? (dbg('doSend:ack ok', {id}), {id, sent: true}) : (dbg('doSend:ack timeout', {id}), {
             id,
             sent: false
         });
-    } catch (err) {
-        dbg('doSend:error', err);
-        return {id, sent: false};
+    } catch (err: any) {
+        const reason = err?.message || err?.reason || String(err);
+        dbg('doSend:error', { id, reason });
+        return { id, sent: false };
     }
 }
 
@@ -81,9 +103,10 @@ export async function sendChatMessage(deps: SendMessageDeps, data: MessagePayloa
     const hasSender = !!(deps as any)?.sender, hasRoom = !!(deps as any)?.roomId, hasSenderId = !!data?.senderId;
     if(!hasSender || !hasRoom || !hasSenderId) return;
 
-    const msgId = data?.id ? String(data.id) : undefined;
-    const sentSet = (deps as any)?.sentSet as Set<string> | undefined;
-    if(msgId && sentSet?.has?.(msgId)) return {id: msgId, sent: false};
+    const msgId = (data as any)?.id; // keep id type; avoid string-casting
+    const sentSet = (deps as any)?.sentSet as Set<any> | undefined;
+    // Do not early-return if message id is already in sentSet — we still want to ensure it exists in the UI/store.
+    // sentSet is only used to reduce duplicate transport sends, not to suppress UI state.
 
     const allowEncrypt = data?.secure !== false;
     const p = createMessage(message, (deps as any).roomId, data.senderId, data.secure, data.id);
@@ -111,20 +134,20 @@ export async function sendChatMessage(deps: SendMessageDeps, data: MessagePayloa
 
     if(!(deps as any)?.sender) return; // guard (shouldn’t happen; already checked)
 
+
     try {
         const res = await doSend(deps, p);
-        const pid = String(p.id);
-        const rid = String(res?.id ?? pid);
+        const pid = (p as any).id;                   // preserve original type
+        const rid = (res as any)?.id ?? pid;         // if server returns new id only on success
+        // update status without changing identity type
         store?.commitStatus?.(res?.sent ? rid : pid, res?.sent ? 'sent' : 'failed');
-        return res;
+        // If send failed, allow future retries by clearing the de-dup marker
+        if (!res?.sent && msgId != null) try { sentSet?.delete?.(msgId); } catch {}
+        return { id: rid, sent: !!res?.sent } as any;
     } catch (err) {
         dbg('sendChatMessage: transport error', err);
-        store?.commitStatus?.(String(p.id), 'failed');
-        return {id: String(p.id), sent: false};
-    } finally {
-        if(msgId) try {
-            sentSet?.delete?.(msgId);
-        } catch {
-        }
+        store?.commitStatus?.((p as any).id, 'failed');
+        if (msgId != null) try { sentSet?.delete?.(msgId); } catch {}
+        return { id: (p as any).id, sent: false } as any;
     }
 }

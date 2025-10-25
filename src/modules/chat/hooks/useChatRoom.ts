@@ -423,17 +423,24 @@ export function useChatRoom({
 
     const sendTyping = useCallback((isTyping: boolean) => {
         try {
+            const a: any = adapterAny ?? (ws as any);
+            const active = !!(
+              a && (
+                a.isReady === true ||
+                a.connected === true ||
+                (typeof a.isOpen === 'function' && a.isOpen() === true)
+              )
+            );
+            if (!active) return; // ไม่พร้อมก็ไม่ส่ง
+
             if (isTyping) {
-                // user started typing – trigger the debounced/throttled start
                 typingEmitter?.startTyping?.();
-                // optional hint that a keystroke happened; safe no-op if not provided
                 typingEmitter?.onUserTyping?.();
             } else {
-                // user stopped typing – decay immediately
                 typingEmitter?.stopTyping?.();
             }
         } catch {}
-    }, [typingEmitter]);
+    }, [adapterAny, ws, typingEmitter]);
 
     const onWsErrorDuringFetch = useCallback(() => {
         if(fetchTimeoutRef.current) {

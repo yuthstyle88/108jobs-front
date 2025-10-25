@@ -10,6 +10,8 @@ const TOKEN       = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImlzcy
 const SPREAD_MS   = Number(process.env.CHAT_SPREAD_MS ?? '25');     // เว้นช่วงเปิดแต่ละ conn (กัน burst)
 const DURATION_MS = Number(process.env.CHAT_DURATION_MS ?? '180000');
 const SENDER_BASE = Number(process.env.SENDER_BASE ?? '1000');
+const MODE        = process.env.CHAT_MODE ?? 'multi'; // 'multi' | 'pair'
+const TOPIC_FIXED = process.env.TOPIC_FIXED;          // e.g. 'room:1' (ถ้าต้องยิงห้องเดียว)
 
 if (!TOKEN) {
   console.error('[FATAL] CHAT_TOKEN is empty. Provide a valid token to join.');
@@ -19,8 +21,9 @@ if (!TOKEN) {
 console.log('==> Config:', { TOTAL, ROOM, TOKEN: TOKEN.slice(0, 24) + '…', SPREAD_MS, DURATION_MS, SENDER_BASE });
 
 function topicFor(i: number): string {
-  // ทดสอบแบบหลายห้อง: room:1..TOTAL (คงเดิม)
-  return `room:${i + 1}`;
+  if (TOPIC_FIXED) return TOPIC_FIXED;                 // บังคับยิงห้องเดียว
+  if (MODE === 'pair') return `room:${Math.floor(i / 2) + 1}`; // 2 คน/ห้อง
+  return `room:${i + 1}`;                              // หลายห้อง (ค่าเริ่มต้น)
 }
 
 function s(v: any) {
