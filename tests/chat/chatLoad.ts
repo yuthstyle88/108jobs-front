@@ -14,14 +14,13 @@ const conns: any[] = [];
 
 for (let i = 0; i < TOTAL; i++) {
   setTimeout(() => {
-    const topic = `room:${i}`;
+    const topic = TOPIC || `room:${ROOM}`; // use a real, existing topic instead of room:i
     const ch = getChannelAdapter(TOKEN, topic, ROOM, BASE + i);
     conns.push(ch);
-    ch.onopen    = () => open++;
-    ch.onmessage = (e) => console.log("MSG", e.data);
-    ch.onerror   = (e) => errs++;
-    ch.onclose   = (e) => closed++;
-    ch.close();
+    ch.onopen    = () => { open++; if (open % 50 === 0) console.log('OPEN:', open); };
+    ch.onerror   = (e) => { errs++; if (errs % 10 === 0) console.log('ERR :', errs, e ?? ''); };
+    ch.onmessage = (e) => { try { const s = String(e?.data ?? ''); if (s) console.log('MSG', s); } catch {} };
+    ch.onclose   = (e) => { closed++; if (closed % 50 === 0) console.log('CLOSE:', closed, e ?? ''); };
     console.log(
       `Open: ${open}, Closed: ${closed}, Errs: ${errs}, Topic: ${topic}, Room: ${ROOM}, Sender: ${BASE + i}`
     )
