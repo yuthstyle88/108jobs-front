@@ -14,7 +14,6 @@ const TOKEN          = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsIml
 const SPREAD_MS      = Number(process.env.CHAT_SPREAD_MS ?? '5');        // หน่วงเปิดแต่ละ conn
 const DURATION_MS    = Number(process.env.CHAT_DURATION_MS ?? '180000'); // เวลารวมก่อนปิดทั้งหมด
 const SENDER_BASE    = Number(process.env.SENDER_BASE ?? '1000');
-console.log('==> Config:', { TOTAL, MODE, TOPIC_FIXED, ROOM, TOKEN, SPREAD_MS, DURATION_MS, SENDER_BASE });
 if (!TOKEN) {
     console.error('[FATAL] CHAT_TOKEN is empty. Provide a valid token to join.');
     process.exit(2);
