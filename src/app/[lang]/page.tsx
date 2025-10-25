@@ -42,18 +42,20 @@ export default function Home() {
                     <div className="block sm:hidden">
                         {/* Mobile Header */}
 
-                        <div className="block sm:hidden fixed top-0 left-0 right-0 z-50">
+                        <div className="block sm:hidden fixed top-0 inset-x-0 z-[1000] bg-black">
                             <NavBar
-                                isSidebarOpen={isSidebarOpen}
-                                onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-                                className="absolute top-3 right-3"
-                            />
-                            <SpHeader
-                                isSidebarOpen={isSidebarOpen}
-                                onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-                                showBackButton={true}
+                              isSidebarOpen={isSidebarOpen}
+                              onToggleSidebar={() => setIsSidebarOpen(v => !v)}
+                              className="text-white"
                             />
                         </div>
+                        {/* spacer for fixed navbar height */}
+                        <div className="block sm:hidden h-14" />
+                        <SpHeader
+                            isSidebarOpen={isSidebarOpen}
+                            onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+                            showBackButton={true}
+                        />
                         <div className="block sm:hidden">
                             <ChatWrapper
                                 isSidebarOpen={isSidebarOpen}

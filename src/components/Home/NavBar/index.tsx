@@ -1,6 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faMagnifyingGlass, faBagShopping } from "@fortawesome/free-solid-svg-icons";
+import { faApple } from "@fortawesome/free-brands-svg-icons";
 
 /**
  * Minimal NavBar: renders a mobile menu toggle button.
@@ -18,15 +19,29 @@ const NavBar: React.FC<NavBarProps> = ({
   className = "",
 }) => {
   return (
-    <nav className={className}>
-      <button
-        type="button"
-        className="lg:hidden w-10 h-10 grid place-items-center rounded-lg border border-gray-300 text-gray-700 hover:text-blue-600 hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        onClick={onToggleSidebar}
-        aria-label={isSidebarOpen ? "Close catalog menu" : "Open catalog menu"}
-      >
-        <FontAwesomeIcon icon={faBars} className="w-6 h-6" />
-      </button>
+    <nav className={`flex items-center justify-between px-3 py-2 ${className}`}>
+      {/* Left: Apple logo (home) */}
+      <a href="/" aria-label="Home" className="p-2 text-white/90 hover:text-white focus:outline-none rounded-full hover:bg-white/10">
+        <FontAwesomeIcon icon={faApple} className="w-5 h-5" />
+      </a>
+
+      {/* Right: search, bag, hamburger */}
+      <div className="flex items-center gap-2">
+        <button type="button" aria-label="Search" className="w-9 h-9 grid place-items-center rounded-full text-white/90 hover:text-white hover:bg-white/10 focus:outline-none">
+          <FontAwesomeIcon icon={faMagnifyingGlass} className="w-4 h-4" />
+        </button>
+        <button type="button" aria-label="Bag" className="w-9 h-9 grid place-items-center rounded-full text-white/90 hover:text-white hover:bg-white/10 focus:outline-none">
+          <FontAwesomeIcon icon={faBagShopping} className="w-4 h-4" />
+        </button>
+        <button
+          type="button"
+          className="md:hidden w-9 h-9 grid place-items-center rounded-full text-white/90 hover:text-white hover:bg-white/10 focus:outline-none"
+          onClick={onToggleSidebar}
+          aria-label={isSidebarOpen ? "Close menu" : "Open menu"}
+        >
+          <FontAwesomeIcon icon={faBars} className="w-4 h-4" />
+        </button>
+      </div>
     </nav>
   );
 };
