@@ -25,6 +25,7 @@ const isInternalEvent = (ev?: string): boolean => !!ev && (
 
 export function getChannelAdapter(token: string, topic: string, roomId: string, senderId: number): RealtimeChannelAdapter {
     const url = buildActixWsUrl();
+    console.log("[phoenix] getChannelAdapter", {url, topic, roomId, senderId});
     const opts = token ? ({params: {token}} as any) : (undefined as any);
     const socket = new PhoenixSocket(url, opts);
     socket.connect();
