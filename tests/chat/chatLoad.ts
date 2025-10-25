@@ -10,7 +10,7 @@ const TOTAL          = Number(process.env.LOAD_TOTAL ?? '300');          // จ�
 const MODE           = (process.env.CHAT_MODE ?? 'pair').toLowerCase() as Mode; // 'pair' = 2 คน/ห้อง
 const TOPIC_FIXED    = process.env.CHAT_TOPIC ?? 'room:1';               // ใช้เมื่อ MODE='same'
 const ROOM           = process.env.CHAT_ROOM  ?? '1';                    // roomId ใน payload
-const TOKEN          = process.env.CHAT_TOKEN ?? 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImlzcyI6ImFwaS1zdGFnaW5nLjEwOGpvYnMuY29tIiwiaWF0IjoxNzYxMzY5NDU5LCJleHAiOjE3NjU2ODk0NTksInNlc3Npb24iOiI0ZDU5NzFmNmJlMDI0MWU4OTFhZjRjMTI2ODQ5MjNjZCIsImVtYWlsIjoiaWJyb3dlMTA4QGdtYWlsLmNvbSIsImxhbmciOiJlbiIsImFjY2VwdGVkVGVybXMiOnRydWV9.7sWK12eSpQ3tLqEZ2yypce6oYjSTPG5IlPJ4sOCOxgw';                     // ต้องใส่ token จริงถ้า server ต้อง auth
+const TOKEN          = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImlzcyI6ImFwaS1zdGFnaW5nLjEwOGpvYnMuY29tIiwiaWF0IjoxNzYxMzY5NDU5LCJleHAiOjE3NjU2ODk0NTksInNlc3Npb24iOiI0ZDU5NzFmNmJlMDI0MWU4OTFhZjRjMTI2ODQ5MjNjZCIsImVtYWlsIjoiaWJyb3dlMTA4QGdtYWlsLmNvbSIsImxhbmciOiJlbiIsImFjY2VwdGVkVGVybXMiOnRydWV9.7sWK12eSpQ3tLqEZ2yypce6oYjSTPG5IlPJ4sOCOxgw';                     // ต้องใส่ token จริงถ้า server ต้อง auth
 const SPREAD_MS      = Number(process.env.CHAT_SPREAD_MS ?? '5');        // หน่วงเปิดแต่ละ conn
 const DURATION_MS    = Number(process.env.CHAT_DURATION_MS ?? '180000'); // เวลารวมก่อนปิดทั้งหมด
 const SENDER_BASE    = Number(process.env.SENDER_BASE ?? '1000');
