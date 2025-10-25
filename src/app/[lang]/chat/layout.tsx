@@ -73,13 +73,6 @@ export default function ProfileLayout({children}: LayoutProps) {
         <div className="hidden sm:block fixed top-0 left-0 right-0 z-50">
           <Header type="primary" />
         </div>
-        <div className="block sm:hidden fixed top-0 left-0 right-0 z-50">
-          <SpHeader
-            isSidebarOpen={isSidebarOpen}
-            onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-            showBackButton={true}
-          />
-        </div>
 
         {/* Main Content: fix viewport height and prevent page scroll */}
         <div className="fixed top-16 sm:top-20 left-0 right-0 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] overflow-hidden">

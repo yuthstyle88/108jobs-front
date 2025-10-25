@@ -1,10 +1,10 @@
 "use client";
-import {faSearch} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {useRouter, useSearchParams} from "next/navigation";
-import {useForm} from "react-hook-form";
-import {useEffect, useState} from "react";
-import {useTranslation} from "react-i18next";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
     showSearch?: boolean;
@@ -21,11 +21,10 @@ const Search = ({ showSearch = false, className = "" }: Props) => {
     const searchParams = useSearchParams();
     const titleSearch = searchParams.get("titleSearch") || "";
     const [isSearchOpen, setIsSearchOpen] = useState(showSearch);
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
 
     const { register, handleSubmit, setValue } = useForm<SearchForm>({
-        defaultValues: {
-            query: "",
-        },
+        defaultValues: { query: "" },
     });
 
     useEffect(() => {
@@ -35,9 +34,21 @@ const Search = ({ showSearch = false, className = "" }: Props) => {
         }
     }, [titleSearch, setValue]);
 
-    const toggleSearch = () => {
-        setIsSearchOpen(!isSearchOpen);
-    };
+    // Close search when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target as Node)
+            ) {
+                setIsSearchOpen(false);
+            }
+        };
+        if (isSearchOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [isSearchOpen]);
 
     const onSubmit = (data: SearchForm) => {
         const trimmed = data.query.trim();
@@ -48,20 +59,20 @@ const Search = ({ showSearch = false, className = "" }: Props) => {
     };
 
     return (
-        <div className={`relative flex items-center ${className}`}>
-            {/* Icon-only button for small screens (below lg) */}
+        <div className={`relative flex items-center ${className}`} ref={dropdownRef}>
+            {/* Mobile search toggle */}
             <button
-                onClick={toggleSearch}
-                className="lg:hidden flex items-center justify-center w-8 h-8 rounded-full bg-white text-primary hover:bg-gray-200 transition-colors"
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className="lg:hidden flex items-center justify-center w-9 h-9 rounded-full bg-white/90 text-primary hover:bg-white transition-all duration-200 shadow-sm"
                 aria-label="Toggle search"
             >
                 <FontAwesomeIcon icon={faSearch} className="w-4 h-4" />
             </button>
 
-            {/* Full search bar for large screens (lg and above) */}
+            {/* Desktop search bar */}
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className={`hidden lg:flex text-black h-[40px] w-[200px] relative transition-all duration-300 ${
+                className={`hidden lg:flex items-center bg-white rounded-full border border-gray-300 h-[40px] w-[220px] pl-4 pr-10 text-sm shadow-sm transition-all duration-300 ${
                     showSearch ? "opacity-100" : "opacity-0 pointer-events-none"
                 }`}
             >
@@ -70,35 +81,39 @@ const Search = ({ showSearch = false, className = "" }: Props) => {
                     placeholder={
                         titleSearch || t("global.hintTextHeaderSearch") || "Search..."
                     }
-                    className="focus:outline-none rounded-[20px] border-2 border-gray-300 pl-5 pr-10 text-sm font-mono w-full"
+                    className="w-full focus:outline-none text-gray-800"
                     {...register("query")}
                 />
-                <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2">
+                <button type="submit" className="absolute right-4">
                     <FontAwesomeIcon icon={faSearch} className="w-[14px] h-[14px] text-primary" />
                 </button>
             </form>
 
-            {/* Toggleable search box for small screens */}
-            {isSearchOpen && (
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="lg:hidden absolute top-[2.5rem] left-0 z-50 bg-white rounded-md shadow-md"
-                >
-                    <div className="relative">
-                        <input
-                            type="text"
-                            placeholder={
-                                titleSearch || t("global.hintTextHeaderSearch") || "Search..."
-                            }
-                            className="w-[150px] px-3 py-1 text-sm text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                            {...register("query")}
-                        />
-                        <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2">
-                            <FontAwesomeIcon icon={faSearch} className="w-[12px] h-[12px] text-primary" />
-                        </button>
-                    </div>
+            {/* Mobile dropdown search */}
+            <div
+                className={`lg:hidden absolute top-[3rem] right-0 w-[220px] bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 transform ${
+                    isSearchOpen
+                        ? "opacity-100 translate-y-0 scale-100"
+                        : "opacity-0 -translate-y-2 scale-95 pointer-events-none"
+                }`}
+            >
+                <form onSubmit={handleSubmit(onSubmit)} className="relative p-2">
+                    <input
+                        type="text"
+                        placeholder={
+                            titleSearch || t("global.hintTextHeaderSearch") || "Search..."
+                        }
+                        className="w-full px-3 py-2 text-sm text-gray-800 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                        {...register("query")}
+                    />
+                    <button
+                        type="submit"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-primary"
+                    >
+                        <FontAwesomeIcon icon={faSearch} className="w-[14px] h-[14px]" />
+                    </button>
                 </form>
-            )}
+            </div>
         </div>
     );
 };

@@ -11,18 +11,16 @@ import CatalogBanner from "@/components/Home/Catalog";
 import OfferSection from "@/components/Home/OfferSection";
 import SearchInput from "@/components/SearchInput";
 import SpAdsSlider from "@/containers/SpAdsSlider";
-import SpCatalog from "@/containers/SpCatalog";
-import SpHeader from "@/containers/SpHeader";
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {buildCommunitiesTree} from "@/utils/helpers";
 import {useCommunities} from "@/hooks/communites-api/useCommunities";
 import {LandingImage} from "@/constants/images";
-import ChatWrapper from "@/containers/ChatWrapper";
 import {ChatRoomsProvider} from "@/modules/chat/contexts/ChatRoomsContext";
 import {ChatLanguageProvider} from "@/contexts/ChatLanguage";
 import Link from "next/link";
 import NavBar from "@/components/Home/NavBar";
+import MobileSidebar from "@/components/MobileSidebar";
 
 export default function Home() {
     const {t, i18n} = useTranslation();
@@ -41,30 +39,19 @@ export default function Home() {
                     </div>
                     <div className="block sm:hidden">
                         {/* Mobile Header */}
-
-                        <div className="block sm:hidden fixed top-0 inset-x-0 z-[1000] bg-black">
+                        <div className="block sm:hidden fixed top-0 inset-x-0 z-[1000] bg-primary">
                             <NavBar
-                              isSidebarOpen={isSidebarOpen}
-                              onToggleSidebar={() => setIsSidebarOpen(v => !v)}
-                              className="text-white"
-                            />
-                        </div>
-                        {/* spacer for fixed navbar height */}
-                        <div className="block sm:hidden h-14" />
-                        <SpHeader
-                            isSidebarOpen={isSidebarOpen}
-                            onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-                            showBackButton={true}
-                        />
-                        <div className="block sm:hidden">
-                            <ChatWrapper
                                 isSidebarOpen={isSidebarOpen}
-                                onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-                                setIsSidebarOpen={setIsSidebarOpen}
+                                onToggleSidebar={() => setIsSidebarOpen(v => !v)}
+                                className="text-white"
                             />
                         </div>
+                        <MobileSidebar
+                            isOpen={isSidebarOpen}
+                            onClose={() => setIsSidebarOpen(false)}
+                        />
                     </div>
-                    <main>
+                    <main className="mt-20 sm:mt-0 sm:pt-0">
                         <section
                             className="hidden sm:block h-auto bg-cover bg-center relative pt-[6.5rem] md:pt-[4.5rem]"
                             style={{
@@ -140,9 +127,6 @@ export default function Home() {
 
                         <section className="block sm:hidden pt-[4.5rem] bg-gray-50">
                             <SpAdsSlider/>
-                        </section>
-                        <section className="block sm:hidden p-3 border-b-4 border-blue-200">
-                            <SpCatalog activeCatalog={activeCatalog}/>
                         </section>
 
                         <OfferSection/>
