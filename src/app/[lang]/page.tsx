@@ -22,6 +22,7 @@ import ChatWrapper from "@/containers/ChatWrapper";
 import {ChatRoomsProvider} from "@/modules/chat/contexts/ChatRoomsContext";
 import {ChatLanguageProvider} from "@/contexts/ChatLanguage";
 import Link from "next/link";
+import NavBar from "@/components/Home/NavBar";
 
 export default function Home() {
     const {t, i18n} = useTranslation();
@@ -40,7 +41,13 @@ export default function Home() {
                     </div>
                     <div className="block sm:hidden">
                         {/* Mobile Header */}
+
                         <div className="block sm:hidden fixed top-0 left-0 right-0 z-50">
+                            <NavBar
+                                isSidebarOpen={isSidebarOpen}
+                                onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+                                className="absolute top-3 right-3"
+                            />
                             <SpHeader
                                 isSidebarOpen={isSidebarOpen}
                                 onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
