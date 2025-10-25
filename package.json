@@ -8,8 +8,8 @@
     "start": "node .next/standalone/server.js",
     "lint": "next lint",
     "setup:lemmy": "cd src/lib/lemmy-js-client && pnpm i",
-    "test:chat:smoke": "tsx -r tsconfig-paths/register tests/chat/chatSmoke.ts",
-    "test:chat:load": "tsx -r tsconfig-paths/register tests/chat/chatLoad.ts"
+    "test:chat:smoke": "tsx -r tsconfig-paths/register -r ./tests/register-assets.cjs tests/chat/chatSmoke.ts",
+    "test:chat:load": "tsx -r tsconfig-paths/register -r ./tests/register-assets.cjs tests/chat/chatLoad.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
