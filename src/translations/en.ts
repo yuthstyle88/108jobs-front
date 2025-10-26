@@ -486,6 +486,7 @@ export const en = {
             resendFailed: "Failed to resend OTP. Please try again.",
             resendEmailSuccess: "Email resent successfully",
             resendVerifyCode: "Resend verification code",
+            resendLimitReached: "You have exceeded the allowed number of resend attempts (3 times).",
             emailRegistered: "This email has already been registered. Please login with your password.",
             invalidPassword: "Invalid password",
             titleVerifyingCode: "Check your inbox",

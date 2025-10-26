@@ -1,6 +1,6 @@
 'use client'
 import {VerifyOTPForm} from "@/components/Authentication/VerifyOTP";
 
-export default async function Page() {
+export default function Page() {
   return <VerifyOTPForm/>;
 }

@@ -2,6 +2,8 @@ import {useCallback, useEffect, useRef, useState} from 'react';
 // IMPORTANT: Adjust the import path if your service lives elsewhere
 import {getChannelAdapter} from '@/modules/chat/services/PhoenixSocketService';
 import {WebSocketStatus} from "@/modules/chat/types";
+import {onReadReceipt} from '@/modules/chat/events/chatEvents';
+import {useReadLastIdStore} from '@/modules/chat/store/readStore';
 
 
 export interface SendMessageInput {
@@ -541,6 +543,23 @@ export function useWebSocket(options: Partial<UseWebSocketOptions> = {}): WebSoc
             clearInactivityTimer();
         };
     }, [clearInactivityTimer]);
+
+    // Wire read-receipt -> readLastId store update (production readiness: real-time updates)
+    useEffect(() => {
+        // Subscribe globally to read receipt events and update the store
+        const unsubscribe = onReadReceipt(({ roomId: rid, readerId }) => {
+            try {
+                const setPeerLastReadAt = useReadLastIdStore.getState().setPeerLastReadAt;
+                if (typeof setPeerLastReadAt === 'function') {
+                    const nowIso = new Date().toISOString();
+                    setPeerLastReadAt(String(rid), Number(readerId), nowIso);
+                }
+            } catch {}
+        });
+        return () => {
+            try { unsubscribe?.(); } catch {}
+        };
+    }, []);
 
     return {
         status,

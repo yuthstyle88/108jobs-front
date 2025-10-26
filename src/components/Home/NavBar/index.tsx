@@ -1,7 +1,7 @@
 import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBars, faMagnifyingGlass, faBagShopping} from "@fortawesome/free-solid-svg-icons";
-import {faApple} from "@fortawesome/free-brands-svg-icons";
+import Link from "next/link";
 import Image from "next/image";
 import {AssetIcon} from "@/constants/icons";
 import Search from "@/components/Header/components/Search";
@@ -25,7 +25,7 @@ const NavBar: React.FC<NavBarProps> = ({
                                        }) => {
     return (
         <nav className={`flex items-center justify-between px-3 py-2 ${className}`}>
-            <a href="/" aria-label="Home"
+            <Link href="/" aria-label="Home"
                className="p-2 text-white/90 hover:text-white focus:outline-none rounded-full hover:bg-white/10">
                 <Image
                     src={AssetIcon.logo}
@@ -35,7 +35,7 @@ const NavBar: React.FC<NavBarProps> = ({
                     height={200}
                     priority
                 />
-            </a>
+            </Link>
 
             {/* Right: search, bag, hamburger */}
             <div className="flex items-center gap-2">

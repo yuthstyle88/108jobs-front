@@ -46,6 +46,12 @@ function langFromPath(pathname: string): Lang | null {
     return m ? normalizeLang(m[1]) : null;
 }
 
+function resolveLanguage(args: { pathname: string; cookieLang?: string; jwtLang?: string; req: NextRequest }): Lang {
+    const pathLng = langFromPath(args.pathname);
+    const browserLng = langFromBrowser(args.req);
+    return normalizeLang(pathLng || args.cookieLang || args.jwtLang || browserLng);
+}
+
 export function middleware(req: NextRequest) {
     const { pathname, search } = req.nextUrl;
     if (isStatic(pathname)) return NextResponse.next();
@@ -57,18 +63,15 @@ export function middleware(req: NextRequest) {
     let jwtLang: string | undefined;
     try {
         const claims = parseJwtClaims(rawCookie) as any;
-        console.log(claims);
         const v = claims?.acceptedTerms;
         acceptedTerms = typeof v === 'boolean' ? v : undefined;
         jwtLang = typeof claims?.lang === 'string' ? claims.lang : undefined;
     } catch {}
     // If the user is signed-in and the token does not explicitly confirm acceptance, assume they still need to accept.
     const needsTerms = acceptedTerms !== true;
-    console.log(needsTerms);
-    // --- language resolution: query > path > cookie > JWT > browser ---
-    const pathLng = langFromPath(pathname);
+    // --- language resolution (shared precedence): path > cookie > JWT > browser ---
     const cookieLng = req.cookies.get(LANGUAGE_COOKIE)?.value ?? '';
-    const effectiveLng = normalizeLang(pathLng || cookieLng || jwtLang || langFromBrowser(req));
+    const effectiveLng = resolveLanguage({ pathname, cookieLang: cookieLng, jwtLang, req });
 
     const setLangCookie = (resp: NextResponse, value: string) => {
         resp.cookies.set(LANGUAGE_COOKIE, value, { path: '/', maxAge: 60 * 60 * 24 * 365, sameSite: 'lax' });
@@ -107,7 +110,7 @@ export function middleware(req: NextRequest) {
         return resp;
     }
     // --- i18n auto prefix + persist cookie ---
-    if (!pathLng) {
+    if (!langFromPath(pathname)) {
         const target = new URL(`/${effectiveLng}${pathname}${search}`, req.url);
         // Prevent redirect loop: only redirect when the path actually changes
         if (target.pathname !== pathname || target.search !== search) {

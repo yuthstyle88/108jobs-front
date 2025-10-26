@@ -37,8 +37,8 @@ const ChatRoomsContext = createContext<ChatRoomsContextValue | undefined>(undefi
 
 export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?: number }>
     = ({children, pageSize = 20}) => {
-    const [page, setPage] = useState(1);
-    const {localUser} = useMyUser();
+    const { localUser } = useMyUser();
+
     if (!localUser?.id) {
         const emptyValue: ChatRoomsContextValue = {
             rooms: [],
@@ -54,13 +54,19 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
             activeRoomId: null,
             setActiveRoomId: () => {},
         };
-
         return (
             <ChatRoomsContext.Provider value={emptyValue}>
                 {children}
             </ChatRoomsContext.Provider>
         );
     }
+
+    return <InnerChatRoomsProvider pageSize={pageSize}>{children}</InnerChatRoomsProvider>;
+};
+
+const InnerChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize: number }> = ({ children, pageSize }) => {
+    const [page, setPage] = useState(1);
+    const { localUser } = useMyUser();
 
     // Persist client-known last-activity timestamps to keep room order stable across reloads
     const LOCAL_ACTIVITY_KEY = 'chat_last_activity_overrides';

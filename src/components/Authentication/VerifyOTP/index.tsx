@@ -11,6 +11,9 @@ import {REQUEST_STATE} from "@/services/HttpService";
 import LoadingCircle from "@/components/Common/Loading/LoadingCircle";
 import {RegisterDataProps} from "@/types/register-data";
 
+const MAX_RESENDS = 3;
+const RESEND_COOLDOWN = 20; // seconds
+
 interface VerifyOTPProps {
     switchToVerifyEmail?: () => void;
     setApiError?: (err: string) => void;
@@ -31,6 +34,14 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
     // State
     const [apiErrorState, setApiErrorState] = useState<string | null>(null);
     const [apiSuccessState, setApiSuccessState] = useState<string | null>(null);
+    const [resendCount, setResendCount] = useState<number>(0);
+    const [cooldown, setCooldown] = useState<number>(0);
+
+    React.useEffect(() => {
+        if (cooldown <= 0) return;
+        const timer = setInterval(() => setCooldown((c) => c - 1), 1000);
+        return () => clearInterval(timer);
+    }, [cooldown]);
 
     // Use the provided setApiError function if available, otherwise use the local state setter
     const handleApiError = useCallback((err: string) => {
@@ -105,7 +116,14 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
             <div className="text-center">
                 <button
                     type="button"
+                    disabled={isSubmitting || cooldown > 0 || resendCount >= MAX_RESENDS}
                     onClick={async () => {
+                        if (resendCount >= MAX_RESENDS) {
+                            setApiErrorState(t("authen.resendLimitReached"));
+                            return;
+                        }
+                        if (cooldown > 0) return;
+
                         const emailString: string = email?.toString() || "";
                         const resendRes = await HttpService.client.resendVerificationEmail({
                             email: emailString,
@@ -118,12 +136,20 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
                         } else {
                             setApiErrorState(null);
                             setApiSuccessState(t("authen.resendEmailSuccess"));
+                            setResendCount((c) => c + 1);
+                            setCooldown(RESEND_COOLDOWN);
                         }
                     }}
                     className="text-text-primary text-sm font-sans"
                 >
-                    {t("authen.resendEmail")}
+                    <>
+                      {t("authen.resendEmail")} {resendCount > 0 ? `(${resendCount}/${MAX_RESENDS})` : null}
+                      {cooldown > 0 ? ` – ${cooldown}s` : ""}
+                    </>
                 </button>
+                <p className="text-xs text-gray-500 mt-1">
+                  {t("authen.resendEmail")}: {resendCount}/{MAX_RESENDS}
+                </p>
                 {apiErrorState && (
                     <p className="text-red-500 text-sm text-center mb-4">
                         {t("authen.notFound")}

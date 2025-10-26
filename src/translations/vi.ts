@@ -482,6 +482,7 @@ export const vi = {
             resendFailed: "Gửi lại mã OTP không thành công. Vui lòng thử lại.",
             resendEmailSuccess: "Email đã được gửi lại thành công",
             resendVerifyCode: "Resend verification code",
+            resendLimitReached: "Bạn đã gửi lại quá số lần cho phép (3 lần). Vui lòng thử lại sau.",
             emailRegistered: "Email này đã được đăng ký. Vui lòng đăng nhập bằng mật khẩu của bạn.",
             invalidPassword: "Mật khẩu không hợp lệ",
             titleVerifyingCode: "Kiểm tra hộp thư của bạn",
