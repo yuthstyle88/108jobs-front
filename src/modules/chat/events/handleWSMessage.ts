@@ -115,6 +115,26 @@ export function createHandleWSMessage(deps: HandlerDeps) {
                 return null;
             }
 
+            // 2.5) sync event (network recovery) → re-flush pending delivery/read acks then return
+            try {
+                const rawEvt = payload?.data?.event;
+                if (rawEvt === 'chat:sync') {
+                    // Allow immediate ack
+                    try { if (ackCooldownRef) ackCooldownRef.current = 0 as any; } catch {}
+                    const lastId = (handleWSMessage as any)._batchAckLastId
+                        || (handleWSMessage as any)._lastDeliveredId;
+                    if (lastId) {
+                        try { deliveryAckRef?.current?.(lastId); } catch {}
+                        try {
+                            // Reuse auto-ack to push read receipt if applicable
+                            (handleWSMessage as any)._batchAckLastId = lastId;
+                            tryFlushAutoAck(handleWSMessage, roomIdStr, readAckRef, ackCooldownRef);
+                        } catch {}
+                    }
+                    return null;
+                }
+            } catch {}
+
             // 3) typing → DOM + optional callback
 
             const typingInfo = parseTypingDetail(env, roomIdStr, meId);
@@ -172,6 +192,7 @@ export function createHandleWSMessage(deps: HandlerDeps) {
                     try {
                         // Also send delivery ack to server to confirm we received it
                         deliveryAckRef?.current?.(lastAckId);
+                        (handleWSMessage as any)._lastDeliveredId = lastAckId;
                     } catch {}
                 }
                 // 6) auto-ack flush (once)
