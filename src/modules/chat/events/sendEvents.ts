@@ -39,7 +39,7 @@ export function sendTyping(deps: SendEventDeps, typing: boolean) {
 export function sendReadReceipt(deps: SendEventDeps, lastMessageId: string) {
     const a = (deps as any).adapter;
     if(!a) return;
-    const pkt = createEvent('chat:read_up_to', {
+    const pkt = createEvent('chat:readUpTo', {
         secure: false,
         roomId: deps.roomId,
         readerId: deps.senderId,
@@ -53,6 +53,22 @@ export function sendRoomUpdateEvent(deps: SendEventDeps, update: Record<string, 
     const a = (deps as any).adapter;
     if(!a) return;
     wsSend(a, createEvent('chat:update', {roomId: deps.roomId, ...update}));
+}
+
+/**
+ * Send delivery acknowledgment to server for a received message.
+ * Minimal payload: roomId, receiverId (me), messageId
+ */
+export function sendDeliveryAck(deps: SendEventDeps, messageId: string) {
+    const a = (deps as any).adapter;
+    if(!a) return;
+    const pkt = createEvent('chat:ack', {
+        roomId: deps.roomId,
+        receiverId: deps.senderId,
+        messageId: String(messageId || '')
+    });
+    dbg('sendDeliveryAck', pkt);
+    wsSend(a, pkt);
 }
 
 // ---- Core send/ack ----
@@ -70,15 +86,22 @@ async function doSend(deps: SendMessageDeps, msg: ChatMessage): Promise<{ id: st
     try {
         const ok = await s.sendMessage('chat:message', msg);
         if(!ok) return (dbg('doSend:sendMessage failed', {id}), {id, sent: false});
+        // Transport send initiated successfully → mark as 'sending'
+        try { useChatStore.getState()?.commitStatus?.(id, 'sending' as any); } catch {}
         // Wait for ACK, auto-extend waiting if no reply
         let totalWait = 0;
         let acked = false;
+        let markedRetrying = false;
         while (totalWait < ACK_TIMEOUT_MS * ACK_EXTENDS && !acked) {
             if (isChannelClosed()) { dbg('doSend:channel-closed-before-ack', { id, totalWait }); break; }
             acked = await waitForAck(deps, msg.id, ACK_TIMEOUT_MS).catch((e) => (dbg('doSend:waitForAck error', e), false));
             if (!acked) {
                 totalWait += ACK_TIMEOUT_MS;
                 dbg('doSend:auto-extend-wait', { id, totalWait });
+                if (!markedRetrying) {
+                    try { useChatStore.getState()?.commitStatus?.(id, 'retrying' as any); } catch {}
+                    markedRetrying = true;
+                }
             }
         }
         return acked ? (dbg('doSend:ack ok', {id}), {id, sent: true}) : (dbg('doSend:ack timeout', {id}), {

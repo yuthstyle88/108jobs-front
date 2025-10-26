@@ -35,6 +35,8 @@ export interface HandlerRefs {
     fetchResolveRef?: React.RefObject<(() => void) | null>;
     /** read-ack support */
     readAckRef: React.RefObject<((lastId: string) => void) | null>;
+    /** delivery-ack support */
+    deliveryAckRef?: React.RefObject<((lastId: string) => void) | null>;
     ackCooldownRef: React.RefObject<number>;
 }
 
@@ -69,6 +71,7 @@ export function createHandleWSMessage(deps: HandlerDeps) {
         fetchTimeoutRef,
         fetchResolveRef,
         readAckRef,
+        deliveryAckRef,
         ackCooldownRef,
         upsertMessage
     } = deps;
@@ -164,7 +167,13 @@ export function createHandleWSMessage(deps: HandlerDeps) {
                     upsertMessage(enhancedItem)
                 }
 
-                if (lastAckId) (handleWSMessage as any)._batchAckLastId = lastAckId;
+                if (lastAckId) {
+                    (handleWSMessage as any)._batchAckLastId = lastAckId;
+                    try {
+                        // Also send delivery ack to server to confirm we received it
+                        deliveryAckRef?.current?.(lastAckId);
+                    } catch {}
+                }
                 // 6) auto-ack flush (once)
                 tryFlushAutoAck(handleWSMessage, roomIdStr, readAckRef, ackCooldownRef);
             }

@@ -24,26 +24,31 @@ export interface ChatTypingDetail {
 export const TYPING_EVENT_NAMES = ['chat:typing'];
 
 export const EVENTS = [
-    'phx_reply',
+    'phxReply',
     'forward',
     'chat:message',
     'chat:typing',
     'chat:read',
-    'history_page',
+    "chat:ack",
+    "chat:sync",
+    'historyPage',
 ];
 
 export type PhoenixEvent =
-  | "phx_join"
-  | "phx_leave"
-  | "phx_reply"
-  | "phx_error"
-  | "phx_close"
+  | "phxJoin"
+  | "phxLeave"
+  | "phxReply"
+  | "phxError"
+  | "phxElose"
   | "chat:message"
   | "chat:typing"
   | "chat:read"
-  | "chat:read_up_to"
+  | "chat:readUpTo"
   | "chat:update"
-  | "history_page";
+  | "chat:ack"
+  | "chat:sync"
+  | "forward"
+  | "historyPage";
 
 export type ChatMessageModel = ChatMessage & {
     isOwner: boolean

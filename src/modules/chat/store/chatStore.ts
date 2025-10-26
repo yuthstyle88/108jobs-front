@@ -39,7 +39,7 @@ function removeAt<T>(arr: T[], index: number): T[] {
 
 function flushByStatus(
   getFn: () => ChatStoreState & ChatStoreActions,
-  status: 'pending' | 'failed',
+  status: 'pending' | 'retrying' | 'failed',
   roomId?: string
 ): ChatMessage[] {
   const { listMessages, retryMeta } = getFn();
@@ -203,13 +203,18 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
         const nextTime = Date.now() + delay;
         return {
             listMessages: s.listMessages.map((m) =>
-              String(m.id) === String(id) ? ({...m, status: 'pending' as ChatStatus} as ChatMessage) : m
+              String(m.id) === String(id) ? ({...m, status: 'retrying' as ChatStatus} as ChatMessage) : m
             ),
             retryMeta: {...s.retryMeta, [id]: {retry, next: nextTime}},
         };
     }),
 
-    flushPending: (roomId) => flushByStatus(get, 'pending', roomId),
+    flushPending: (roomId) => {
+        // Include messages marked as 'pending' or 'retrying'
+        const pending = flushByStatus(get, 'pending', roomId);
+        const retrying = flushByStatus(get, 'retrying', roomId);
+        return [...pending, ...retrying];
+    },
     flushFailed:  (roomId) => flushByStatus(get, 'failed', roomId),
 
     removeMessage: (id) => set((s) => {
@@ -225,6 +230,6 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
 
     addPendingMessage: (msg) => get().addPending(msg),
     removePendingMessage: (id) => get().removePending(id),
-    clearPendingMessages: () => set((s) => ({listMessages: s.listMessages.filter((m: any) => m.status !== 'pending')})),
+    clearPendingMessages: () => set((s) => ({listMessages: s.listMessages.filter((m: any) => m.status !== 'pending' && m.status !== 'retrying')})),
 
 }))

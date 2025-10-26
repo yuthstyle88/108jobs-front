@@ -2,7 +2,7 @@ import React from "react";
 
 interface Props {
     isOwner: boolean | undefined;
-    msgStatus: "pending" | "sent" | "failed";
+    msgStatus: "pending" | "sending" | "retrying" | "sent" | "failed";
     unread?: boolean;
     isRead: boolean | undefined;
     readTime: string | null
@@ -97,11 +97,14 @@ const MessageStatusIndicator: React.FC<Props> = ({
             );
         }
 
-        if (msgStatus === "pending") {
+        if (msgStatus === "pending" || msgStatus === "sending" || msgStatus === "retrying") {
+            const label = msgStatus === 'retrying'
+              ? (t("profileChat.retrying") || "Retrying")
+              : (t("profileChat.sending") || "Sending");
             return (
                 <span className="ml-2 inline-flex items-center gap-1 text-gray-500">
                     <PendingSpinner/>
-                    <span className="text-xs">{t("profileChat.sending") || "Sending"}</span>
+                    <span className="text-xs">{label}</span>
                 </span>
             );
         }

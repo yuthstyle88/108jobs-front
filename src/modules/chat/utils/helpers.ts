@@ -88,17 +88,19 @@ export function maybeHandleReadReceipt(env: any, fallbackRoomId: string): boolea
 
 export async function maybeHandlePresenceUpdate(env: any, meId: number): Promise<boolean> {
     try {
-        const evName = String(env?.event);
-        if (!evName || !evName.includes("heartbeat") || meId === Number(env.sender.id)) return false;
+        const evName = String(env?.event || '');
+        // accept any heartbeat-like event names and avoid throwing on missing sender
+        if (!evName || !evName.toLowerCase().includes('heartbeat')) return false;
+        const senderId = Number(env?.sender?.id ?? env?.readerId ?? env?.payload?.senderId ?? 0);
+        if (!senderId || senderId === Number(meId)) return false;
         try {
             const api = require('@/modules/chat/store/presenceStore');
-            const { setSnapshot, } = api.usePresenceStore.getState();
-            setSnapshot([{ userId: Number(env.sender.id), lastSeenAt: Date.now() }]);
+            const { setSnapshot } = api.usePresenceStore.getState();
+            setSnapshot([{ userId: senderId, lastSeenAt: Date.now() }]);
         } catch (err) {
             try {
-                if (localStorage.getItem('chat_debug') === '1') console.error("Error fetching room:", err);
-            } catch {
-            }
+                if (localStorage.getItem('chat_debug') === '1') console.error('presence update failed:', err);
+            } catch {}
         }
         return true;
     } catch {
@@ -119,7 +121,7 @@ export function mergeNewMessages(
     return arr.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
-// ---- helpers: auto-ack ----
+// ---- helpers: auto-ack (read receipt) ----
 export function tryFlushAutoAck(handleWSMessageFn: any, roomIdStr: string, readAckRef: RefObject<((lastId: string) => void) | null>, ackCooldownRef: RefObject<number | undefined>) {
     try {
         const batchId = (handleWSMessageFn as any)._batchAckLastId as string | undefined;

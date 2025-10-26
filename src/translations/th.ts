@@ -158,6 +158,7 @@ export const th = {
             messageHiringAgain: "หากคุณต้องการจ้างบุคคลนี้อีกครั้ง คลิก",
             previousMessages: "ข้อความก่อนหน้า",
             sending: "กำลังส่ง",
+            retrying: "กำลังพยายามส่งใหม่",
             failed: "ล้มเหลว",
             sent: "ส่งแล้ว",
             retry: "ลองใหม่",

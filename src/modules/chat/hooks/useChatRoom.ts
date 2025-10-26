@@ -8,6 +8,7 @@ import {
     SendEventDeps,
     sendReadReceipt as sendReadReceiptEvent,
     sendRoomUpdateEvent,
+    sendDeliveryAck,
 } from "@/modules/chat/events/sendEvents";
 import { useTypingIndicator } from '@/modules/chat/hooks/useTypingIndicator';
 import {ChatRoomData, ChatRoomId, LocalUser, LocalUserId} from "lemmy-js-client";
@@ -116,6 +117,7 @@ export function useChatRoom({
     const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const ackCooldownRef = useRef<number>(0);
     const readAckRef = useRef<((id: number | string) => void) | null>(null);
+    const deliveryAckRef = useRef<((id: number | string) => void) | null>(null);
     // Partner typing state handled by usePartnerTyping hook below
     const [connectionError, setConnectionError] = useState(false);
     const localSenderRef = useRef<any>(null);
@@ -241,6 +243,7 @@ export function useChatRoom({
         fetchTimeoutRef,
         fetchResolveRef,
         readAckRef,
+        deliveryAckRef,
         ackCooldownRef,
         upsertMessage
     }), [roomId, localUser.id, setRefreshRoomData, markPeerActive, upsertMessage]);
@@ -284,6 +287,27 @@ export function useChatRoom({
             readAckRef.current = null;
         };
     }, [roomId, localUser.id, isE2EMock, ws]);
+
+    // Delivery-ack wiring (confirm received to server)
+    useEffect(() => {
+        if(isE2EMock || !roomId) {
+            deliveryAckRef.current = null;
+            return;
+        }
+        const adapter = ((ws as any)?.adapter ?? ws) as any;
+        const me = Number(localUser.id) || 0;
+        deliveryAckRef.current = (id: number | string) => {
+            try {
+                const deps: SendEventDeps = { adapter, roomId, senderId: me } as any;
+                sendDeliveryAck(deps, String(id));
+            } catch (e) {
+                try { console.warn('[deliver-ack] failed', e); } catch {}
+            }
+        };
+        return () => {
+            deliveryAckRef.current = null;
+        };
+    }, [ws, roomId, localUser.id, isE2EMock]);
 
     useEffect(() => {
         return () => {
