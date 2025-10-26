@@ -392,6 +392,7 @@ export const en = {
             checkboxPrivacyPolicyRedirect: "Privacy Policy",
             checkboxTermsConditions: "I have read and agree to the ",
             checkboxTermsConditionsRedirect: "Terms of Service",
+            checkSpamHint: "If you don’t see the email in your inbox, please check your spam or junk folder.",
             confirmButton: "Confirm Password Change",
             confirmPasswordLabel: "Confirm Password",
             confirmPasswordPlaceholder: "Re-enter password",

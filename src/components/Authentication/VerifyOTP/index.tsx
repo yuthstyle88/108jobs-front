@@ -95,6 +95,9 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
                     values={{email}}
                 />
             </p>
+            <p className="text-gray-600 text-sm mt-1">
+                {t("authen.checkSpamHint", { defaultValue: "If you don’t see the email in your inbox, please check your spam or junk folder." })}
+            </p>
             <CustomInput
                 label={t("authen.labelOTP")}
                 type="string"

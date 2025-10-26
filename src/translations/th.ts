@@ -391,6 +391,7 @@ export const th = {
             checkboxPrivacyPolicyRedirect: "นโยบายคุ้มครองความเป็นส่วนตัว",
             checkboxTermsConditions: "ฉันได้อ่านและยอมรับ ",
             checkboxTermsConditionsRedirect: "เงื่อนไขข้อตกลงการใช้บริการ",
+            checkSpamHint: "หากไม่พบอีเมลในกล่องขาเข้า กรุณาตรวจสอบในโฟลเดอร์สแปมหรือจดหมายขยะ",
             confirmButton: "ยืนยันการเปลี่ยนรหัสผ่าน",
             confirmPasswordLabel: "ยืนยันรหัสผ่าน",
             confirmPasswordPlaceholder: "ระบุยืนยันรหัสผ่าน",

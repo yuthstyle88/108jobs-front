@@ -393,6 +393,7 @@ export const vi = {
             checkboxPrivacyPolicyRedirect: "Chính sách Bảo mật",
             checkboxTermsConditions: "Tôi đã đọc và đồng ý với ",
             checkboxTermsConditionsRedirect: "Điều khoản Dịch vụ",
+            checkSpamHint: "Nếu bạn không thấy email trong hộp thư đến, vui lòng kiểm tra thư rác hoặc mục spam.",
             confirmButton: "Xác nhận đổi mật khẩu",
             confirmPasswordLabel: "Xác nhận mật khẩu",
             confirmPasswordPlaceholder: "Nhập lại mật khẩu",
