@@ -1,5 +1,4 @@
 import * as React from "react";
-import {UserService} from "@/services";
 import type {NormalizedEnvelope} from "@/modules/chat/utils/chatSocketUtils";
 import {
     broadcastToListeners,
@@ -97,8 +96,8 @@ export function createHandleWSMessage(deps: HandlerDeps) {
                 // Prefer normalized env ids; fall back to raw/nested payload (e.g., chat:active_rooms → data.payload.readerId)
                 const rawSender = payload?.data?.payload?.senderId
                   ?? payload?.data?.payload?.readerId;
-                const senderId = rawSender != null ? Number(rawSender) : undefined;
-                const isFromPeer = senderId && Number(senderId) !== meId;
+                const senderIdNum = rawSender != null ? Number(rawSender) : undefined;
+                const isFromPeer = senderIdNum != null && senderIdNum !== meId;
                 if (isFromPeer) {
                     markPeerActive();
                 }
@@ -118,7 +117,7 @@ export function createHandleWSMessage(deps: HandlerDeps) {
             // 2.5) sync event (network recovery) → re-flush pending delivery/read acks then return
             try {
                 const rawEvt = payload?.data?.event;
-                if (rawEvt === 'chat:sync') {
+                if (rawEvt === 'sync:pending') {
                     // Allow immediate ack
                     try { if (ackCooldownRef) ackCooldownRef.current = 0 as any; } catch {}
                     const lastId = (handleWSMessage as any)._batchAckLastId
@@ -133,6 +132,27 @@ export function createHandleWSMessage(deps: HandlerDeps) {
                     }
                     return null;
                 }
+            } catch {}
+
+            // 2.6) ack protocol events from server
+            try {
+              const rawEvt2 = payload?.data?.event;
+              // A) ackReminder → mark pending locally and reply ackConfirm
+              if (rawEvt2 === 'ackReminder') {
+                const ids: string[] = payload?.data?.payload?.clientIds ?? [];
+                try { (window as any)?.chatOutbox?.markPending?.(roomIdStr, meId, ids); } catch {}
+                try { (window as any)?.chatChannel?.ackConfirm?.(ids); } catch {}
+                return;
+              }
+              // B) messageAck → mark delivered/sent for that clientId
+              if (rawEvt2 === 'messageAck') {
+                const cid: string | undefined = payload?.data?.payload?.clientId;
+                if (cid) {
+                  try { (window as any)?.chatOutbox?.markDelivered?.(roomIdStr, meId, cid); } catch {}
+                  try { (window as any)?.chatStore?.markMessageDelivered?.(roomIdStr, cid); } catch {}
+                }
+                return;
+              }
             } catch {}
 
             // 3) typing → DOM + optional callback

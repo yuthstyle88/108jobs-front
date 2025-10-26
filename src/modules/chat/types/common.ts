@@ -30,7 +30,7 @@ export const EVENTS = [
     'chat:typing',
     'chat:read',
     "chat:ack",
-    "chat:sync",
+    "sync:pending",
     'historyPage',
 ];
 
@@ -46,7 +46,7 @@ export type PhoenixEvent =
   | "chat:readUpTo"
   | "chat:update"
   | "chat:ack"
-  | "chat:sync"
+  | "sync:pending"
   | "forward"
   | "historyPage";
 

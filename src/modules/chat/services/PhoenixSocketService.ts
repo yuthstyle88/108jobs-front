@@ -1,3 +1,4 @@
+"use client";
 /**
  * Phoenix socket/channel adapter — MINIMAL
  * - No retries / no heartbeat overrides / no caches
@@ -13,9 +14,13 @@ export interface RealtimeChannelAdapter {
     onclose?: (event: { code?: number; reason?: string }) => void;
     onerror?: (event?: any) => void;
     onheartbeat?: (ts: number) => void;
-    send: (data: string) => void;
+    send: (data: string | Record<string, any>) => void;
     emit?: (event: string, payload: any) => void;
     sendHeartbeat?: (payload?: Record<string, any>) => void;
+    ackConfirm?: (clientIds: string[]) => void;
+    syncPending?: (list: string[], sseqNext?: string) => void;
+    startHeartbeat?: (intervalMs: number) => void;
+    stopHeartbeat?: () => void;
     close: () => void;
 }
 
@@ -66,17 +71,14 @@ export function getChannelAdapter(token: string, topic: string, roomId: string, 
                 if (DEV) console.warn("[phoenix] emit failed", {event, e});
             }
         },
-        sendHeartbeat() {
-            const payload = {
-                senderId,
-                event: "heartbeat",
-            };
+        sendHeartbeat(payload?: Record<string, any>) {
+            const base = { senderId, event: "heartbeat" };
+            const merged = typeof payload === 'object' && payload ? { ...base, ...payload } : base;
             try {
-                ch.push("heartbeat", payload);
-                // แจ้งให้ชั้นบนรู้ว่าเพิ่งส่ง heartbeat (onheartbeat) และปล่อย DOM event ให้ hook ฟังได้
+                ch.push("heartbeat", merged);
                 try { adapter.onheartbeat?.(Date.now()); } catch {}
                 try { if (typeof window !== 'undefined') window.dispatchEvent(new Event('chat:heartbeat')); } catch {}
-                if (DEV) console.debug("[phoenix] custom heartbeat sent", payload);
+                if (DEV) console.debug("[phoenix] custom heartbeat sent", merged);
             } catch (err) {
                 console.warn("[phoenix] heartbeat send failed", err);
             }
@@ -96,6 +98,30 @@ export function getChannelAdapter(token: string, topic: string, roomId: string, 
             adapter.onclose?.({code: 1000, reason: "client closed"});
         },
     } as RealtimeChannelAdapter;
+
+    // --- Protocol helpers ---
+    adapter.ackConfirm = (clientIds: string[]) => {
+        try {
+            (ch as any).push("ackConfirm", { roomId, senderId, clientIds });
+        } catch (e) { if (DEV) console.warn("[phoenix] ackConfirm failed", e); }
+    };
+
+    adapter.syncPending = (list: string[], sseqNext?: string) => {
+        try {
+            (ch as any).push("sync:pending", {
+                roomId, senderId, list,
+                sseqHello: sseqNext ? { next: sseqNext } : undefined,
+            });
+        } catch (e) { if (DEV) console.warn("[phoenix] sync:pending failed", e); }
+    };
+
+    // Heartbeat scheduler (client-side trigger)
+    let hbTimer: ReturnType<typeof setInterval> | null = null;
+    adapter.startHeartbeat = (intervalMs: number) => {
+        if (hbTimer) clearInterval(hbTimer);
+        hbTimer = setInterval(() => adapter.sendHeartbeat?.(), Math.max(1000, intervalMs|0));
+    };
+    adapter.stopHeartbeat = () => { if (hbTimer) clearInterval(hbTimer); hbTimer = null; };
 
     // Forward all non-internal events as a normalized envelope
     try {
@@ -146,6 +172,10 @@ export function getChannelAdapter(token: string, topic: string, roomId: string, 
                     readyState = 1;
                     adapter.onopen?.();
                 }
+                try {
+                    const pending: string[] = (typeof window !== 'undefined' && (window as any)?.chatOutbox?.pending?.(roomId, senderId)) || [];
+                    adapter.syncPending?.(pending);
+                } catch {}
             })
             .receive("error", (e: any) => {
                 if (DEV) console.log("[phoenix] join error", {topic, e});
