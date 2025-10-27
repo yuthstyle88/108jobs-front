@@ -5,6 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import {AssetIcon} from "@/constants/icons";
 import Search from "@/components/Header/components/Search";
+import SpUserAvatar from "@/containers/SpHeader/components/SpUserProfile";
+import {CircleUserRound} from "lucide-react";
+import {UserService} from "@/services";
 
 /**
  * Minimal NavBar: renders a mobile menu toggle button.
@@ -23,6 +26,7 @@ const NavBar: React.FC<NavBarProps> = ({
                                            showSearch = false,
                                            className = "",
                                        }) => {
+    const isLoggedIn = UserService.Instance.isLoggedIn;
     return (
         <nav className={`flex items-center justify-between px-3 sm:py-2 ${className}`}>
             <Link href="/" aria-label="Home"
@@ -42,6 +46,18 @@ const NavBar: React.FC<NavBarProps> = ({
                 <div className="block md:hidden">
                     <Search showSearch={showSearch} />
                 </div>
+                {isLoggedIn ? (
+                    <SpUserAvatar/>
+                ) : (
+                    <Link
+                        prefetch={false}
+                        href="/login"
+                        className="flex items-center justify-center p-2 text-white cursor-pointer min-w-[44px]"
+                        aria-label="Login"
+                    >
+                        <CircleUserRound className="w-6 h-6 sm:w-7 sm:h-7"/>
+                    </Link>
+                )}
                 <button
                     type="button"
                     className="md:hidden w-8 h-8 sm:w-9 sm:h-9 grid place-items-center rounded-full text-white/90 hover:text-white hover:bg-white/10 focus:outline-none"
