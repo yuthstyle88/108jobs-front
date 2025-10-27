@@ -1,15 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {LANGUAGE_COOKIE} from "@/constants/language";
 import {authCookieName} from "@/utils/config";
+import {isHttps} from "@/utils";
+import {SUPPORTED} from "@/utils/localeHref";
 
-const STATIC_PATHS = ['/_next', '/favicon', '/robots', '/sitemap', '/images', '/fonts', '/static'];
+const LOCALE_RE = /^\/([a-z]{2})(\/|$)/i;
+
+function stripLocalePrefix(pathname: string) {
+  return pathname.replace(LOCALE_RE, '/');
+}
 // Disable protection: make all routes public
 const PROTECTED_PATHS: string[] = ['/chat' ,'/account', '/admin'];
 
-function isStatic(p: string) {
-    return STATIC_PATHS.some((x) => p.startsWith(x));
-}
-const SUPPORTED = ['th', 'en', 'vi'] as const;
+
 type Lang = typeof SUPPORTED[number];
 
 function decodeBase64Url(input: string): string {
@@ -55,7 +58,6 @@ function resolveLanguage(args: { pathname: string; cookieLang?: string; jwtLang?
 export function proxy(req: NextRequest) {
     const { pathname, search } = req.nextUrl;
     console.log('middleware', pathname);
-    if (isStatic(pathname)) return NextResponse.next();
 
     const rawCookie = req.cookies.get(authCookieName)?.value;
     const sid = Boolean(rawCookie);
@@ -72,12 +74,18 @@ export function proxy(req: NextRequest) {
     const effectiveLng = resolveLanguage({ pathname, cookieLang: cookieLng, jwtLang, req });
 
     const setLangCookie = (resp: NextResponse, value: string) => {
-        resp.cookies.set(LANGUAGE_COOKIE, value, { path: '/', maxAge: 60 * 60 * 24 * 365, sameSite: 'lax' });
+        resp.cookies.set(LANGUAGE_COOKIE, value, {
+            path: '/',
+            maxAge: 60 * 60 * 24 * 365,
+            sameSite: 'lax',
+            secure: isHttps(req),
+        });
         return resp;
     };
 
     // --- protect dynamic routes ---
-    const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p));
+    const pathNoLang = stripLocalePrefix(pathname);
+    const isProtected = PROTECTED_PATHS.some((p) => pathNoLang.startsWith(p));
     const isOnLogin = /^\/[a-z]{2}\/login(\/|$)/i.test(pathname);
     if (isProtected && !sid && !isOnLogin) {
         const login = new URL(`/${effectiveLng}/login`, req.url);
@@ -104,5 +112,8 @@ export function proxy(req: NextRequest) {
 
 // --- matcher (exclude static) ---
 export const config = {
-    matcher: ['/((?!_next|static|fonts|images|favicon|robots|sitemap|lottie).*)'],
+    matcher: [
+        // everything except Next internals, static assets, api and uploads
+        '/((?!_next|static|fonts|images|favicon|robots|sitemap|lottie|api|uploads).*)',
+    ],
 };
