@@ -54,6 +54,7 @@ function resolveLanguage(args: { pathname: string; cookieLang?: string; jwtLang?
 
 export function middleware(req: NextRequest) {
     const { pathname, search } = req.nextUrl;
+    console.log('middleware', pathname);
     if (isStatic(pathname)) return NextResponse.next();
 
     const rawCookie = req.cookies.get(authCookieName)?.value;

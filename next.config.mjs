@@ -58,6 +58,34 @@ const nextConfig = {
   productionBrowserSourceMaps: false,
 
   // Security + cache headers
+  // Ensure WebAssembly works reliably in all environments (avoid fetch failures)
+  webpack: (config, { isServer }) => {
+    // Enable modern WebAssembly support in Webpack
+    config.experiments = {
+      ...config.experiments,
+      asyncWebAssembly: true,
+      topLevelAwait: true,
+      layers: true,
+    };
+
+    // Some environments block or mis-serve .wasm via fetch(). To make the app resilient,
+    // emit WASM as a real file so libraries that do `fetch(url)` can load it
+    const hasWasmRule = config.module.rules.some(
+      (r) => String(r.test) === String(/\.wasm$/)
+    );
+    if (!hasWasmRule) {
+      config.module.rules.push({
+        test: /\.wasm$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'static/wasm/[name]-[hash][ext]',
+        },
+      });
+    }
+
+    return config;
+  },
+
   async headers() {
     const securityHeaders = [
       // Protect against MIME sniffing
@@ -70,6 +98,9 @@ const nextConfig = {
       { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
       // Opt-in to modern security defaults (adjust per your features)
       { key: 'Permissions-Policy', value: 'geolocation=(), microphone=(), camera=(), interest-cohort=()' },
+      // COOP and COEP for WASM isolation
+      { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
+      { key: 'Cross-Origin-Embedder-Policy', value: 'require-corp' },
       // HSTS (enable only behind HTTPS and once you are confident)
       // { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains; preload' },
       // Content Security Policy (start relaxed; harden later)
@@ -78,12 +109,17 @@ const nextConfig = {
         key: 'Content-Security-Policy',
         value: [
           "default-src 'self'",
-          "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+          // Allow WebAssembly and worker usage needed by some dependencies (e.g. syntax highlighters)
+          "script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob:",
+          "worker-src 'self' blob:",
           "style-src 'self' 'unsafe-inline'",
           "img-src 'self' data: blob:",
           "font-src 'self' data:",
+          // Allow fetching same-origin resources including WASM files served from /_next/static
           "connect-src 'self'",
           "media-src 'self'",
+          // Forbid plugins completely
+          "object-src 'none'",
           "frame-ancestors 'none'",
         ].join('; '),
       },
@@ -106,6 +142,14 @@ const nextConfig = {
       {
         source: '/:all*(svg|jpg|jpeg|png|gif|webp|avif|ico|woff|woff2|ttf|otf|eot|mp4|webm)',
         headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      // Dedicated WASM headers for emitted WASM files
+      {
+        source: '/_next/static/wasm/:path*',
+        headers: [
+          { key: 'Content-Type', value: 'application/wasm' },
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },

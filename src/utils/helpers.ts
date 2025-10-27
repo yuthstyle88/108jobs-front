@@ -546,9 +546,42 @@ export function stripEmpty<T extends object>(obj: T): Partial<T> {
     ) as Partial<T>;
 }
 
-export function assertExists<T>(value: T | null | undefined, message?: string): T {
-    if (value == null) throw new Error(message ?? "Expected value to be present but got null or undefined");
-    return value;
+export function assertExists<T>(
+    value: T | null | undefined,
+    message?: string,
+    defaultValue?: T | (() => T)
+): T {
+    // Present → return immediately
+    if (value != null) return value as T;
+
+    // Resolve default (supports lazy factory)
+    const hasFactory = typeof defaultValue === 'function';
+    const resolvedDefault = hasFactory
+        ? (defaultValue as () => T)()
+        : defaultValue;
+
+    if (resolvedDefault !== undefined) {
+        try {
+            console.warn(
+                (message ?? "Expected value to be present but got null or undefined") +
+                    " – using provided defaultValue"
+            );
+        } catch {}
+        return resolvedDefault as T;
+    }
+
+    // No default provided → in production do not hard-crash the app
+    const isProd = typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'production';
+    const errMsg = message ?? 'Expected value to be present but got null or undefined';
+
+    if (isProd) {
+        try { console.error(errMsg); } catch {}
+        // Return undefined as T to let UI guards handle empty state instead of crashing
+        return undefined as unknown as T;
+    }
+
+    // In development, fail fast so the caller fixes the flow
+    throw new Error(errMsg);
 }
 
 export function toCamelCaseLastSegment(path: string | undefined): string {

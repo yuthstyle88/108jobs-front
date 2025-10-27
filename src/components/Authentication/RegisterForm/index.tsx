@@ -87,7 +87,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                 case REQUEST_STATE.SUCCESS: {
                     if (registerRes.data.verifyEmailSent) {
                         if (switchToVerifyOTP) {
-                            switchToVerifyOTP(data.email);
+                            switchToVerifyOTP({ email: data.email });
                         }
                     }
                 }
