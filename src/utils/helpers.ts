@@ -485,6 +485,7 @@ async function toBlob(src: string | File | Blob): Promise<Blob> {
                 byteString = decodeURIComponent(dataPart);
             }
 
+
             const len = byteString.length;
             const bytes = new Uint8Array(len);
             for (let i = 0; i < len; i++) {
