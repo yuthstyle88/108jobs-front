@@ -6,22 +6,7 @@ import Link from "next/link";
 import {useTranslation} from "react-i18next";
 import LanguageDropdown from "../LanguageDropDown";
 import UserProfileSection from "./components/UserProfileSection";
-import Search from "./components/Search";
 import {useScrollHandler} from "./hooks/useScrollHandler";
-
-const TYPES: Record<string, { bg: string }> = {
-    transparent: {
-        bg: "#transparent",
-    },
-    primary: {
-        bg: "bg-primary",
-    },
-};
-
-interface BgProps {
-    type: keyof typeof TYPES;
-    forceShowSearch?: boolean;
-}
 
 const Header = ({ type, forceShowSearch = false }: { type: string; forceShowSearch?: boolean }) => {
     const { isLoggedIn } = useAuthInfo();
@@ -51,15 +36,11 @@ const Header = ({ type, forceShowSearch = false }: { type: string; forceShowSear
                                 src={AssetIcon.logo}
                                 alt="logo"
                                 className="w-full h-full"
-                                width={500}
-                                height={500}
+                                width={700}
+                                height={700}
                                 priority
                             />
                         </Link>
-                        <Search showSearch={showSearch} />
-                    </div>
-                    <div className="block md:hidden">
-                        <Search showSearch={showSearch} />
                     </div>
                 </section>
                 <section className="flex items-center gap-4 w-full sm:w-auto mt-4 sm:mt-0 justify-end">

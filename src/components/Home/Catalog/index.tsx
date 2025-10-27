@@ -1,13 +1,13 @@
-import {CategoriesIcon} from "@/constants/icons";
-import {CommunityNodeView} from "lemmy-js-client";
-import {catalogIcons} from "@/types/catalogIcon";
-import {faArrowRight, faBars} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { CategoriesIcon } from "@/constants/icons";
+import { CommunityNodeView } from "lemmy-js-client";
+import { catalogIcons } from "@/types/catalogIcon";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-import React, {useState} from "react";
-import {useTranslation} from "react-i18next";
-import {toCamelCaseLastSegment} from "@/utils/helpers";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { toCamelCaseLastSegment } from "@/utils/helpers";
 
 type Props = {
     serviceCatalogs: CommunityNodeView[];
@@ -24,27 +24,13 @@ const CatalogBanner = (props: Props) => {
         setActiveCatalogIndex,
     } = props;
     const { t } = useTranslation();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
         <section className="py-8 bg-gradient-to-b from-gray-50 to-white">
             <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="relative min-h-[160px] mt-[-3rem] rounded-3xl bg-white/80 backdrop-blur-lg shadow-2xl border border-gray-100/50 transition-all duration-300 flex flex-col lg:flex-row gap-6 p-6">
-                    {/* Mobile Toggle Button */}
-                    <button
-                        className="lg:hidden flex items-center justify-center p-2 text-gray-600 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                        aria-label={isSidebarOpen ? "Close catalog menu" : "Open catalog menu"}
-                    >
-                        <FontAwesomeIcon icon={faBars} className="w-6 h-6" />
-                    </button>
-
                     {/* Catalog Sidebar */}
-                    <div
-                        className={`${
-                            isSidebarOpen ? "block" : "hidden"
-                        } lg:block w-full lg:w-64 flex-shrink-0 transition-all duration-300`}
-                    >
+                    <div className="hidden lg:block w-full lg:w-64 flex-shrink-0 transition-all duration-300">
                         <div className="flex flex-col gap-3 p-4 bg-gray-50/50 rounded-2xl max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-50">
                             {serviceCatalogs.map((catalog, index) => {
                                 const matchedIcon = catalogIcons.find(
@@ -66,10 +52,7 @@ const CatalogBanner = (props: Props) => {
                                                 ? "after:scale-100"
                                                 : "after:scale-0 group-hover:after:scale-75"
                                         }`}
-                                        onClick={() => {
-                                            setActiveCatalogIndex(index);
-                                            setIsSidebarOpen(false);
-                                        }}
+                                        onClick={() => setActiveCatalogIndex(index)}
                                         onKeyDown={(e) => e.key === "Enter" && setActiveCatalogIndex(index)}
                                     >
                                         <div
@@ -109,18 +92,6 @@ const CatalogBanner = (props: Props) => {
                             <h2 className="text-lg font-bold text-gray-900">
                                 {t("catalogs.subcatalogs")}
                             </h2>
-                            <Link
-                                prefetch={false}
-                                href="/categories/popular-service"
-                                className="group flex items-center text-blue-600 font-semibold text-sm hover:text-blue-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                aria-label={t("home.labelSeeMoreTittle")}
-                            >
-                                {t("home.labelSeeMoreTittle")}
-                                <FontAwesomeIcon
-                                    icon={faArrowRight}
-                                    className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200"
-                                />
-                            </Link>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             {activeCatalog?.children?.slice(0, 12).map(({ community }) => {

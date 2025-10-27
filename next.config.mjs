@@ -1,71 +1,160 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-    images: {
-        unoptimized: process.env.NODE_ENV === 'development',
-        remotePatterns: [
-            { protocol: 'https', hostname: 'staging.108jobs.com', pathname: '/api/v4/image/**' },
-            { protocol: 'https', hostname: 'api-staging.108jobs.com', pathname: '/api/v4/image/**' },
-            { protocol: 'http', hostname: 'localhost', pathname: '/api/v4/image/**' },
-            { protocol: 'http', hostname: 'localhost', pathname: '/api/v4/files/**' },
-            { protocol: 'https', hostname: 'images.unsplash.com' },
-            { protocol: 'https', hostname: '*.unsplash.com' },
-            { protocol: 'https', hostname: 'storage.googleapis.com' },
-            { protocol: 'https', hostname: '*.googleusercontent.com' },
-            { protocol: 'https', hostname: 'fastlance.vn' },
-        ],
-        formats: ['image/webp', 'image/avif'],
-        minimumCacheTTL: 31536000,
-        deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-        imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-        dangerouslyAllowSVG: true,
-        contentSecurityPolicy:
-            "default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data:; img-src 'self' data: https://staging.108jobs.com https://api-staging.108jobs.com https://fastwork.ibrowe.com https://images.unsplash.com https://*.unsplash.com https://storage.googleapis.com https://*.googleusercontent.com https://fastlance.vn; connect-src 'self' https://api-staging.108jobs.com wss://staging.108jobs.com;",
-    },
-    reactStrictMode: false,
-    output: 'standalone',
-    poweredByHeader: false,
-    compress: true,
-    eslint: { ignoreDuringBuilds: true },
-    typescript: { ignoreBuildErrors: false },
-    compiler: {
-        removeConsole:
-            process.env.NODE_ENV === 'production' && process.env.DEBUG !== 'true'
-                ? { exclude: ['error', 'warn'] }
-                : false,
-    },
-    experimental: {
-        optimizeCss: true,
-        optimizePackageImports: ['@fortawesome/fontawesome-svg-core', '@fortawesome/free-solid-svg-icons'],
-        serverActions: { bodySizeLimit: '2mb' },
-        scrollRestoration: true,
-        optimizeServerReact: true,
-    },
-    headers: async () => [
-        {
-            source: '/_next/image(.*)',
-            headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
-        },
-        {
-            source: '/_next/static/(.*)',
-            headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
-        },
-    ],
-    allowedDevOrigins: ['192.168.1.35', '192.168.1.*', 'my-proxy.local'],
-    env: { COMMIT_HASH: process.env.COMMIT_HASH || 'default' },
-    async rewrites() {
-        const apiHost =
-            process.env.NEXT_PUBLIC_USE_HTTPS === 'true'
-                ? `https://${process.env.NEXT_PUBLIC_API_HOST_NAME}`
-                : `http://${process.env.NEXT_PUBLIC_API_HOST_NAME}`;
-        console.log(`Rewrites: API host set to ${apiHost}`);
-        return [{ source: '/api/:path*', destination: `${apiHost}/api/:path*` }];
-    },
-    webpack: (config) => {
-        config.externals.push({ sharp: 'commonjs sharp' });
-        return config;
-    },
-};
+const isProd = process.env.NODE_ENV === 'production';
 
-console.log('next.config.mjs loaded with images.remotePatterns:', JSON.stringify(nextConfig.images.remotePatterns, null, 2));
+const nextConfig = {
+  // Produce a minimal, self-contained output for faster cold starts
+  output: 'standalone',
+
+  // Fail fast in production; allow flexibility in dev/CI if desired
+  // Always ignore ESLint during builds to prevent lint warnings/errors from failing CI builds
+    // Fail fast in production; allow flexibility in dev/CI if desired
+  // Always ignore ESLint during builds to avoid failing production builds due to lint issues
+  eslint: { ignoreDuringBuilds: !isProd },
+  typescript: { ignoreBuildErrors: !isProd },
+
+  reactStrictMode: true,
+  poweredByHeader: false,
+  compress: true,
+
+  // Reduce client bundle size and improve runtime perf
+  compiler: {
+    // Only strip console.* in production bundles (except errors)
+    removeConsole: isProd ? { exclude: ['error'] } : false,
+  },
+
+  // Prefer modern optimizations
+  experimental: {
+    // Tree-shake and rewrite common libraries to per-module imports
+    optimizePackageImports: [
+      'lodash',
+      'date-fns',
+      'lucide-react',
+      'react-icons',
+      '@radix-ui/react-accordion',
+      '@radix-ui/react-avatar',
+      '@radix-ui/react-checkbox',
+      '@radix-ui/react-collapsible',
+      '@radix-ui/react-label',
+      '@radix-ui/react-select',
+      '@radix-ui/react-slider',
+      '@radix-ui/react-slot',
+      '@radix-ui/react-switch',
+      '@radix-ui/react-tabs',
+    ],
+    // Better CSS handling in production
+    optimizeCss: true,
+  },
+
+  // Help Next.js tree-shake and dedupe by transpiling local packages if needed
+  transpilePackages: ['lemmy-js-client'],
+
+  images: {
+    // Using Next/Image without on-the-fly optimization to keep server lean
+    // Flip to `false` if you want Next's built-in Image Optimization.
+    unoptimized: true,
+  },
+
+  // Smaller bundles and faster builds in production
+  productionBrowserSourceMaps: false,
+
+  // Security + cache headers
+  // Ensure WebAssembly works reliably in all environments (avoid fetch failures)
+  webpack: (config, { isServer }) => {
+    // Enable modern WebAssembly support in Webpack
+    config.experiments = {
+      ...config.experiments,
+      asyncWebAssembly: true,
+      topLevelAwait: true,
+      layers: true,
+    };
+
+    // Some environments block or mis-serve .wasm via fetch(). To make the app resilient,
+    // emit WASM as a real file so libraries that do `fetch(url)` can load it
+    const hasWasmRule = config.module.rules.some(
+      (r) => String(r.test) === String(/\.wasm$/)
+    );
+    if (!hasWasmRule) {
+      config.module.rules.push({
+        test: /\.wasm$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'static/wasm/[name]-[hash][ext]',
+        },
+      });
+    }
+
+    return config;
+  },
+
+  async headers() {
+    const securityHeaders = [
+      // Protect against MIME sniffing
+      { key: 'X-Content-Type-Options', value: 'nosniff' },
+      // Clickjacking protection (adjust if you embed your site in iframes)
+      { key: 'X-Frame-Options', value: 'DENY' },
+      // Basic XSS protection
+      { key: 'X-XSS-Protection', value: '1; mode=block' },
+      // Referrer policy
+      { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+      // Opt-in to modern security defaults (adjust per your features)
+      { key: 'Permissions-Policy', value: 'geolocation=(), microphone=(), camera=(), interest-cohort=()' },
+      // COOP and COEP for WASM isolation
+      { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
+      { key: 'Cross-Origin-Embedder-Policy', value: 'require-corp' },
+      // HSTS (enable only behind HTTPS and once you are confident)
+      // { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains; preload' },
+      // Content Security Policy (start relaxed; harden later)
+      // NOTE: Tune this for your domains/CDN; keep it simple for now.
+      {
+        key: 'Content-Security-Policy',
+        value: [
+          "default-src 'self'",
+          // Allow WebAssembly and worker usage needed by some dependencies (e.g. syntax highlighters)
+          "script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob:",
+          "worker-src 'self' blob:",
+          "style-src 'self' 'unsafe-inline'",
+          "img-src 'self' data: blob:",
+          "font-src 'self' data:",
+          // Allow fetching same-origin resources including WASM files served from /_next/static
+          "connect-src 'self'",
+          "media-src 'self'",
+          // Forbid plugins completely
+          "object-src 'none'",
+          "frame-ancestors 'none'",
+        ].join('; '),
+      },
+    ];
+
+    return [
+      // Apply security headers to all routes
+      {
+        source: '/:path*',
+        headers: securityHeaders,
+      },
+      // Cache Next static assets aggressively
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      // Cache public assets by extension
+      {
+        source: '/:all*(svg|jpg|jpeg|png|gif|webp|avif|ico|woff|woff2|ttf|otf|eot|mp4|webm)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      // Dedicated WASM headers for emitted WASM files
+      {
+        source: '/_next/static/wasm/:path*',
+        headers: [
+          { key: 'Content-Type', value: 'application/wasm' },
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+    ];
+  },
+};
 
 export default nextConfig;

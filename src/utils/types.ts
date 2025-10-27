@@ -21,7 +21,7 @@ export interface IsoData<T extends RouteData = RouteData> {
   communities?: ListCommunitiesResponse,
   myUserInfo?: MyUserInfo;
   errorPageData?: ErrorPageData;
-  lemmyExternalHost: string | undefined;
+  appUrl: string | undefined;
 }
 
 declare global {

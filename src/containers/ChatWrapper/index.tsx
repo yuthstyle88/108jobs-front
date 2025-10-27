@@ -29,6 +29,10 @@ const ChatWrapper = ({
     const {rooms, isLoading, error} = chatCtx || {} as any;
     const [searchQuery, setSearchQuery] = useState("");
 
+    // Refs to prevent repeated connect/join on re-renders
+    const connectedRef = React.useRef(false);
+    const lastJoinedRoomRef = React.useRef<string | undefined>(undefined);
+
     // Debounce search input to prevent excessive re-renders
     const debouncedSetSearchQuery = useCallback(
         debounce((value: string) => setSearchQuery(value), 300),
@@ -40,26 +44,48 @@ const ChatWrapper = ({
         };
     }, [debouncedSetSearchQuery]);
 
-    // Auto-join when the route roomId changes and the chat context is ready
+    // Auto-connect once; join when roomId changes
     useEffect(() => {
-        if (!activeRoomId || !chatCtx) return;
+        if (!chatCtx) return;
         try {
-            (chatCtx as any)?.connect?.();
-
-            const roomKey = activeRoomId;
-            const ensured = (chatCtx as any)?.ensureJoined?.(roomKey);
-            if (!ensured) {
-                const joinFn = (chatCtx as any)?.joinRoom ?? (chatCtx as any)?.openRoom;
-                joinFn?.(roomKey);
+            if (!connectedRef.current) {
+                (chatCtx as any)?.connect?.();
+                connectedRef.current = true;
             }
 
-            (chatCtx as any)?.setActiveRoom?.(roomKey);
+            if (!activeRoomId) return;
+            const roomKey = activeRoomId;
+
+            // Skip if we already joined this room (prevents duplicate joins on re-render)
+            if (lastJoinedRoomRef.current !== roomKey) {
+                const ensured = (chatCtx as any)?.ensureJoined?.(roomKey);
+                if (!ensured) {
+                    const joinFn = (chatCtx as any)?.joinRoom ?? (chatCtx as any)?.openRoom;
+                    joinFn?.(roomKey);
+                }
+                lastJoinedRoomRef.current = roomKey;
+            }
+
+            (chatCtx as any)?.setActiveRoomId?.(roomKey);
         } catch (e) {
             console.warn('[ChatWrapper] auto-join failed', e);
         }
 
         if (isSidebarOpen) setIsSidebarOpen(false);
+
     }, [activeRoomId, chatCtx, isSidebarOpen, setIsSidebarOpen]);
+
+    // Reset connection state when auth user changes (logout/login)
+    useEffect(() => {
+        if (!chatCtx) return;
+        // reset guards so next login will connect/join fresh
+        connectedRef.current = false;
+        lastJoinedRoomRef.current = undefined;
+        // on logout explicitly disconnect
+        if (!localUser) {
+            try { (chatCtx as any)?.disconnect?.(); } catch {}
+        }
+    }, [localUser?.id, chatCtx]);
 
 
     // Memoized filtered rooms to optimize search performance
@@ -85,7 +111,7 @@ const ChatWrapper = ({
             {/* Sidebar */}
             <div className="flex flex-col bg-white border-r border-gray-200 h-full w-full md:w-64 lg:w-80 xl:w-96 md:max-w-none md:flex-[0_0_20%] lg:flex-[0_0_25%] overflow-y-auto">
                 {/* Header with Search */}
-                <div className="p-3 sm:p-4 border-b border-gray-200 bg-gray-50">
+                <div className="p-3 sm:p-4 border-b text-primary border-gray-200 bg-gray-50">
                     <input
                         type="text"
                         placeholder={t("profileChat.searchChat")}
@@ -116,7 +142,6 @@ const ChatWrapper = ({
                         <ChatListItem
                             key={room.id}
                             room={room}
-                            isActive={String(room.id) === activeRoomId}
                             currentLang={currentLang || "th"}
                             localUser={localUser}
                         />

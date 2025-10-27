@@ -90,7 +90,7 @@ interface ChatRoomViewProps {
     partnerAvailable?: boolean;
     roomData: ChatRoomData;
     localUser: LocalUser;
-    shareKey: string;
+    partnerPersonId: PersonId;
 }
 
 function ResponsiveFlowPanel({isOpen, children}: { isOpen: boolean; children: React.ReactNode }) {
@@ -120,7 +120,7 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
                                                        partnerAvailable,
                                                        roomData,
                                                        localUser,
-                                                       shareKey
+                                                       partnerPersonId
                                                    }) => {
     const {t} = useTranslation();
     const {person, wallet} = useMyUser();
@@ -205,7 +205,7 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
     // fetch the last read timestamp from the backend and store it into useReadLastIdStore
     useLoadLastRead(roomId, partnerId);
     // Fetch one-shot presence snapshot for the active room/peer
-    useRoomPresence(roomId, partnerId);
+    useRoomPresence(partnerId);
 
     // --- History management ---
     // Pulls paginated history for this room and writes pages into the global store via upsertHistory.
@@ -226,11 +226,10 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
     const {
         actions: {sendMessage, sendTyping, sendRoomUpdate, sendReadReceipt},
         state: {refreshRoomData, isPartnerTyping},
-    } = useChatRoom({roomId, shareKey, localUser, roomData: currentRoom});
+    } = useChatRoom({roomId, localUser, roomData: currentRoom});
 
     // Deduplicate read-receipts: remember last sent message id
     const lastReadSentRef = useRef<string | null>(null);
-
     const sendLatestRead = useCallback(() => {
         // Prevent sending when tab is hidden or unfocused
         if (document.visibilityState !== "visible" || !document.hasFocus()) {
@@ -791,7 +790,7 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
                 <SubmitReviewModal
                     showReviewModal={showSubmitReviewModal}
                     setShowReviewModal={setShowSubmitReviewModal}
-                    revieweeId={partnerId}
+                    revieweeId={partnerPersonId}
                     workflowId={currentRoom.workflow?.id}
                     submitReview={submitReview}
                 />

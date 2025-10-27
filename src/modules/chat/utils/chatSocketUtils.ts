@@ -1,5 +1,5 @@
 import {HttpService, UserService} from "@/services";
-import {getHost, isHttps} from "@/utils/env";
+import {getApiHost, isHttps} from "@/utils/env";
 import type {
     ChatMessage,
     ChatMessagesResponse,
@@ -39,19 +39,16 @@ export type NormalizedEnvelope =
 };
 
 // Server-side payload shapes (mirroring Rust `MessageModel` and `IncomingEvent`)
-interface ServerMessageModel {
-    id?: string;
-    senderId: LocalUserId;
+export type ServerMessageModel = ChatMessage & {
     readerId?: ChatRoomId;
     lastReadMessageId?: string;
-    content?: string;
-    status?: 'pending' | 'sent' | 'failed' | string;
     typing?: boolean;
     updateType?: string;
     statusTarget?: string;
     prevStatus?: string;
     createdAt?: string;
     updatedAt?: string;
+    response?: any;
 }
 
 interface IncomingEventLike {
@@ -102,6 +99,7 @@ export function normalizePhoenixEnvelope(
                 id: String(p.id ?? ''),
                 roomId: rid,
                 senderId: p.senderId,
+                secure: p.secure ?? false,
                 content: p.content,
                 status: (p.status as ChatStatus) ?? 'sent',
                 createdAt: p.createdAt ?? new Date().toISOString(),
@@ -140,13 +138,28 @@ export function normalizePhoenixEnvelope(
         }
 
         // --- read_up_to events ---
-        if (evLower === 'chat:read_up_to') {
+        if (ev === 'readUpTo') {
             return {
                 event: ev,
                 roomId: rid,
                 lastReadMessageId: p?.lastReadMessageId,
                 updatedAt: p?.updatedAt,
                 readerId: p?.readerId,
+            };
+        }
+    }
+
+    if (isIncomingEventLike(payload) && payload.event === 'phx_reply') {
+        const p: ServerMessageModel | undefined = payload.payload;
+        const ev = p?.response?.event;
+        const evLower = ev.toLowerCase();
+
+        // --- heartbeat presence online events ---
+        if (evLower === 'heartbeat') {
+            return {
+                event: ev,
+                roomId: 'lobby',
+                sender: p?.response.senderId ? ({id: p?.response.senderId} as unknown as ChatMessageView['sender']) : undefined,
             };
         }
     }
@@ -172,7 +185,7 @@ export function buildActixWsUrl(): string {
     // Always go through Actix first → Phoenix-compatible endpoint
     // Do not append token/roomId in the URL. Phoenix client will send auth via params.
     const proto = isHttps() ? 'wss' : 'ws';
-    const host = getHost();
+    const host = getApiHost();
     // Actix will handle `/socket/websocket` (either as WS proxy to Phoenix on :4000 or native Phoenix-compatible handler)
     return `${proto}://${host}/socket`;
 }
@@ -544,15 +557,6 @@ export async function fetchHistoryPage(
     if (res.state !== REQUEST_STATE.SUCCESS) return {prev: null, next: null} as any;
     const resp = res.data as any;
     const items = Array.isArray(resp?.results) ? resp.results : [];
-
-    let sharedKey = UserService.Instance.authInfo?.sharedKey;
-    if (!sharedKey) {
-        sharedKey = await waitForSharedKey(5000);
-        if (!sharedKey) {
-            console.warn(`fetchHistory: No sharedKey available after timeout for room ${params.roomId}`);
-            return;
-        }
-    }
 
     const mappedItems: any[] = [];
     for (const view of items) {

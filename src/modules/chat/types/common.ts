@@ -24,26 +24,31 @@ export interface ChatTypingDetail {
 export const TYPING_EVENT_NAMES = ['chat:typing'];
 
 export const EVENTS = [
-    'phx_reply',
+    'phxReply',
     'forward',
     'chat:message',
     'chat:typing',
     'chat:read',
-    'history_page',
+    "chat:ack",
+    "sync:pending",
+    'historyPage',
 ];
 
 export type PhoenixEvent =
-  | "phx_join"
-  | "phx_leave"
-  | "phx_reply"
-  | "phx_error"
-  | "phx_close"
+  | "phxJoin"
+  | "phxLeave"
+  | "phxReply"
+  | "phxError"
+  | "phxElose"
   | "chat:message"
   | "chat:typing"
   | "chat:read"
-  | "chat:read_up_to"
+  | "chat:readUpTo"
   | "chat:update"
-  | "history_page";
+  | "chat:ack"
+  | "sync:pending"
+  | "forward"
+  | "historyPage";
 
 export type ChatMessageModel = ChatMessage & {
     isOwner: boolean
@@ -59,9 +64,7 @@ export interface PhoenixPacket<T = any> {
 export interface SendMessageDeps {
     isE2EMock: boolean;
     roomId: string;
-    shareKey?: string;
     sentSet: Set<string>;
-    onAfterSend?: () => void; // ใช้เคลียร์ typing flag ที่ provider
     // เชื่อม Chat Store แบบ optional: ถ้าไม่ได้ส่งมาก็ยังทำงานผ่าน DOM event เหมือนเดิม
     adapter?: {
         send: (packet: any) => Promise<string | false> | string | false;

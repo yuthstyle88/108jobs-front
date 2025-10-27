@@ -3,17 +3,15 @@
 import React, {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import {ChatRoom as AppChatRoom} from "@/modules/chat/types/chat";
 import {HttpService, UserService} from "@/services";
-// E2EE exchange is ensured for future needs
-import {exchange} from "@/lib/api/auth";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import type {ListUserChatRoomsResponse} from "lemmy-js-client";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {isBrowser} from "@/utils/browser";
 import {useUnreadStore} from "@/modules/chat/store/unreadStore";
+import { onChatNewMessage, onWsReconnected } from "@/modules/chat/events";
 import {useActiveRoomId, useRoomsStore} from "@/modules/chat/store/roomsStore";
-import {disableBackgroundUnread, enableBackgroundUnread} from "@/modules/chat/utils/backgroundUnreadWatcher";
-import {ensureIdentityKeyPair, ensureSharedKeyForLocalUser} from "@/modules/chat/utils/security/crypto";
+import {disableBackgroundUnread, enableBackgroundUnread} from "@/modules/chat/services/backgroundUnreadWatcher";
 
 // Context state for listing chat rooms with pagination and E2EE-aware lastMessage preview
 
@@ -39,9 +37,37 @@ const ChatRoomsContext = createContext<ChatRoomsContextValue | undefined>(undefi
 
 export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?: number }>
     = ({children, pageSize = 20}) => {
+    const { localUser } = useMyUser();
+
+    if (!localUser?.id) {
+        const emptyValue: ChatRoomsContextValue = {
+            rooms: [],
+            isLoading: false,
+            error: null,
+            page: 1,
+            pageSize,
+            hasMore: false,
+            refresh: () => {},
+            loadMore: () => {},
+            markRoomRead: async () => {},
+            bumpRoomToTop: () => {},
+            activeRoomId: null,
+            setActiveRoomId: () => {},
+        };
+        return (
+            <ChatRoomsContext.Provider value={emptyValue}>
+                {children}
+            </ChatRoomsContext.Provider>
+        );
+    }
+
+    return <InnerChatRoomsProvider pageSize={pageSize}>{children}</InnerChatRoomsProvider>;
+};
+
+const InnerChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize: number }> = ({ children, pageSize }) => {
     const [page, setPage] = useState(1);
-    const sharedKeyReadyRef = useRef(false);
-    const {localUser} = useMyUser();
+    const { localUser } = useMyUser();
+
     // Persist client-known last-activity timestamps to keep room order stable across reloads
     const LOCAL_ACTIVITY_KEY = 'chat_last_activity_overrides';
     const activityOverridesRef = useRef<Record<string, string>>({});
@@ -85,7 +111,8 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         isMutating: isLoading,
         execute
     } = useHttpGet("listChatRooms", {limit: page * pageSize});
-    const error = reqState.state === "failed" ? (reqState as any).err : null;
+    const error =
+      reqState.state === REQUEST_STATE.FAILED ? (reqState as any).err : null;
 
 
     const mapToRooms = useCallback(async (input?: ListUserChatRoomsResponse): Promise<RoomsState> => {
@@ -93,58 +120,52 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         const totalLoaded = items.length;
         // Prefer cursor-based hasMore if provided by API, otherwise fall back to count-based heuristic
         const hasMore = typeof (input as any)?.nextPage !== 'undefined' ? !!(input as any).nextPage : totalLoaded >= page * pageSize;
-        const mapped: AppChatRoom[] = [];
-        for (const it of items as any[]) {
+
+        // Fetch all participant profiles concurrently
+        const mapped: AppChatRoom[] = await Promise.all((items as any[]).map(async (it) => {
             // Normalize item shape to ChatRoomView whether input is ChatRoomResponse or ChatRoomView
             const roomView = (it as any)?.room?.room ? (it as any).room : (it as any);
             const rawId = roomView?.room?.id ?? roomView?.id ?? (it as any)?.roomId ?? (it as any)?.id;
-            if (!rawId) {
-                // Skip invalid entries with no id to avoid "undefined"
-                continue;
-            }
+            if (!rawId) return null;
 
             const participantsArr = (roomView?.participants ?? (it as any)?.participants ?? []) as any[];
-            const other = participantsArr.find(
-                (p: any) => String(p.memberId) !== String(localUser?.id)
-            );
+            const other = participantsArr.find((p: any) => String(p.memberId) !== String(localUser?.id));
 
             let profileName = "Unknown";
-            let partnerAvatar = "";
+            let partnerAvatar: string = ""; // normalize to string (empty when unknown)
             if (other?.memberId != null) {
                 try {
                     const res = await HttpService.client.visitProfile(String(other.memberId));
-                    profileName = res.state === REQUEST_STATE.SUCCESS ? (res as any)?.data?.profile?.name ?? "Unknown" : "Unknown";
-                    partnerAvatar = res.state === REQUEST_STATE.SUCCESS ? (res as any)?.data?.profile?.avatar ?? null : null;
-                } catch {
-                }
+                    if (res.state === REQUEST_STATE.SUCCESS) {
+                        profileName = (res as any)?.data?.profile?.name ?? "Unknown";
+                        partnerAvatar = (res as any)?.data?.profile?.avatar ?? "";
+                    }
+                } catch {}
             }
 
             let roomName = roomView?.room?.roomName;
-            if (rawId === roomName) {
-                roomName = profileName;
-            } else {
-                roomName = `${profileName}:Job ${roomName}`;
-            }
+            if (rawId === roomName) roomName = profileName;
+            else roomName = `${profileName}:Job ${roomName ?? ""}`.trim();
 
-            mapped.push({
+            return {
                 id: String(rawId),
                 name: roomName,
-                partnerAvatar: partnerAvatar,
+                partnerAvatar,
                 participants: participantsArr.map((p: any) => String(p.memberId)) as any,
                 unreadCount: 0,
                 postId: roomView?.room?.postId ?? roomView?.post?.id ?? (it as any)?.postId,
-            } as any);
-        }
+            } as any;
+        }));
 
         return {
-            rooms: mapped,
+            rooms: mapped.filter(Boolean) as AppChatRoom[],
             isLoading,
             error,
             page,
             pageSize,
             hasMore,
         };
-    }, [error, isLoading, page, pageSize]);
+    }, [error, isLoading, page, pageSize, localUser?.id]);
 
     const [state, setState] = useState<RoomsState>({
         rooms: [],
@@ -206,7 +227,9 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
                     const n = mergedRooms[i];
                     return r.id === n.id &&
                         r.name === n.name &&
-                        r.unreadCount === n.unreadCount;
+                        r.unreadCount === n.unreadCount &&
+                        r.partnerAvatar === n.partnerAvatar &&
+                        r.postId === n.postId;
                 });
                 if (isSame) {
                     return {...prev, isLoading: isLoading, error} as any;
@@ -255,31 +278,21 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         };
     }, [localUser?.id]);
 
-    const refresh = useCallback(() => {
-        execute();
+    const refresh = useCallback(async () => {
+        try {
+            await execute();
+        } catch {
+            // intentionally ignore errors here; state will reflect via reqState
+        }
     }, [execute]);
 
     // Refetch when WS reconnects (event dispatched from RealtimeChatContext)
     useEffect(() => {
-        const off = (async () => {
-            const {onWsReconnected} = await import("@/modules/chat/events");
-            return onWsReconnected(() => {
-                try {
-                    execute();
-                } catch {
-                }
-            });
-        })();
-        let unsub: (() => void) | null = null;
-        off.then((u) => {
-            unsub = u as any;
-        }).catch(() => {
+        const unsubscribe = onWsReconnected(() => {
+            execute().catch(() => {});
         });
         return () => {
-            try {
-                unsub?.();
-            } catch {
-            }
+            try { unsubscribe?.(); } catch {}
         };
     }, [execute]);
 
@@ -288,16 +301,14 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     }, [state.hasMore, isLoading]);
 
     const markRoomRead = useCallback(async (roomId: string) => {
-        // Optimistically zero out unread count for UX; integrate API when available
-        setState(prev => ({...prev, rooms: prev.rooms.map(r => r.id === roomId ? {...r, unreadCount: 0} : r)}));
+        // อัปเดตที่ global unread store เท่านั้น
         try {
-            // Keep global unread badge in sync
-            const {markSeen} = (await import("@/modules/chat/store/unreadStore")).useUnreadStore.getState();
-            markSeen(roomId);
+            useUnreadStore.getState().markSeen(roomId);
         } catch {
+            // no-op
         }
-        // If server endpoint exists, call it here
-        // await axiosPrivate.post(`/messages/rooms/${roomId}/read`)
+        // TODO: ถ้ามี API ฝั่งเซิร์ฟเวอร์ค่อยเรียกที่นี่ (ไม่ต้อง await การนำทาง)
+        // await axiosPrivate.post(`/messages/rooms/${roomId}/read`);
     }, []);
 
     // Expose a helper to move a room to the top when a new message arrives
@@ -332,28 +343,17 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
 
     // Listen for global chat:new-message events for UI ordering ONLY (no unread increments here)
     useEffect(() => {
-        let unsubscribe: (() => void) | null = null;
-        (async () => {
-            try {
-                const {onChatNewMessage} = await import("@/modules/chat/events");
-                unsubscribe = onChatNewMessage((detail) => {
-                    console.log('New message event received:', detail); // Debug log
-                    if (!detail || !detail.roomId) {
-                        console.warn('Invalid chat:new-message event:', detail);
-                        return;
-                    }
-
-                    // Only reorder list here; unread counting handled by realtime + background watcher
-                    bumpRoomToTop(detail.roomId, detail.createdAt);
-                });
-            } catch (e) {
-                console.error('Failed to set up chat:new-message listener:', e);
+        const unsubscribe = onChatNewMessage((detail) => {
+            console.log('New message event received:', detail); // Debug log
+            if (!detail || !detail.roomId) {
+                console.warn('Invalid chat:new-message event:', detail);
+                return;
             }
-        })();
+            // Only reorder list here; unread counting handled by realtime + background watcher
+            bumpRoomToTop(detail.roomId, detail.createdAt);
+        });
         return () => {
-            try {
-                unsubscribe?.();
-            } catch (e) {
+            try { unsubscribe?.(); } catch (e) {
                 console.error('Failed to unsubscribe from chat:new-message:', e);
             }
         };
@@ -366,48 +366,32 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     //   - Single source of truth: useUnreadStore handles active-room policy & dedupe
     //   - Avoids double counting from multiple listeners/providers
     useEffect(() => {
-        let unsub: undefined | (() => void);
-        let cancelled = false;
-        (async () => {
-            try {
-                const {useUnreadStore} = await import("@/modules/chat/store/unreadStore");
-                const applyPerRoom = (perRoom: Record<string, number>) => {
-                    if (cancelled) return;
-                    setState(prev => {
-                        if (!prev.rooms || prev.rooms.length === 0) return prev as any;
-                        const nextRooms = prev.rooms.map((r: any) => {
-                            const cnt = perRoom?.[r.id] || 0;
-                            return cnt === r.unreadCount ? r : {...r, unreadCount: cnt};
-                        });
-                        return {...prev, rooms: nextRooms} as any;
-                    });
-                };
-                // initial apply
-                applyPerRoom(useUnreadStore.getState().perRoom);
-                // subscribe for future changes
-                // store doesn't use subscribeWithSelector; listen to full state and react when perRoom reference changes
-                unsub = useUnreadStore.subscribe((s, prev) => {
-                    if (s.perRoom !== prev?.perRoom) applyPerRoom(s.perRoom);
+        const applyPerRoom = (perRoom: Record<string, number>) => {
+            setState(prev => {
+                if (!prev.rooms || prev.rooms.length === 0) return prev as any;
+                const nextRooms = prev.rooms.map((r: any) => {
+                    const cnt = perRoom?.[r.id] || 0;
+                    return cnt === r.unreadCount ? r : { ...r, unreadCount: cnt };
                 });
-            } catch {
-            }
-        })();
-        return () => {
-            cancelled = true;
-            try {
-                unsub?.();
-            } catch {
-            }
+                return { ...prev, rooms: nextRooms } as any;
+            });
         };
-        // Re-run when room list identity changes (ids), so unread can be applied to new rooms
-    }, [state.rooms.map?.(r => r.id).join("|")]);
+        // initial apply
+        applyPerRoom(useUnreadStore.getState().perRoom);
+        // subscribe for future changes
+        const unsub = useUnreadStore.subscribe((s, prev) => {
+            if (s.perRoom !== prev?.perRoom) applyPerRoom(s.perRoom);
+        });
+        return () => {
+            try { unsub?.(); } catch {}
+        };
+    }, []);
 
     // Sync current rooms into the global rooms store so background watchers can observe them
     useEffect(() => {
         try {
             const setRooms = (useRoomsStore as any).getState?.().setRooms;
             if (typeof setRooms === 'function') {
-                // Keep only the minimal fields the watchers need; preserve id and name for potential UI use
                 const slim = state.rooms.map((r: any) => {
                     const otherId = Array.isArray(r.participants)
                         ? r.participants.find((pid: any) => String(pid) !== String(localUser?.id))
@@ -415,44 +399,22 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
 
                     const participant = {
                         id: otherId != null ? Number(otherId) : 0,
-                        // Try known fields first; fallback to room name if we don't have a dedicated profile field
                         name: r.participant?.name ?? r.participantName ?? r.profileName ?? r.peerName ?? r.name ?? 'Unknown',
                     };
 
-                    return {
-                        id: String(r.id),
-                        name: r.name ?? undefined,
-                        participant,
-                    };
+                    return { id: String(r.id), name: r.name ?? undefined, participant };
                 });
                 setRooms(slim);
             } else {
-                // Fallback: if no setter, try to mutate a known key carefully
-                const store = (useRoomsStore as any).getState?.();
-                if (store && 'rooms' in store) {
-                    store.rooms = state.rooms.map((r: any) => {
-                        const otherId = Array.isArray(r.participants)
-                            ? r.participants.find((pid: any) => String(pid) !== String(localUser?.id))
-                            : r.participant?.id ?? r.peerId ?? undefined;
-
-                        const participant = {
-                            id: otherId != null ? Number(otherId) : 0,
-                            name: r.participant?.name ?? r.participantName ?? r.profileName ?? r.peerName ?? r.name ?? 'Unknown',
-                        };
-
-                        return {
-                            id: String(r.id),
-                            name: r.name ?? undefined,
-                            participant,
-                        };
-                    });
+                if (process.env.NODE_ENV !== 'production') {
+                    console.warn('[rooms-store] setRooms not found; skip syncing rooms');
                 }
             }
         } catch (e) {
             console.warn('[rooms-store] failed to sync rooms:', e);
         }
         // Re-run when the set of room ids changes
-    }, [state.rooms.map?.(r => r.id).join('|')]);
+    }, [state.rooms]);
 
     // removed effect that released activeToken on unmount
 

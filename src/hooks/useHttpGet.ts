@@ -1,6 +1,6 @@
 import {useGlobalLoader} from "@/contexts/GlobalLoaderContext";
 import {useGlobalError} from "@/contexts/GlobalErrorContext"; // Import GlobalError Context
-import useSWR, {SWRConfiguration} from "swr";
+import useSWR, { SWRConfiguration } from "swr";
 import {callHttp, EMPTY_REQUEST, Payload, REQUEST_STATE, RequestState, WrappedLemmyHttp,} from "@/services/HttpService";
 
 export function useHttpGet<K extends keyof WrappedLemmyHttp>(

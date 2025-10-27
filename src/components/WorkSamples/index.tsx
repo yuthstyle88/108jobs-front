@@ -20,7 +20,7 @@ export default function WorkSamples() {
         startEditing,
         cancelEditing,
         validateField,
-    } = useWorkSamplesForm(person);
+    } = useWorkSamplesForm(person ?? undefined);
     const [currentSampleIndex, setCurrentSampleIndex] = useState(0);
     const samplesPerPage = 2;
 
@@ -35,7 +35,11 @@ export default function WorkSamples() {
     };
 
     const handleAddOrUpdateSample = async () => {
-        editingSampleId ? await editSample(editingSampleId) : await addSample();
+        if (editingSampleId) {
+            await editSample(editingSampleId);
+        } else {
+            await addSample();
+        }
     };
 
     return (

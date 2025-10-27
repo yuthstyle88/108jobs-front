@@ -3,8 +3,9 @@ import {createContext, useContext, useEffect, useState} from "react";
 import {LANGUAGE_COOKIE, VALID_LANGUAGES} from "@/constants/language";
 import {I18NextService} from "@/services/I18NextService";
 import {I18nextProvider} from "react-i18next";
-import {getClientCurrentLanguage} from "@/actions/getClientCurrentLanguage";
+import { getClientCurrentLanguage, invalidateClientLanguageCache,buildLangRedirectTarget } from "@/actions/getClientCurrentLanguage";
 import {isBrowser} from "@/utils/browser";
+
 
 interface LanguageContextType {
   lang: string;
@@ -28,7 +29,7 @@ export function LanguageProvider({
   // Initialize from client-side language resolver to ensure client consistency
   const [lang, setLangState] = useState<string>(() => {
     try {
-      return getClientCurrentLanguage() || safeInitial;
+      return getClientCurrentLanguage(true) || safeInitial;
     } catch {
       return safeInitial;
     }
@@ -52,22 +53,17 @@ export function LanguageProvider({
 
   const setLang = (newLang: string) => {
     if (!VALID_LANGUAGES.includes(newLang)) return;
+    if (newLang === lang) return;
     if (typeof document !== 'undefined') {
       document.cookie = `${LANGUAGE_COOKIE}=${newLang}; path=/`;
+      try { if (typeof localStorage !== 'undefined') localStorage.setItem('lang', newLang); } catch {}
+      invalidateClientLanguageCache();
     }
     setLangState(newLang);
 
     if (isBrowser()) {
-      const langsPattern = `(?:${VALID_LANGUAGES.join('|')})`;
-      const langPrefixRe = new RegExp(`^/` + langsPattern + `\\b`);
-      const currentPath = window.location.pathname;
-      const pathWithoutLang = currentPath.replace(langPrefixRe, '') || '/';
-      const { search, hash } = window.location;
-      const target = `/${newLang}${pathWithoutLang}${search}${hash}`;
-      const currentFull = `${currentPath}${search}${hash}`;
-      if (currentFull !== target) {
-        window.location.assign(target);
-      }
+      const target = buildLangRedirectTarget(newLang, window.location.href);
+      if (target) window.location.assign(target);
     }
   };
 

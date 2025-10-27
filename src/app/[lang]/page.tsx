@@ -11,19 +11,19 @@ import CatalogBanner from "@/components/Home/Catalog";
 import OfferSection from "@/components/Home/OfferSection";
 import SearchInput from "@/components/SearchInput";
 import SpAdsSlider from "@/containers/SpAdsSlider";
-import SpCatalog from "@/containers/SpCatalog";
-import SpHeader from "@/containers/SpHeader";
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {buildCommunitiesTree} from "@/utils/helpers";
 import {useCommunities} from "@/hooks/communites-api/useCommunities";
 import {LandingImage} from "@/constants/images";
-import ChatWrapper from "@/containers/ChatWrapper";
 import {ChatRoomsProvider} from "@/modules/chat/contexts/ChatRoomsContext";
 import {ChatLanguageProvider} from "@/contexts/ChatLanguage";
+import Link from "next/link";
+import NavBar from "@/components/Home/NavBar";
+import MobileSidebar from "@/components/MobileSidebar";
 
 export default function Home() {
-    const {t} = useTranslation();
+    const {t, i18n} = useTranslation();
     const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);
     const catalogData = useCommunities();
     const serviceCatalogs = buildCommunitiesTree(catalogData.communities) || [];
@@ -39,22 +39,19 @@ export default function Home() {
                     </div>
                     <div className="block sm:hidden">
                         {/* Mobile Header */}
-                        <div className="block sm:hidden fixed top-0 left-0 right-0 z-50">
-                            <SpHeader
+                        <div className="block sm:hidden fixed top-0 inset-x-0 z-[1000] bg-primary">
+                            <NavBar
                                 isSidebarOpen={isSidebarOpen}
-                                onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-                                showBackButton={true}
+                                onToggleSidebar={() => setIsSidebarOpen(v => !v)}
+                                className="text-white"
                             />
                         </div>
-                        <div className="block sm:hidden">
-                            <ChatWrapper
-                                isSidebarOpen={isSidebarOpen}
-                                onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-                                setIsSidebarOpen={setIsSidebarOpen}
-                            />
-                        </div>
+                        <MobileSidebar
+                            isOpen={isSidebarOpen}
+                            onClose={() => setIsSidebarOpen(false)}
+                        />
                     </div>
-                    <main>
+                    <main className="mt-20 sm:mt-0 sm:pt-0">
                         <section
                             className="hidden sm:block h-auto bg-cover bg-center relative pt-[6.5rem] md:pt-[4.5rem]"
                             style={{
@@ -72,13 +69,17 @@ export default function Home() {
                                     {t("home.titleBannerHomePage2")}
                                 </p>
                                 <SearchInput/>
-                                <a
-                                    href="/job-board"
+                                <Link
+                                    href={`/${i18n.language}/job-board`}
                                     className="mt-6 inline-block bg-blue-600 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
                                 >
                                     {t("home.exploreNow")}
-                                </a>
+                                </Link>
                             </div>
+                        </section>
+
+                        <section className="block sm:hidden bg-gray-50">
+                            <SpAdsSlider/>
                         </section>
 
                         <section className="py-16 bg-white">
@@ -127,14 +128,6 @@ export default function Home() {
                             activeCatalogIndex={activeCatalogIndex}
                             setActiveCatalogIndex={setActiveCatalogIndex}
                         />
-
-                        <section className="block sm:hidden pt-[4.5rem] bg-gray-50">
-                            <SpAdsSlider/>
-                        </section>
-                        <section className="block sm:hidden p-3 border-b-4 border-blue-200">
-                            <SpCatalog activeCatalog={activeCatalog}/>
-                        </section>
-
                         <OfferSection/>
                     </main>
                     <Footer/>

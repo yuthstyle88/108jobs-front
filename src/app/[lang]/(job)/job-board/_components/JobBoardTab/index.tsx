@@ -1,14 +1,19 @@
 'use client'
 
 import Link from 'next/link'
-import {usePathname} from 'next/navigation'
+import {usePathname, useParams} from 'next/navigation'
 import React from 'react'
 import {useTranslation} from "react-i18next";
 
 const JobBoardTab = () => {
   const {t} = useTranslation();
   const pathname = usePathname();
+  const params = useParams<{ lang: string }>();
+  const lang = (params?.lang as string) || 'en';
   const pathWithoutLang = '/' + pathname.split('/').slice(2).join('/');
+
+  const hrefAll = `/${lang}/job-board`;
+  const hrefJobs = `/${lang}/job-board/jobs`;
 
   const excludedPaths = ['/job-board/proposals', '/job-board/jobs'];
 
@@ -20,7 +25,7 @@ const JobBoardTab = () => {
   return (
     <div className="flex -mb-px">
       <Link prefetch={false}
-            href="/job-board"
+            href={hrefAll}
             className={`mr-6 py-2 text-[18px] font-medium border-b-2 ${isAllJobPostsActive
               ? 'text-primary border-primary'
               : 'text-gray-500 border-transparent hover:text-gray-700'
@@ -40,7 +45,7 @@ const JobBoardTab = () => {
       {/*</Link>*/}
 
       <Link prefetch={false}
-            href="/job-board/jobs"
+            href={hrefJobs}
             className={`py-2 text-[18px] font-medium border-b-2 ${pathWithoutLang === '/job-board/jobs'
               ? 'text-primary border-primary'
               : 'text-gray-500 border-transparent hover:text-gray-700'

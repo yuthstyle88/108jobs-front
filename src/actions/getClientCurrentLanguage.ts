@@ -1,72 +1,103 @@
 'use client'
-import {LANGUAGE_COOKIE, LANGUAGES, VALID_LANGUAGES} from "@/constants/language";
-import {SupportedLang} from "@/lib/metadata";
-import {isBrowser} from "@/utils/browser";
+import { LANGUAGE_COOKIE, LANGUAGES, VALID_LANGUAGES } from "@/constants/language";
+import { SupportedLang } from "@/lib/metadata";
+import { isBrowser } from "@/utils/browser";
 
-// Micro-cache with an invalidation key to avoid stale values when cookies, localStorage, or URL change
+// Micro-cache keyed only by meaningful bits (URL prefix, cookie lang, LS lang, navigator hint)
 let cachedClientLang: SupportedLang | undefined;
 let cachedKey: string | undefined;
 
-export function getClientCurrentLanguage(): SupportedLang {
-  // SSR-safe guard
-  if (!isBrowser()) {
-    return 'th';
-  }
+function pickValid(v?: string | null): SupportedLang | undefined {
+  return v && VALID_LANGUAGES.includes(v) ? (v as SupportedLang) : undefined;
+}
 
-  const cookieString = document.cookie || "";
-  const lsLang = (() => {
-    try {
-      return typeof localStorage !== 'undefined' ? localStorage.getItem('lang') || undefined : undefined;
-    } catch {
-      return undefined;
+function readCookie(name: string): string | undefined {
+  try {
+    const cookie = typeof document !== 'undefined' ? document.cookie || '' : '';
+    const nameEq = `${name}=`;
+    const parts = cookie.split('; ');
+    for (let i = 0; i < parts.length; i++) {
+      if (parts[i].startsWith(nameEq)) return decodeURIComponent(parts[i].slice(nameEq.length));
     }
-  })();
-  const pathname = window.location?.pathname || "";
-  const key = `${cookieString}|${lsLang || ''}|${pathname}`;
-
-  if (cachedKey === key && cachedClientLang) return cachedClientLang;
-
-  let lang: string | undefined;
-
-  // 1) Cookie
-  const nameEq = `${LANGUAGE_COOKIE}=`;
-  const parts = cookieString.split("; ");
-  for (let i = 0; i < parts.length; i++) {
-    const part = parts[i];
-    if (part.startsWith(nameEq)) {
-      lang = decodeURIComponent(part.substring(nameEq.length));
-      break;
-    }
+    return undefined;
+  } catch {
+    return undefined;
   }
+}
 
-  // 2) URL prefix
-  if (!lang && pathname) {
-    const firstSeg = pathname.split('/').filter(Boolean)[0];
-    if (firstSeg && VALID_LANGUAGES.includes(firstSeg)) {
-      lang = firstSeg;
-    }
+function readUrlLang(pathname: string): string | undefined {
+  const firstSeg = pathname.split('/').filter(Boolean)[0];
+  return firstSeg && VALID_LANGUAGES.includes(firstSeg) ? firstSeg : undefined;
+}
+
+function readLocalStorageLang(): string | undefined {
+  try {
+    return typeof localStorage !== 'undefined' ? localStorage.getItem('lang') || undefined : undefined;
+  } catch {
+    return undefined;
   }
+}
 
-  // 3) localStorage override/fallback
-  if (!lang && lsLang && VALID_LANGUAGES.includes(lsLang)) {
-    lang = lsLang;
-  }
-
-  // 4) navigator.language heuristic
-  if (!lang && typeof navigator !== 'undefined') {
+function readNavigatorLang(): string | undefined {
+  try {
+    if (typeof navigator === 'undefined') return undefined;
     const nav = (navigator.language || navigator.languages?.[0] || '').toLowerCase();
-    if (nav.startsWith('th')) lang = 'th';
-    else if (nav.startsWith('vi') || nav.startsWith('vn')) lang = 'vi';
-    else if (nav.startsWith('en')) lang = 'en';
+    if (nav.startsWith('th')) return 'th';
+    if (nav.startsWith('vi') || nav.startsWith('vn')) return 'vi';
+    if (nav.startsWith('en')) return 'en';
+    return undefined;
+  } catch {
+    return undefined;
   }
+}
 
-  const resolved = lang && VALID_LANGUAGES.includes(lang) ? (lang as SupportedLang) : 'th';
+/**
+ * Resolve language with clear precedence and a clean cache key:
+ * URL prefix > cookie > localStorage > navigator > 'th'
+ */
+export function getClientCurrentLanguage(forceRefresh = false): SupportedLang {
+  // SSR-safe guard
+  if (!isBrowser()) return 'th';
+
+  const pathname = typeof window !== 'undefined' ? (window.location?.pathname || '') : '';
+
+  const cookieLang = pickValid(readCookie(LANGUAGE_COOKIE));
+  const urlLang = pickValid(readUrlLang(pathname));
+  const lsLang = pickValid(readLocalStorageLang());
+  const navLang = pickValid(readNavigatorLang());
+
+  const key = `${urlLang ?? ''}|${cookieLang ?? ''}|${lsLang ?? ''}|${navLang ?? ''}`;
+  if (!forceRefresh && cachedKey === key && cachedClientLang) return cachedClientLang;
+
+  const resolved = (urlLang || cookieLang || lsLang || navLang || 'th') as SupportedLang;
   cachedClientLang = resolved;
   cachedKey = key;
   return resolved;
 }
 
+export function invalidateClientLanguageCache(): void {
+  cachedClientLang = undefined;
+  cachedKey = undefined;
+}
+
 export function getNumericCode(langCode: string): number | null {
   const language = LANGUAGES[langCode as keyof typeof LANGUAGES];
   return language && "numericCode" in language ? language.numericCode : null;
+}
+
+const LANGS_PATTERN = `(?:${VALID_LANGUAGES.join('|')})`;
+const LANG_PREFIX_RE = new RegExp(`^/` + LANGS_PATTERN + `\\b`);
+
+// Reusable: build target URL with the chosen language prefix. Returns null if no change needed.
+export function buildLangRedirectTarget(newLang: string, href: string): string | null {
+    try {
+        const base = typeof window !== 'undefined' ? window.location.origin : 'http://localhost';
+        const url = new URL(href, base);
+        const pathWithoutLang = url.pathname.replace(LANG_PREFIX_RE, '') || '/';
+        const target = `/${newLang}${pathWithoutLang}${url.search}${url.hash}`;
+        const currentFull = `${url.pathname}${url.search}${url.hash}`;
+        return currentFull !== target ? target : null;
+    } catch {
+        return null;
+    }
 }

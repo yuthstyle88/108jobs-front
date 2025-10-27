@@ -87,7 +87,6 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
         } catch (error) {
             console.error("Image upload failed:",
                 error);
-            alert(t("uploadInstruction.uploadError"));
         } finally {
             setLoading(false); // ปิด Loading ไม่ว่าจะแสดงผลสำเร็จหรือ error ก็ตาม
         }

@@ -8,6 +8,7 @@ import {
     SendEventDeps,
     sendReadReceipt as sendReadReceiptEvent,
     sendRoomUpdateEvent,
+    sendDeliveryAck,
 } from "@/modules/chat/events/sendEvents";
 import { useTypingIndicator } from '@/modules/chat/hooks/useTypingIndicator';
 import {ChatRoomData, ChatRoomId, LocalUser, LocalUserId} from "lemmy-js-client";
@@ -19,6 +20,7 @@ import {PhoenixSenderAdapter} from '@/modules/chat/adapters/PhoenixSenderAdapter
 import {usePresenceStore} from '@/modules/chat/store/presenceStore';
 import {useReadLastIdStore} from "@/modules/chat/store/readStore";
 import { usePartnerTyping } from '@/modules/chat/hooks/usePartnerTyping';
+import { useRoomPresence } from '@/modules/chat/hooks/useRoomPresence';
 
 // Safe DOM CustomEvent dispatcher
 function dispatchDomEvent(name: string, detail: any) {
@@ -36,7 +38,6 @@ const PEER_ACTIVE_BUMP_MIN_MS = 1000; // throttle markPeerActive to avoid runawa
 
 export interface UseChatRoomParams {
     roomId: string;
-    shareKey: string;
     onRemoteTyping?: (detail: { roomId: string; senderId: number; typing: boolean }) => void;
     localUser: LocalUser,
     roomData: ChatRoomData;
@@ -44,7 +45,6 @@ export interface UseChatRoomParams {
 
 export function useChatRoom({
     roomId,
-    shareKey,
     onRemoteTyping,
     localUser,
     roomData,
@@ -65,6 +65,8 @@ export function useChatRoom({
         const peer = participants.find((p: any) => String(p.memberId) !== String(localUser?.id));
         return peer ? Number(peer.memberId) : 0;
     }, [roomData?.room?.participants, localUser?.id]);
+    // Bind presence watcher (HTTP + focus/visibility + heartbeat). Safe for 0/undefined.
+    useRoomPresence((peerUserId || undefined) as any);
 
     const markPeerActive = useCallback(() => {
         const now = Date.now();
@@ -115,6 +117,7 @@ export function useChatRoom({
     const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const ackCooldownRef = useRef<number>(0);
     const readAckRef = useRef<((id: number | string) => void) | null>(null);
+    const deliveryAckRef = useRef<((id: number | string) => void) | null>(null);
     // Partner typing state handled by usePartnerTyping hook below
     const [connectionError, setConnectionError] = useState(false);
     const localSenderRef = useRef<any>(null);
@@ -240,6 +243,7 @@ export function useChatRoom({
         fetchTimeoutRef,
         fetchResolveRef,
         readAckRef,
+        deliveryAckRef,
         ackCooldownRef,
         upsertMessage
     }), [roomId, localUser.id, setRefreshRoomData, markPeerActive, upsertMessage]);
@@ -284,6 +288,27 @@ export function useChatRoom({
         };
     }, [roomId, localUser.id, isE2EMock, ws]);
 
+    // Delivery-ack wiring (confirm received to server)
+    useEffect(() => {
+        if(isE2EMock || !roomId) {
+            deliveryAckRef.current = null;
+            return;
+        }
+        const adapter = ((ws as any)?.adapter ?? ws) as any;
+        const me = Number(localUser.id) || 0;
+        deliveryAckRef.current = (id: number | string) => {
+            try {
+                const deps: SendEventDeps = { adapter, roomId, senderId: me } as any;
+                sendDeliveryAck(deps, String(id));
+            } catch (e) {
+                try { console.warn('[deliver-ack] failed', e); } catch {}
+            }
+        };
+        return () => {
+            deliveryAckRef.current = null;
+        };
+    }, [ws, roomId, localUser.id, isE2EMock]);
+
     useEffect(() => {
         return () => {
             if(peerActiveDecayRef.current) {
@@ -325,7 +350,6 @@ export function useChatRoom({
         const deps = {
             isE2EMock,
             roomId,
-            shareKey,
             sentSet: sentMessagesRef.current,
             addMessageListener, // allow waitForAck to subscribe when adapter lacks onAny/onmessage
             onAfterSend: () => {
@@ -335,7 +359,7 @@ export function useChatRoom({
             ...(adapter ? {adapter} : {}),
         } as const;
         await sendChatMessage(deps, payload);
-    }, [ws, roomId, localUser.id, isE2EMock, shareKey]);
+    }, [ws, roomId, localUser.id, isE2EMock]);
 
     const resendMessage = useCallback(async (id: string) => {
         const st = useChatStore.getState();
@@ -426,17 +450,24 @@ export function useChatRoom({
 
     const sendTyping = useCallback((isTyping: boolean) => {
         try {
+            const a: any = adapterAny ?? (ws as any);
+            const active = !!(
+              a && (
+                a.isReady === true ||
+                a.connected === true ||
+                (typeof a.isOpen === 'function' && a.isOpen() === true)
+              )
+            );
+            if (!active) return; // ไม่พร้อมก็ไม่ส่ง
+
             if (isTyping) {
-                // user started typing – trigger the debounced/throttled start
                 typingEmitter?.startTyping?.();
-                // optional hint that a keystroke happened; safe no-op if not provided
                 typingEmitter?.onUserTyping?.();
             } else {
-                // user stopped typing – decay immediately
                 typingEmitter?.stopTyping?.();
             }
         } catch {}
-    }, [typingEmitter]);
+    }, [adapterAny, ws, typingEmitter]);
 
     const onWsErrorDuringFetch = useCallback(() => {
         if(fetchTimeoutRef.current) {

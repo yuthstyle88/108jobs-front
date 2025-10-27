@@ -11,7 +11,7 @@ export function useLoadLastRead(roomId: ChatRoomId, peerId: LocalUserId) {
 
         HttpService.client.getLastRead({roomId, peerId}).then((res) => {
             if (!active || !res || res.state !== REQUEST_STATE.SUCCESS || !res.data?.lastRead) return;
-            const lastRead = res.data.lastRead;
+            const lastRead = res.data.lastRead ?? new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toISOString();
             const {setPeerLastReadAt} = useReadLastIdStore.getState();
             setPeerLastReadAt(roomId, lastRead.localUserId, lastRead.updatedAt);
         });

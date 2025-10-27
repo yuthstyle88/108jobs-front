@@ -7,26 +7,21 @@ import {createMessage} from "@/modules/chat/domain/entities/message";
 import {waitForAck, wsSend} from "@/modules/chat/utils/socketSend";
 import {useChatStore} from "@/modules/chat/store/chatStore";
 
-// ฟังก์ชันกลาง สำหรับสร้าง event (รองรับ meta + ลบ key undefined)
-export function createEvent<T>(
-  event: PhoenixEvent,
-  payload?: T,
-): PhoenixPacket<T> & {
+// ---- Ack / Retry tuning (keep minimal & explicit)
+const ACK_TIMEOUT_MS   = Number(process.env.CHAT_ACK_TIMEOUT ?? 8000);
+// Allow extending ACK wait more than once. Default 3x (24s total when timeout=8s)
+const ACK_EXTENDS     = Number(process.env.CHAT_ACK_EXTENDS ?? 3);
+
+// ---- Packet helpers ----
+export function createEvent<T>(event: PhoenixEvent, payload?: T): PhoenixPacket<T> & {
     roomId?: string;
-    timestamp: string;
+    timestamp: string
 } {
-    const packet: any = {
-        event,
-        payload,
-        timestamp: new Date().toISOString(),
-    };
-    Object.keys(packet).forEach((k) => {
-        if(packet[k] === undefined) delete packet[k];
-    });
-    return packet;
+    const p: any = {event, payload, timestamp: new Date().toISOString()};
+    Object.keys(p).forEach((k) => p[k] === undefined && delete p[k]);
+    return p;
 }
 
-// --- Generic event-deps for socket sends ---
 export interface SendEventDeps {
     roomId: string;
     senderId: LocalUserId;
@@ -34,297 +29,148 @@ export interface SendEventDeps {
     sender?: SendMessageDeps['sender'];
 }
 
-// --- Typing events ---
+// ---- Lightweight emits ----
 export function sendTyping(deps: SendEventDeps, typing: boolean) {
-    const {senderId, roomId} = deps as any;
-    const adapter = (deps as any).adapter as SendMessageDeps['adapter'];
-    const unified = createEvent('chat:typing', {typing, senderId, roomId});
-    if(!adapter) return;
-    wsSend(adapter, unified);
+    const a = (deps as any).adapter;
+    if(!a) return;
+    wsSend(a, createEvent('chat:typing', {typing, senderId: deps.senderId, roomId: deps.roomId}));
 }
 
-// --- Read receipt ---
 export function sendReadReceipt(deps: SendEventDeps, lastMessageId: string) {
-    const {roomId, senderId} = deps as any;
-    const adapter = (deps as any).adapter as SendMessageDeps['adapter'];
-    const packet = createEvent('chat:read_up_to', {
-        roomId: roomId,
-        readerId: senderId,
-        lastReadMessageId: lastMessageId ?? '',
+    const a = (deps as any).adapter;
+    if(!a) return;
+    const pkt = createEvent('chat:readUpTo', {
+        secure: false,
+        roomId: deps.roomId,
+        readerId: deps.senderId,
+        lastReadMessageId: lastMessageId || ''
     });
-    if(!adapter) return;
-    dbg('sendReadReceipt', packet);
-    wsSend(adapter, packet);
+    dbg('sendReadReceipt', pkt);
+    wsSend(a, pkt);
 }
 
-// --- Room update ---
-export function sendRoomUpdateEvent(
-  deps: SendEventDeps,
-  update: Record<string, any>
-) {
-    const {roomId} = deps as any;
-    const adapter = (deps as any).adapter as SendMessageDeps['adapter'];
-    const packet = createEvent('chat:update', {roomId, ...update});
-    if(!adapter) return;
-    wsSend(adapter, packet);
+export function sendRoomUpdateEvent(deps: SendEventDeps, update: Record<string, any>) {
+    const a = (deps as any).adapter;
+    if(!a) return;
+    wsSend(a, createEvent('chat:update', {roomId: deps.roomId, ...update}));
 }
 
-/** Internal helper to send a message, wait for ack, update status and emit UI event */
-async function doSend(deps: SendMessageDeps, msg: ChatMessage): Promise<{ id: string; sent: boolean; }> {
-    const {sender} = deps as any;
-    if(!sender) return {id: String(msg.id), sent: false};
-    dbg('doSend', msg);
-    const sent = deps.sender ? Boolean(await deps.sender.sendMessage('chat:message', msg)) : false;
-    if(sent) {
-        const acked = await waitForAck(deps, msg.id, 8000)
-          .catch((err) => {
-              dbg('waitForAck error', err);
-              return false;
-          });
-        if(acked) {
-            dbg('waitForAck success', acked);
-            try {
-                (deps as any).onAfterSend?.();
-            } catch {
-            }
-            return {id: String(msg.id), sent};
-        }
+/**
+ * Send delivery acknowledgment to server for a received message.
+ * Minimal payload: roomId, receiverId (me), messageId
+ */
+export function sendDeliveryAck(deps: SendEventDeps, messageId: string) {
+    const a = (deps as any).adapter;
+    if(!a) return;
+    const pkt = createEvent('chat:ack', {
+        roomId: deps.roomId,
+        receiverId: deps.senderId,
+        messageId: String(messageId || '')
+    });
+    dbg('sendDeliveryAck', pkt);
+    wsSend(a, pkt);
+}
+
+// ---- Core send/ack ----
+async function doSend(deps: SendMessageDeps, msg: ChatMessage): Promise<{ id: string; sent: boolean }> {
+    const id = (msg as any).id; // keep original id type (number/string) to match store keys
+    const s = (deps as any).sender;
+    const a = (deps as any).adapter;
+    const isChannelClosed = () => {
         try {
-            (deps as any).onAfterSend?.();
-        } catch {
+            return a && (a.closed === true || a.isClosed?.() === true || a.isOpen?.() === false);
+        } catch { return false; }
+    };
+    if(!s) return {id, sent: false};
+    dbg('doSend:start', {id, roomId: (deps as any)?.roomId});
+    try {
+        const ok = await s.sendMessage('chat:message', msg);
+        if(!ok) return (dbg('doSend:sendMessage failed', {id}), {id, sent: false});
+        // Transport send initiated successfully → mark as 'sending'
+        try { useChatStore.getState()?.commitStatus?.(id, 'sending' as any); } catch {}
+        // Wait for ACK, auto-extend waiting if no reply
+        let totalWait = 0;
+        let acked = false;
+        let markedRetrying = false;
+        while (totalWait < ACK_TIMEOUT_MS * ACK_EXTENDS && !acked) {
+            if (isChannelClosed()) { dbg('doSend:channel-closed-before-ack', { id, totalWait }); break; }
+            acked = await waitForAck(deps, msg.id, ACK_TIMEOUT_MS).catch((e) => (dbg('doSend:waitForAck error', e), false));
+            if (!acked) {
+                totalWait += ACK_TIMEOUT_MS;
+                dbg('doSend:auto-extend-wait', { id, totalWait });
+                if (!markedRetrying) {
+                    try { useChatStore.getState()?.commitStatus?.(id, 'retrying' as any); } catch {}
+                    markedRetrying = true;
+                }
+            }
         }
-        return {id: String(msg.id), sent: false};
+        return acked ? (dbg('doSend:ack ok', {id}), {id, sent: true}) : (dbg('doSend:ack timeout', {id}), {
+            id,
+            sent: false
+        });
+    } catch (err: any) {
+        const reason = err?.message || err?.reason || String(err);
+        dbg('doSend:error', { id, reason });
+        return { id, sent: false };
     }
-
-    return {id: String(msg.id), sent};
 }
 
-/** Centralized send-message flow used by PhoenixSocketProvider */
+// ---- Public: send chat message ----
 export async function sendChatMessage(deps: SendMessageDeps, data: MessagePayload): Promise<{
     id: string;
-    sent: boolean;
+    sent: boolean
 } | undefined> {
-    const {roomId} = deps as any;
     const store = useChatStore.getState();
+    const message = data?.message ?? '';
+    if(!message) return;
+    const hasSender = !!(deps as any)?.sender, hasRoom = !!(deps as any)?.roomId, hasSenderId = !!data?.senderId;
+    if(!hasSender || !hasRoom || !hasSenderId) return;
+
+    const msgId = (data as any)?.id; // keep id type; avoid string-casting
+    const sentSet = (deps as any)?.sentSet as Set<any> | undefined;
+    // Do not early-return if message id is already in sentSet — we still want to ensure it exists in the UI/store.
+    // sentSet is only used to reduce duplicate transport sends, not to suppress UI state.
+
+    const allowEncrypt = data?.secure !== false;
+    const p = createMessage(message, (deps as any).roomId, data.senderId, data.secure, data.id);
+    if(!p) return;
+    p.status = 'pending' as any;
     try {
-        // ---- 0) Sanitize & validate input here (do not rely on caller) ----
-        const raw = (data?.message ?? '');
-        const message = typeof raw === 'string' ? raw.trim() : raw;
-        if(!message) {
-            try {
-                (deps as any).onAfterSend?.();
-            } catch {
-            }
-            return undefined; // nothing to send
-        }
-
-        // ---- 1) Deduplicate by id to avoid double-submits ----
-        const msgId = data?.id ? String(data.id) : undefined;
-        const sentSet = (deps as any)?.sentSet as Set<string> | undefined;
-        if(msgId && sentSet?.has?.(msgId)) {
-            try {
-                (deps as any).onAfterSend?.();
-            } catch {
-            }
-            return {id: msgId, sent: false};
-        }
-
-        // Resolve shared key as hex string (room-level or user-level), not boolean
-        const sharedKeyHex: string | null = (
-          (typeof (deps as any)?.shareKey === 'string' && (deps as any).shareKey) ||
-          (typeof UserService.Instance?.authInfo?.sharedKey === 'string' && UserService.Instance.authInfo.sharedKey) ||
-          null
-        );
-
-        // Respect caller's intent: if data.secure === false, force plaintext
-        const allowEncrypt = data?.secure !== false;
-
-        // ---- 2) Create a single pending entity and optimistically insert once ----
-        const p = createMessage(message, roomId, data.senderId, data.id);
-        if(!p) {
-            try {
-                (deps as any).onAfterSend?.();
-            } catch {
-            }
-            return undefined;
-        }
-        p.status = "pending" as any;
-
-        try {
-            store?.addPending?.(p);
-        } catch {
-        }
-
-        // mark as attempted
-        try {
-            if(msgId) sentSet?.add?.(msgId);
-        } catch {
-        }
-
-        // NOTE: sharedKeyHex must be provisioned during room join; do not derive here.
-        // ---- 3) Encrypt if shared key is already provisioned for this room ----
-        try {
-            const aesKey = UserService.Instance.authInfo?.sharedKey;
-            const shouldEncrypt = Boolean(aesKey && message && allowEncrypt);
-            if(shouldEncrypt && aesKey) {
-                try {
-                    const cipher = await encrypt(message, aesKey);
-                    if(cipher && cipher !== message) {
-                        (p as any).content = cipher;
-                        (p as any).secure = true;
-                    } else {
-                        (p as any).secure = false;
-                    }
-                } catch (err) {
-                    (p as any).secure = false; // encryption failed → plaintext
-                    if(process.env.NODE_ENV !== 'production') {
-                        console.warn(`[crypto] encryption failed, falling back to plaintext`, err);
-                    }
-                }
-            } else {
-                (p as any).secure = false; // no shared key or disabled
-            }
-        } catch {
-        }
-
-        // ---- 4) Transport: must have sender to send ----
-        if(!(deps as any)?.sender) {
-            try {
-                store?.commitStatus?.(String(p.id), "failed");
-            } catch {
-            }
-            try {
-                (deps as any).onAfterSend?.();
-            } catch {
-            }
-            return {id: String(p.id), sent: false};
-        }
-
-        // ---- 5) Send & commit status; always call onAfterSend ----
-        try {
-            const res = await doSend(deps, p);
-            const pid = String(p.id);
-            const rid = String(res?.id ?? pid);
-            if(res?.sent) {
-                try {
-                    store?.commitStatus?.(rid, 'sent');
-                } catch {
-                }
-            } else {
-                try {
-                    store?.commitStatus?.(pid, 'failed');
-                } catch {
-                }
-            }
-            try {
-                (deps as any).onAfterSend?.();
-            } catch {
-            }
-            return res;
-        } catch (err) {
-            dbg('sendChatMessage: transport error', err);
-            try {
-                store?.commitStatus?.(String(p.id), 'failed');
-            } catch {
-            }
-            try {
-                (deps as any).onAfterSend?.();
-            } catch {
-            }
-            return {id: String(p.id), sent: false};
-        } finally {
-            try {
-                if(msgId) sentSet?.delete?.(msgId);
-            } catch {
-            }
-        }
+        store?.addPending?.(p);
     } catch {
     }
-    return;
-}
+    if(msgId) try {
+        sentSet?.add?.(msgId);
+    } catch {
+    }
 
-/** Manual resend (used when user taps "resend" in UI) */
-export async function resendChatMessage(
-  deps: SendMessageDeps,
-  originalOrId: string | ChatMessage
-): Promise<{ id: string; sent: boolean; }> {
-    const store = useChatStore();
     try {
-        // Resolve message from id or use provided ChatMessage directly
-        let msg: ChatMessage | undefined;
-        let messageId: string;
-        if(typeof originalOrId === 'string') {
-            messageId = originalOrId;
-            msg = store?.getMessageById ? store.getMessageById(messageId) : undefined;
-            if(!msg) {
-                console.warn("[chat] resend: message not found in store", messageId);
-                return {id: messageId, sent: false};
-            }
-        } else {
-            msg = originalOrId;
-            messageId = String(originalOrId.id);
-        }
+        const key = UserService.Instance.authInfo?.sharedKey;
+        const useEnc = !!(key && message && allowEncrypt);
+        const cipher = useEnc ? await encrypt(message, key!) : null;
+        (p as any).content = cipher && cipher !== message ? cipher : message;
+        (p as any).secure = !!(cipher && cipher !== message);
+    } catch {
+        (p as any).content = message;
+        (p as any).secure = false;
+    }
 
-        if(msg) {
-            return await doSend(deps, msg);
-        }
-        return {id: messageId, sent: false,};
+    if(!(deps as any)?.sender) return; // guard (shouldn’t happen; already checked)
+
+
+    try {
+        const res = await doSend(deps, p);
+        const pid = (p as any).id;                   // preserve original type
+        const rid = (res as any)?.id ?? pid;         // if server returns new id only on success
+        // update status without changing identity type
+        store?.commitStatus?.(res?.sent ? rid : pid, res?.sent ? 'sent' : 'failed');
+        // If send failed, allow future retries by clearing the de-dup marker
+        if (!res?.sent && msgId != null) try { sentSet?.delete?.(msgId); } catch {}
+        return { id: rid, sent: !!res?.sent } as any;
     } catch (err) {
-        console.error("[chat] resend failed", err);
-        // messageId is always defined by this point
-        let messageId: string;
-        if(typeof originalOrId === 'string') {
-            messageId = originalOrId;
-        } else {
-            messageId = String(originalOrId.id);
-        }
-        store?.commitStatus?.(messageId, "failed");
-        return {id: messageId, sent: false};
+        dbg('sendChatMessage: transport error', err);
+        store?.commitStatus?.((p as any).id, 'failed');
+        if (msgId != null) try { sentSet?.delete?.(msgId); } catch {}
+        return { id: (p as any).id, sent: false } as any;
     }
-}
-
-// ปลอดภัยกับ SSR
-const getWin = (): Window | undefined => {
-    try {
-        return window;
-    } catch {
-        return undefined;
-    }
-};
-
-/** สั่งให้ realtime layer เชื่อมต่อ WS (ถ้าเชื่อมแล้วจะเป็น no-op) */
-export function emitEnsureWs(): void {
-    const w = getWin();
-    if(!w) return;
-    w.dispatchEvent(new CustomEvent('ws:ensure-connect'));
-}
-
-/** สั่ง join room แบบ decoupled ผ่าน event bus */
-export function emitJoinRoom(payload: { roomId: string }): void {
-    const w = getWin();
-    if(!w) return;
-    w.dispatchEvent(new CustomEvent('chat:join-room', {detail: payload}));
-}
-
-/** helper สำหรับฝั่ง provider เอาไว้ subscribe */
-export function onWsEnsureConnect(handler: () => void): () => void {
-    const w = getWin();
-    if(!w) return () => {
-    };
-    const fn = () => handler();
-    w.addEventListener('ws:ensure-connect', fn as EventListener);
-    return () => w.removeEventListener('ws:ensure-connect', fn as EventListener);
-}
-
-export function onJoinRoom(handler: (roomId: string) => void): () => void {
-    const w = getWin();
-    if(!w) return () => {
-    };
-    const fn = (ev: Event) => {
-        const ce = ev as CustomEvent<{ roomId: string }>;
-        const rid = ce?.detail?.roomId;
-        if(rid) handler(rid);
-    };
-    w.addEventListener('chat:join-room', fn as EventListener);
-    return () => w.removeEventListener('chat:join-room', fn as EventListener);
 }

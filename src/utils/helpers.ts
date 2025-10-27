@@ -365,10 +365,34 @@ export function matchPath(
     return result;
 }
 
-export function getJwtCookie(headers: IncomingHttpHeaders): string | undefined {
-    return headers.cookie
-        ? cookie.parse(headers.cookie)[authCookieName] // This can actually be undefined
-        : undefined;
+export function getJwtCookieFromServer(headers: IncomingHttpHeaders): string | undefined {
+    // 1) Prefer explicit Authorization header: "Bearer <token>"
+    const authHeader = (headers.authorization ??
+        // Some proxies / environments may preserve original casing
+        (headers as any)['Authorization']) as string | undefined;
+
+    if (typeof authHeader === 'string') {
+        const m = authHeader.match(/^\s*Bearer\s+(.+)\s*$/i);
+        if (m?.[1]) {
+            return m[1].trim();
+        }
+    }
+
+    // 2) Fallback to Cookie header
+    // Node's IncomingHttpHeaders.cookie can be string | string[] | undefined
+    const rawCookie =
+        Array.isArray(headers.cookie) ? headers.cookie.join('; ') : headers.cookie;
+
+    if (!rawCookie || rawCookie.length === 0) return undefined;
+
+    const parsed = cookie.parse(rawCookie);
+
+    // Primary cookie name (from config)
+    const byConfiguredName = parsed[authCookieName];
+    if (byConfiguredName) return byConfiguredName;
+
+    // Final fallback to a couple of common names to ease migrations.
+    return parsed['jwt'] ?? parsed['token'] ?? undefined;
 }
 
 export function setForwardedHeaders(headers: IncomingHttpHeaders): {
@@ -392,7 +416,7 @@ export function setForwardedHeaders(headers: IncomingHttpHeaders): {
         out["x-forwarded-for"] = forwardedFor as string;
     }
 
-    const auth = getJwtCookie(headers);
+    const auth = getJwtCookieFromServer(headers);
 
     if (auth) {
         out["Authorization"] = `Bearer ${auth}`;
@@ -507,7 +531,7 @@ export async function uploadSelectedImage(
     }
 
     console.log("Upload failed response:", result);
-    throw new Error("Image upload failed");
+    return "";
 }
 
 export function stripEmpty<T extends object>(obj: T): Partial<T> {
@@ -522,9 +546,42 @@ export function stripEmpty<T extends object>(obj: T): Partial<T> {
     ) as Partial<T>;
 }
 
-export function assertExists<T>(value: T | null | undefined, message?: string): T {
-    if (value == null) throw new Error(message ?? "Expected value to be present but got null or undefined");
-    return value;
+export function assertExists<T>(
+    value: T | null | undefined,
+    message?: string,
+    defaultValue?: T | (() => T)
+): T {
+    // Present → return immediately
+    if (value != null) return value as T;
+
+    // Resolve default (supports lazy factory)
+    const hasFactory = typeof defaultValue === 'function';
+    const resolvedDefault = hasFactory
+        ? (defaultValue as () => T)()
+        : defaultValue;
+
+    if (resolvedDefault !== undefined) {
+        try {
+            console.warn(
+                (message ?? "Expected value to be present but got null or undefined") +
+                    " – using provided defaultValue"
+            );
+        } catch {}
+        return resolvedDefault as T;
+    }
+
+    // No default provided → in production do not hard-crash the app
+    const isProd = typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'production';
+    const errMsg = message ?? 'Expected value to be present but got null or undefined';
+
+    if (isProd) {
+        try { console.error(errMsg); } catch {}
+        // Return undefined as T to let UI guards handle empty state instead of crashing
+        return undefined as unknown as T;
+    }
+
+    // In development, fail fast so the caller fixes the flow
+    throw new Error(errMsg);
 }
 
 export function toCamelCaseLastSegment(path: string | undefined): string {

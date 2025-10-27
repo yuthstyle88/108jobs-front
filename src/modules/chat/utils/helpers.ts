@@ -66,7 +66,7 @@ export async function maybeHandleStatusChange(env: any, roomId: string, setRefre
 export function maybeHandleReadReceipt(env: any, fallbackRoomId: string): boolean {
     try {
         const evName = String(env?.event || env?.content || "");
-        if (evName !== "chat:read_up_to") return false;
+        if (evName !== "readUpTo") return false;
 
         const roomId = String(env?.roomId || env?.topic || fallbackRoomId);
         const lastReadMessageId = String(env?.lastReadMessageId || "");
@@ -76,9 +76,31 @@ export function maybeHandleReadReceipt(env: any, fallbackRoomId: string): boolea
         // Emit event for internal WS listeners
         emitReadReceipt(roomId, lastReadMessageId, readerId);
         const api = require('@/modules/chat/store/readStore');
-        const { setPeerLastReadAt, getPeerLastReadAt } = api.useReadLastIdStore.getState?.() || {};
+        const { setPeerLastReadAt } = api.useReadLastIdStore.getState?.() || {};
         if (typeof setPeerLastReadAt === 'function' && updatedAt) {
             setPeerLastReadAt(roomId, readerId, updatedAt);
+        }
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+export async function maybeHandlePresenceUpdate(env: any, meId: number): Promise<boolean> {
+    try {
+        const evName = String(env?.event || '');
+        // accept any heartbeat-like event names and avoid throwing on missing sender
+        if (!evName || !evName.toLowerCase().includes('heartbeat')) return false;
+        const senderId = Number(env?.sender?.id ?? env?.readerId ?? env?.payload?.senderId ?? 0);
+        if (!senderId || senderId === Number(meId)) return false;
+        try {
+            const api = require('@/modules/chat/store/presenceStore');
+            const { setSnapshot } = api.usePresenceStore.getState();
+            setSnapshot([{ userId: senderId, lastSeenAt: Date.now() }]);
+        } catch (err) {
+            try {
+                if (localStorage.getItem('chat_debug') === '1') console.error('presence update failed:', err);
+            } catch {}
         }
         return true;
     } catch {
@@ -99,7 +121,7 @@ export function mergeNewMessages(
     return arr.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
-// ---- helpers: auto-ack ----
+// ---- helpers: auto-ack (read receipt) ----
 export function tryFlushAutoAck(handleWSMessageFn: any, roomIdStr: string, readAckRef: RefObject<((lastId: string) => void) | null>, ackCooldownRef: RefObject<number | undefined>) {
     try {
         const batchId = (handleWSMessageFn as any)._batchAckLastId as string | undefined;
@@ -299,3 +321,5 @@ export function isApproxSame(
     if (!Number.isFinite(tA) || !Number.isFinite(tB)) return false;
     return Math.abs(tA - tB) <= driftMs;
 }
+
+

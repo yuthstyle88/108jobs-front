@@ -13,12 +13,12 @@ import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {useTranslation} from "react-i18next";
 
-type UpdateFormProps = {
+type UpdateTermsFormProps = {
   title?: string;
 };
 
-export const AcceptForm = ({ title }
-: UpdateFormProps) => {
+export const AcceptTermsForm = ({ title }
+: UpdateTermsFormProps) => {
   const {t} = useTranslation();
 
   const UpdateSchema = z
@@ -91,9 +91,18 @@ export const AcceptForm = ({ title }
     const res = await updateTerm(payload);
 
     if (isSuccess(res)) {
-      UserService.Instance.login({res: res.data});
-      setIsRedirecting(true); // แสดงโหลดดิ่งระหว่างรอเปลี่ยนหน้า
-      window.location.href = "/";
+      // 1) ให้ server เซ็ตคุกกี้ให้เสร็จก่อน (Safari ชอบยกเลิก request ถ้า redirect ทันที)
+      setIsRedirecting(true);
+      try {
+        UserService.Instance.login({ res: res.data });
+        // รอ microtask เล็กน้อยให้ Set-Cookie/IO จบก่อน (ช่วย Safari)
+        await new Promise((r) => setTimeout(r, 150));
+        // ใช้ replace เพื่อลดโอกาสย้อนกลับหน้าเดิมและให้ middleware เห็นคุกกี้แน่
+        window.location.replace("/");
+      } catch (e) {
+        // fallback
+        window.location.href = "/";
+      }
     } else if (res.state === "failed") {
       setApiError(res.err.message ?? "Error: Accept form failed. Please try again later.");
     }

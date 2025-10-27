@@ -7,24 +7,25 @@ import {headers} from "next/headers";
 import {testHost} from "@/utils/config";
 
 const defaultIsoData: IsoData = {
-  path: '/',
-  routeData: {} as RouteData,
-  siteRes: {} as unknown as GetSiteResponse,
-  lemmyExternalHost: testHost,
-  errorPageData: undefined,
+    path: '/',
+    routeData: {} as RouteData,
+    siteRes: {} as unknown as GetSiteResponse,
+    appUrl: testHost,
+    errorPageData: undefined,
 };
 
 export default async function isoDataInitializer(): Promise<IsoData | null> {
-  const hdr = await headers();
-  const url = hdr.get("x-url") || "/";
-  const incomingHttpHeaders: IncomingHttpHeaders = Object.fromEntries(hdr.entries());
-  try {
-    return await fetchIsoData(url,
-      incomingHttpHeaders);
-  } catch (error) {
-    console.error('Error fetching ISO data:',
-      error);
-    return defaultIsoData;
-  }
+    const hdr = await headers();
+    const url = hdr.get("x-url") || "/";
+    const incomingHttpHeaders: IncomingHttpHeaders = Object.fromEntries(hdr.entries());
+
+    try {
+        return await fetchIsoData(url,
+          incomingHttpHeaders);
+    } catch (error) {
+        console.error('Error fetching ISO data:',
+          error);
+        return defaultIsoData;
+    }
 
 }

@@ -4,7 +4,7 @@ import {AuthenticateIcon} from "@/constants/icons";
 import {CategoriesImage} from "@/constants/images";
 import Image from "next/image";
 import {useState} from "react";
-import {AcceptForm} from "@/components/Authentication/AcceptForm";
+import {AcceptTermsForm} from "@/components/Authentication/AcceptTermsForm";
 import {getAppName} from "@/utils/appConfig";
 import {useTranslation} from "react-i18next";
 import {DotLottieReact} from "@lottiefiles/dotlottie-react";
@@ -113,7 +113,7 @@ export default function RegisterTermPage() {
                             title={`Sign up ${getAppName()}`}
                             onBack={() => setCurrentView("update-term")}
                         >
-                            <AcceptForm/>
+                            <AcceptTermsForm/>
                         </AuthFormContainer>
                     )}
 

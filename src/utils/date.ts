@@ -65,15 +65,15 @@ export async function verifyDateFnsImports(): Promise<ImportReport> {
     return report;
 }
 
-export function bestDateFns(languages: readonly string[], i18n_full_lang: string): DateFnsDesc {
-    const base_lang = getLocale(i18n_full_lang.split("-")[0]);
-    for (const lang of languages.filter(x => x.startsWith(base_lang.split("-")[0]))) {
+export function bestDateFns(languages: readonly string[], i18nFullLang: string): DateFnsDesc {
+    const baseLang = getLocale(i18nFullLang.split("-")[0]);
+    for (const lang of languages.filter(x => x.startsWith(baseLang.split("-")[0]))) {
         const locale = localeByCode[getLocale(lang)];
         if (locale) {
             return locale;
         }
     }
-    return localeByCode[base_lang] ?? localeByCode[EN_US];
+    return localeByCode[baseLang] ?? localeByCode[EN_US];
 }
 
 export function findDateFnsChunkNames(languages: readonly string[]): string[] {

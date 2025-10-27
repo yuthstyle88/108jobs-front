@@ -12,6 +12,8 @@ import MessageStatusIndicator from "@/modules/chat/components/MessageStatusIndic
 import {dbg} from "@/modules/chat/utils";
 import {isSameOrAfter, isApproxSame} from "@/modules/chat/utils/helpers";
 import {useReadLastIdStore} from "@/modules/chat/store/readStore";
+import {usePeerOnline} from "@/modules/chat/store/presenceStore";
+import {Stars} from "@/components/RatingDisplay";
 
 interface ChatMessageItemProps {
     message: ChatMessage;
@@ -44,6 +46,8 @@ interface ProposedQuoteMessage {
         startingDay: string;
         deliveryDay: string;
     };
+    rating?: number;
+    comment?: string;
 }
 
 const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
@@ -76,13 +80,16 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     const time = toLocalTime(viewMsg.createdAt as any, i18n?.language || "th-TH");
     const isOwner = !!viewMsg.isOwner;
 
+    const peerOnline = usePeerOnline(Number(partnerId));
+
     const isRead = useMemo(() => {
+        // Only consider as "read" when the peer is currently online and the read timestamp covers this message
         return (
             isOwner &&
             lastReadAt != null &&
             isSameOrAfter(lastReadAt as any, (viewMsg as any).createdAt as any)
         );
-    }, [isOwner, lastReadAt, (viewMsg as any).createdAt]);
+    }, [isOwner, peerOnline, lastReadAt, (viewMsg as any).createdAt]);
 
     const isLastRead = useMemo(() => {
         return (
@@ -112,13 +119,14 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
 
     const isEmployerStarted = parsed && parsed.type === "employer-started";
     const isProposedQuote = parsed && parsed.type === "proposed-quote" && parsed.quote;
-    const isEmployerAssigned = parsed && (parsed as any).type === "employer-assigned";
-    const isStartWork = parsed && (parsed as any).type === "start-work";
-    const isCancelJob = parsed && (parsed as any).type === "cancel-job";
-    const isSubmitDelivery = parsed && (parsed as any).type === "submit-delivery";
-    const isRequestRevision = parsed && (parsed as any).type === "request-revision";
-    const isDeliveryAccepted = parsed && (parsed as any).type === "delivery-accepted";
-    const isFileMsg = parsed && (parsed as any).type === "file";
+    const isEmployerAssigned = parsed && parsed.type === "employer-assigned";
+    const isStartWork = parsed && parsed.type === "start-work";
+    const isCancelJob = parsed && parsed.type === "cancel-job";
+    const isSubmitDelivery = parsed && parsed.type === "submit-delivery";
+    const isRequestRevision = parsed && parsed.type === "request-revision";
+    const isDeliveryAccepted = parsed && parsed.type === "delivery-accepted";
+    const isFileMsg = parsed && parsed.type === "file";
+    const isReviewSubmitted = parsed && parsed.type === "review-submitted" && parsed.rating;
 
     return (
         <div
@@ -163,8 +171,39 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                     />
                 </div>
 
-                {/* Enhanced Quotation Card */}
-                {isProposedQuote ? (
+                {isReviewSubmitted ? (
+                    <div
+                        className={`max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ${
+                            isIncoming ? "ring-yellow-200 bg-yellow-50 mt-2" : "ring-yellow-200 bg-yellow-50"
+                        } px-4 py-3`}
+                    >
+                        <div className="flex items-start gap-3 flex-wrap">
+                            <svg
+                                className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.97a1 1 0 00.95.69h4.178c.969 0 1.371 1.24.588 1.81l-3.39 2.467a1 1 0 00-.364 1.118l1.287 3.97c.3.921-.755 1.688-1.538 1.118l-3.39-2.467a1 1 0 00-1.175 0l-3.39 2.467c-.783.57-1.838-.197-1.538-1.118l1.287-3.97a1 1 0 00-.364-1.118L2.236 9.397c-.783-.57-.381-1.81.588-1.81h4.178a1 1 0 00.95-.69l1.286-3.97z"/>
+                            </svg>
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-4 flex-wrap">
+                                    <div className="text-sm font-medium text-yellow-800">
+                                        {t("profileChat.reviewSubmitted") || "Review Submitted"}
+                                    </div>
+                                    <span className="text-xs text-gray-500 ml-auto min-w-fit">{time}</span>
+                                </div>
+                                <div className="mt-1 flex items-center gap-1">
+                                    <Stars rating={parsed!.rating!} />
+                                </div>
+                                <div className="mt-1 text-xs text-gray-700 whitespace-pre-line break-words">
+                                    {parsed!.comment}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ) : isProposedQuote ? (
                     <div
                         className={`max-w-[90vw] sm:max-w-lg w-full rounded-2xl shadow-lg ring-1 transition-all duration-200 hover:shadow-xl ${
                             isIncoming ? "bg-white ring-gray-200" : "bg-blue-50 ring-blue-200"

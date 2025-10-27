@@ -35,7 +35,7 @@ export default function BasicInformation() {
         errors,
         onSubmit,
         validateField,
-    } = useProfileForm(person, setSelectedAvatar, person?.portfolioPics, person?.workSamples);
+    } = useProfileForm(person ?? undefined, setSelectedAvatar, person?.portfolioPics, person?.workSamples);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
