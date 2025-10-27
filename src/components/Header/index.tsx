@@ -6,22 +6,7 @@ import Link from "next/link";
 import {useTranslation} from "react-i18next";
 import LanguageDropdown from "../LanguageDropDown";
 import UserProfileSection from "./components/UserProfileSection";
-import Search from "./components/Search";
 import {useScrollHandler} from "./hooks/useScrollHandler";
-
-const TYPES: Record<string, { bg: string }> = {
-    transparent: {
-        bg: "#transparent",
-    },
-    primary: {
-        bg: "bg-primary",
-    },
-};
-
-interface BgProps {
-    type: keyof typeof TYPES;
-    forceShowSearch?: boolean;
-}
 
 const Header = ({ type, forceShowSearch = false }: { type: string; forceShowSearch?: boolean }) => {
     const { isLoggedIn } = useAuthInfo();

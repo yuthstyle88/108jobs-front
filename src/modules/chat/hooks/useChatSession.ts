@@ -81,6 +81,7 @@ export function useChatSession(roomId?: string, localUserId?: number, isLoggedIn
                 post: room?.room?.post ?? chatRoomRes.data?.room?.post,
                 partnerName: profile?.name ?? "Unknown",
                 partnerId: Number(other.memberId),
+                partnerPersonId: profile?.id,
                 partnerAvatar: profile?.avatar,
                 partnerAvailable: profile?.available,
                 notFound: false,

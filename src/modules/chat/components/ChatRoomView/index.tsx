@@ -90,6 +90,7 @@ interface ChatRoomViewProps {
     partnerAvailable?: boolean;
     roomData: ChatRoomData;
     localUser: LocalUser;
+    partnerPersonId: PersonId;
 }
 
 function ResponsiveFlowPanel({isOpen, children}: { isOpen: boolean; children: React.ReactNode }) {
@@ -119,6 +120,7 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
                                                        partnerAvailable,
                                                        roomData,
                                                        localUser,
+                                                       partnerPersonId
                                                    }) => {
     const {t} = useTranslation();
     const {person, wallet} = useMyUser();
@@ -788,7 +790,7 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({
                 <SubmitReviewModal
                     showReviewModal={showSubmitReviewModal}
                     setShowReviewModal={setShowSubmitReviewModal}
-                    revieweeId={partnerId}
+                    revieweeId={partnerPersonId}
                     workflowId={currentRoom.workflow?.id}
                     submitReview={submitReview}
                 />

@@ -38,7 +38,7 @@ export function getChannelAdapter(token: string, topic: string, roomId: string, 
 
     const params: any = {topic};
     if (roomId) params.roomId = roomId;
-    if (typeof senderId === "number") params.senderId = senderId;
+    params.senderId = senderId;
     if (token) params.token = token;
 
     const ch = socket.channel(topic, params);

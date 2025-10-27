@@ -13,7 +13,7 @@ export default function MessageClient({ roomId }: { roomId: string }) {
     const { localUser } = useMyUser();
     const state = useChatSession(roomId, localUser?.id, isLoggedIn);
 
-    if (state.loading || !state.currentRoom || !localUser) {
+    if (state.loading || !state.currentRoom || !localUser || !state.partnerPersonId) {
         return <LoadingBlur text="" />;
     }
 
@@ -31,6 +31,7 @@ export default function MessageClient({ roomId }: { roomId: string }) {
                 partnerAvailable={state.partnerAvailable}
                 roomData={state.currentRoom}
                 localUser={localUser}
+                partnerPersonId={state.partnerPersonId}
             />
         </PhoenixChatBridgeProvider>
     );
