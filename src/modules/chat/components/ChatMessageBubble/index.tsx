@@ -126,7 +126,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     const isRequestRevision = parsed && parsed.type === "request-revision";
     const isDeliveryAccepted = parsed && parsed.type === "delivery-accepted";
     const isFileMsg = parsed && parsed.type === "file";
-    const isReviewSubmitted = parsed && parsed.type === "review-submitted" && parsed.rating && parsed.comment;
+    const isReviewSubmitted = parsed && parsed.type === "review-submitted" && parsed.rating;
 
     return (
         <div
