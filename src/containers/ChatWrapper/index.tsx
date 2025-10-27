@@ -111,7 +111,7 @@ const ChatWrapper = ({
             {/* Sidebar */}
             <div className="flex flex-col bg-white border-r border-gray-200 h-full w-full md:w-64 lg:w-80 xl:w-96 md:max-w-none md:flex-[0_0_20%] lg:flex-[0_0_25%] overflow-y-auto">
                 {/* Header with Search */}
-                <div className="p-3 sm:p-4 border-b border-gray-200 bg-gray-50">
+                <div className="p-3 sm:p-4 border-b text-primary border-gray-200 bg-gray-50">
                     <input
                         type="text"
                         placeholder={t("profileChat.searchChat")}

@@ -24,13 +24,13 @@ const NavBar: React.FC<NavBarProps> = ({
                                            className = "",
                                        }) => {
     return (
-        <nav className={`flex items-center justify-between px-3 py-2 ${className}`}>
+        <nav className={`flex items-center justify-between px-3 sm:py-2 ${className}`}>
             <Link href="/" aria-label="Home"
-               className="p-2 text-white/90 hover:text-white focus:outline-none rounded-full hover:bg-white/10">
+                  className="text-white/90 hover:text-white focus:outline-none rounded-full hover:bg-white/10">
                 <Image
                     src={AssetIcon.logo}
                     alt="logo"
-                    className="w-full h-full"
+                    className="w-18 h-18" // Smaller on mobile
                     width={200}
                     height={200}
                     priority
@@ -38,17 +38,17 @@ const NavBar: React.FC<NavBarProps> = ({
             </Link>
 
             {/* Right: search, bag, hamburger */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2">
                 <div className="block md:hidden">
                     <Search showSearch={showSearch} />
                 </div>
                 <button
                     type="button"
-                    className="md:hidden w-9 h-9 grid place-items-center rounded-full text-white/90 hover:text-white hover:bg-white/10 focus:outline-none"
+                    className="md:hidden w-8 h-8 sm:w-9 sm:h-9 grid place-items-center rounded-full text-white/90 hover:text-white hover:bg-white/10 focus:outline-none"
                     onClick={onToggleSidebar}
                     aria-label={isSidebarOpen ? "Close menu" : "Open menu"}
                 >
-                    <FontAwesomeIcon icon={faBars} className="w-4 h-4"/>
+                    <FontAwesomeIcon icon={faBars} className="w-3.5 h-3.5 sm:w-4 sm:h-4"/>
                 </button>
             </div>
         </nav>

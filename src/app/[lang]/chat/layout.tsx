@@ -1,8 +1,8 @@
+// src/app/[lang]/chat/layout.tsx
 "use client";
 
 import React, {useState} from "react";
 import Header from "@/components/Header";
-import SpHeader from "@/containers/SpHeader";
 import {ChatLanguageProvider} from "@/contexts/ChatLanguage";
 import {LayoutProps} from "@/types/layout";
 import {ChatRoomsProvider} from "@/modules/chat/contexts/ChatRoomsContext";
@@ -10,8 +10,9 @@ import {WebSocketProvider} from "@/modules/chat/contexts/WebSocketContext";
 import {UserService} from "@/services/UserService";
 import {useParams} from "next/navigation";
 import ChatWrapper from "@/containers/ChatWrapper";
-import {dbg} from "@/modules/chat/utils";
 import {EnsureSharedKeyBootstrap} from "@/modules/chat/components/EnsureSharedKeyBootstrap";
+import NavBar from "@/components/Home/NavBar";
+import MobileSidebar from "@/components/MobileSidebar";
 
 function decodeJwtSub(token?: string | null): number {
     try {
@@ -67,61 +68,73 @@ export default function ProfileLayout({children}: LayoutProps) {
     }, [token]);
 
     return (
-      <ChatLanguageProvider>
-          <EnsureSharedKeyBootstrap /> {/* ✅ run once to generate shared key */}
-        {/* Headers remain outside providers so they always render */}
-        <div className="hidden sm:block fixed top-0 left-0 right-0 z-50">
-          <Header type="primary" />
-        </div>
-
-        {/* Main Content: fix viewport height and prevent page scroll */}
-        <div className="fixed top-16 sm:top-20 left-0 right-0 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] overflow-hidden">
-          <div className="flex h-full">
-            {senderId ? (
-              <WebSocketProvider
-                options={{ token, senderId, roomId: activeRoomId }}
-              >
-                <ChatRoomsProvider>
-                  {/* Left Sidebar (desktop) */}
-                  <div className="hidden md:flex md:flex-col md:w-64 lg:w-80 xl:w-96 border-r border-gray-200 h-full">
-                    <ChatWrapper
-                      isSidebarOpen={isSidebarOpen}
-                      onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-                      setIsSidebarOpen={setIsSidebarOpen}
+        <ChatLanguageProvider>
+            <EnsureSharedKeyBootstrap/> {/* ✅ run once to generate shared key */}
+            {/* Headers remain outside providers so they always render */}
+            <div className="hidden sm:block fixed top-0 left-0 right-0 z-50">
+                <Header type="primary"/>
+            </div>
+            {/* Show SpHeader only on /chat (no roomId) */}
+            {!activeRoomId && (
+                <div className="block sm:hidden">
+                    {/* Mobile Header */}
+                    <div className="block sm:hidden fixed top-0 inset-x-0 z-[1000] bg-primary">
+                        <NavBar
+                            isSidebarOpen={isSidebarOpen}
+                            onToggleSidebar={() => setIsSidebarOpen(v => !v)}
+                            className="text-white"
+                        />
+                    </div>
+                    <MobileSidebar
+                        isOpen={isSidebarOpen}
+                        onClose={() => setIsSidebarOpen(false)}
                     />
-                  </div>
-
-                  {/* Mobile Sidebar Overlay (slides from left) */}
-                  <div
-                    className={`md:hidden fixed left-0 top-16 sm:top-20 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] w-[80vw] sm:w-[70vw] max-w-[360px] bg-white border-r border-gray-200 z-50 overflow-y-auto transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
-                    role="dialog"
-                    aria-modal="true"
-                    aria-label="Chat rooms"
-                  >
-                    <ChatWrapper
-                      isSidebarOpen={isSidebarOpen}
-                      onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-                      setIsSidebarOpen={setIsSidebarOpen}
-                    />
-                  </div>
-                  {/* Mobile Backdrop */}
-                  {isSidebarOpen && (
-                    <div
-                      className="md:hidden fixed inset-0 bg-black/40 z-40"
-                      onClick={() => setIsSidebarOpen(false)}
-                      aria-hidden="true"
-                    />
-                  )}
-
-                  {/* Main Content */}
-                  <div className="flex-1 min-w-0 h-full">{children}</div>
-                </ChatRoomsProvider>
-              </WebSocketProvider>
-            ) : (
-              <div className="flex-1 min-w-0 h-full">{/* waiting senderId */}</div>
+                </div>
             )}
-          </div>
-        </div>
-      </ChatLanguageProvider>
+
+            {/* Main Content: Adjust top based on whether navbar is visible */}
+            <div className={`
+                fixed 
+                ${!activeRoomId ? 'top-16' : 'top-0'} /* Conditional top - 0 when no navbar, 14 when navbar exists */
+                sm:top-20 
+                left-0 right-0 
+                ${!activeRoomId ? 'h-[calc(100vh-56px)]' : 'h-screen'} /* Conditional height */
+                sm:h-[calc(100vh-80px)] 
+                overflow-hidden
+            `}>
+                <div className="flex h-full">
+                    {senderId ? (
+                        <WebSocketProvider
+                            options={{token, senderId, roomId: activeRoomId}}
+                        >
+                            <ChatRoomsProvider>
+                                {/* Left Sidebar (desktop) - ALWAYS show on desktop, conditionally on mobile */}
+                                <div className={`
+                                    ${!activeRoomId ? 'flex' : 'hidden md:flex'} 
+                                    flex-col w-full md:w-64 lg:w-80 xl:w-96 border-r border-gray-200 h-full
+                                `}>
+                                    <ChatWrapper
+                                        isSidebarOpen={isSidebarOpen}
+                                        onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+                                        setIsSidebarOpen={setIsSidebarOpen}
+                                    />
+                                </div>
+
+                                {/* Main Content - Show children OR placeholder */}
+                                <div className={`
+                                    ${activeRoomId ? 'flex' : 'hidden md:flex'} 
+                                    flex-1 min-w-0 h-full
+                                `}>
+                                    {children}
+                                </div>
+
+                            </ChatRoomsProvider>
+                        </WebSocketProvider>
+                    ) : (
+                        <div className="flex-1 min-w-0 h-full">{/* waiting senderId */}</div>
+                    )}
+                </div>
+            </div>
+        </ChatLanguageProvider>
     );
 }

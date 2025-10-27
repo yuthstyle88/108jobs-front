@@ -5,6 +5,8 @@ import React, {ReactNode, useState} from "react";
 import ChatWrapper from "@/containers/ChatWrapper";
 import {ChatLanguageProvider} from "@/contexts/ChatLanguage";
 import {ChatRoomsProvider} from "@/modules/chat/contexts/ChatRoomsContext";
+import NavBar from "@/components/Home/NavBar";
+import MobileSidebar from "@/components/MobileSidebar";
 
 interface ConsentManagementLayoutProps {
     children: ReactNode;
@@ -24,20 +26,17 @@ export default function ProfileLayout({
                     </div>
                     <div className="block sm:hidden">
                         {/* Mobile Header */}
-                        <div className="block sm:hidden fixed top-0 left-0 right-0 z-50">
-                            <SpHeader
+                        <div className="block sm:hidden fixed top-0 inset-x-0 z-[1000] bg-primary">
+                            <NavBar
                                 isSidebarOpen={isSidebarOpen}
-                                onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-                                showBackButton={true}
+                                onToggleSidebar={() => setIsSidebarOpen(v => !v)}
+                                className="text-white"
                             />
                         </div>
-                        <div className="block sm:hidden">
-                            <ChatWrapper
-                                isSidebarOpen={isSidebarOpen}
-                                onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-                                setIsSidebarOpen={setIsSidebarOpen}
-                            />
-                        </div>
+                        <MobileSidebar
+                            isOpen={isSidebarOpen}
+                            onClose={() => setIsSidebarOpen(false)}
+                        />
                     </div>
                     <section className="pt-[5.5rem] sm:pt-[4.5rem] px-4 sm:px-6 lg:px-8 bg-white min-h-screen">
                         <div className="max-w-[1280px] mx-auto w-full">
