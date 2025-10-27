@@ -13,7 +13,6 @@ import {OAuthProvider} from "lemmy-js-client";
 import {handleUseOAuthProvider} from "@/components/Authentication/LoginForm/handlers";
 import {useSearchParams} from "next/navigation";
 import {getAppName} from "@/utils/appConfig";
-import {handleApiRedirect} from "@/utils/handleApiRedirect";
 
 // Form schema definition
 const createRegisterSchema = (t: any) => z
@@ -36,7 +35,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     const {t} = useTranslation();
     // State
     const [apiErrorState, setApiErrorState] = useState<string | null>(null);
-    const {site, oauthProviders} = useIsoData();
+    const {oauthProviders} = useIsoData();
     // Use the provided setApiError function if available, otherwise use the local state setter
     const handleApiError = useCallback((err: string) => {
             if (setApiError) {

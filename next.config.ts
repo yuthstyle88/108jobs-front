@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
     // Continue to ignore TypeScript build errors in non-prod to ease local dev/CI
     // Provide an explicit (empty) Turbopack config to avoid conflicts with custom webpack config
     turbopack: {},
-
+    reactCompiler: true,
     reactStrictMode: true,
     poweredByHeader: false,
     compress: true,
@@ -18,25 +18,25 @@ const nextConfig: NextConfig = {
     // Reduce client bundle size and improve runtime perf
 
     // Prefer modern optimizations
-    // Note: In Next.js 15, `optimizePackageImports` must be under `experimental`.
+    // Next.js 16: use SWC-based modularizeImports for reliable per-module transforms
+    modularizeImports: {
+        lodash: {
+            transform: 'lodash/{{member}}',
+            preventFullImport: true,
+        },
+        'date-fns': {
+            transform: 'date-fns/{{member}}',
+            preventFullImport: true,
+        },
+        // Note: lucide-react, react-icons, and Radix UI packages are generally ESM-friendly.
+        // We rely on their tree-shaking and direct subpath imports in code.
+    },
     experimental: {
-        // Tree-shake and rewrite common libraries to per-module imports.
-        optimizePackageImports: [
-            'lodash',
-            'date-fns',
-            'lucide-react',
-            'react-icons',
-            '@radix-ui/react-accordion',
-            '@radix-ui/react-avatar',
-            '@radix-ui/react-checkbox',
-            '@radix-ui/react-collapsible',
-            '@radix-ui/react-label',
-            '@radix-ui/react-select',
-            '@radix-ui/react-slider',
-            '@radix-ui/react-slot',
-            '@radix-ui/react-switch',
-            '@radix-ui/react-tabs',
-        ],
+        turbopackFileSystemCacheForDev: true,
+    },
+    compiler: {
+        // Trim console.* in production bundles but keep error/warn
+        removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
     },
 
     // Help Next.js tree-shake and dedupe by transpiling local packages if needed
@@ -80,18 +80,9 @@ const nextConfig: NextConfig = {
     },
 
     async redirects() {
-        // Redirect root to default locale to avoid 404 on '/'
-        // NOTE: If you later implement middleware-based locale detection, you can remove this.
-        const defaultLocale = 'th';
 
-        // Redirect to /login when none of the auth cookies are present
         // Adjust the path list below to match the sections you want to protect
         return [
-            {
-                source: '/',
-                destination: `/${defaultLocale}`,
-                permanent: false,
-            },
             {
                 source: '/dashboard/:path*',
                 destination: '/login',
@@ -123,6 +114,25 @@ const nextConfig: NextConfig = {
                     {type: 'cookie', key: 'access_token'},
                     {type: 'cookie', key: 'token'},
                     {type: 'header', key: 'authorization'},
+                ],
+            },
+        ];
+    },
+
+    // Long-term caching for static assets and wasm files
+    async headers() {
+        return [
+            {
+                source: '/_next/static/:path*',
+                headers: [
+                    { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+                ],
+            },
+            {
+                source: '/static/wasm/:path*',
+                headers: [
+                    { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+                    { key: 'Content-Type', value: 'application/wasm' },
                 ],
             },
         ];
