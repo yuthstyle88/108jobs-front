@@ -66,7 +66,7 @@ export async function maybeHandleStatusChange(env: any, roomId: string, setRefre
 export function maybeHandleReadReceipt(env: any, fallbackRoomId: string): boolean {
     try {
         const evName = String(env?.event || env?.content || "");
-        if (evName !== "chat:read_up_to") return false;
+        if (evName !== "readUpTo") return false;
 
         const roomId = String(env?.roomId || env?.topic || fallbackRoomId);
         const lastReadMessageId = String(env?.lastReadMessageId || "");

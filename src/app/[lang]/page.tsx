@@ -78,6 +78,10 @@ export default function Home() {
                             </div>
                         </section>
 
+                        <section className="block sm:hidden bg-gray-50">
+                            <SpAdsSlider/>
+                        </section>
+
                         <section className="py-16 bg-white">
                             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                                 <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
@@ -124,11 +128,6 @@ export default function Home() {
                             activeCatalogIndex={activeCatalogIndex}
                             setActiveCatalogIndex={setActiveCatalogIndex}
                         />
-
-                        <section className="block sm:hidden pt-[4.5rem] bg-gray-50">
-                            <SpAdsSlider/>
-                        </section>
-
                         <OfferSection/>
                     </main>
                     <Footer/>

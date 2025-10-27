@@ -138,7 +138,7 @@ export function normalizePhoenixEnvelope(
         }
 
         // --- read_up_to events ---
-        if (evLower === 'chat:read_up_to') {
+        if (ev === 'readUpTo') {
             return {
                 event: ev,
                 roomId: rid,
