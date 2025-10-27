@@ -100,8 +100,13 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
 
     upsertHistory: (items) => {
         if (!Array.isArray(items) || items.length === 0) return;
-        const upsert = get().upsertMessage;
-        for (const msg of items) upsert(msg);
+        set((s) => {
+            const existing = s.listMessages;
+            // Prepend unique messages (older first)
+            const existingIds = new Set(existing.map(m => String(m.id)));
+            const newOnes = items.filter(m => !existingIds.has(String(m.id)));
+            return { listMessages: [...newOnes, ...existing] };
+        });
     },
 
     upsertMessage: (msg) => set((s) => {
