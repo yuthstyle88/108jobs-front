@@ -20,7 +20,7 @@ import Link from "next/link";
 import {useTranslation} from "react-i18next";
 
 const SpProfile = () => {
-    const {person, localUser, contact} = useMyUser();
+    const {person, localUser, contact, wallet} = useMyUser();
 
     const {lang: currentLang} = useLanguage();
     const {t} = useTranslation();
@@ -81,7 +81,7 @@ const SpProfile = () => {
                                 height={20}
                             />
                             <div className="flex flex-row items-center text-[0.75rem] font-semibold gap-1">
-                                <span className="text-text-primary">0.00</span>
+                                <span className="text-text-primary">{wallet?.balanceAvailable}</span>
                             </div>
                         </div>
                         <div>
